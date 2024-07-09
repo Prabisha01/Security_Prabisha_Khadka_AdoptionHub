@@ -10,9 +10,59 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [passwordStrength, setPasswordStrength] = useState("");
   const [emailerror, setEmailError] = useState("");
   const [passworderror, setPasswordError] = useState("");
+
+  const checkPasswordStrength = (password) => {
+    let strength = "Weak";
+    let errorMessage = [];
+
+    if (password.length >= 8) {
+      errorMessage.push("At least 8 characters");
+    } else {
+      errorMessage.push("At least 8 characters (X)");
+    }
+
+    if (/[A-Z]/.test(password)) {
+      errorMessage.push("Contains an uppercase letter");
+    } else {
+      errorMessage.push("Contains an uppercase letter (X)");
+    }
+
+    if (/[a-z]/.test(password)) {
+      errorMessage.push("Contains a lowercase letter");
+    } else {
+      errorMessage.push("Contains a lowercase letter (X)");
+    }
+
+    if (/[0-9]/.test(password)) {
+      errorMessage.push("Contains a number");
+    } else {
+      errorMessage.push("Contains a number (X)");
+    }
+
+    if (/[^A-Za-z0-9]/.test(password)) {
+      errorMessage.push("Contains a special character");
+    } else {
+      errorMessage.push("Contains a special character (X)");
+    }
+
+    if (errorMessage.length === 5) {
+      strength = "Strong";
+    } else if (errorMessage.length >= 3) {
+      strength = "Medium";
+    }
+
+    return { strength, errorMessage };
+  };
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    const { strength, errorMessage } = checkPasswordStrength(newPassword);
+    setPasswordStrength({ strength, errorMessage });
+  };
 
   const Validate = () => {
     let isValid = true;
@@ -117,12 +167,19 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
                 </span>
                 <input
                   placeholder="Password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   type="password"
                   className="w-full pl-8 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
                 />
               </div>
               {passworderror && <p className="text-danger">{passworderror}</p>}
+              <p>Password Strength: {passwordStrength.strength}</p>
+              <ul>
+                {passwordStrength.errorMessage &&
+                  passwordStrength.errorMessage.map((msg, index) => (
+                    <li key={index}>{msg}</li>
+                  ))}
+              </ul>
             </div>
             <div className="flex items-center justify-between mb-4">
               <a
