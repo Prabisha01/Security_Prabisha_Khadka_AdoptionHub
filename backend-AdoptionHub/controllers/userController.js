@@ -47,7 +47,6 @@ const sendResetPasswordMail = async (fullName, email, token) => {
     res.status(400).send({ success: false, msg: error.message });
   }
 };
-
 const createUser = async (req, res) => {
   try {
     // Step 1: Check if data is coming or not
@@ -62,6 +61,16 @@ const createUser = async (req, res) => {
         message: "Please provide all required fields",
       });
     }
+
+    // Validate password strength
+    const passwordCriteria = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])(?=.{8,})/;
+    if (!passwordCriteria.test(password)) {
+      return res.json({
+        success: false,
+        message: "Password does not meet the required criteria.",
+      });
+    }
+
     // Step 5: Check existing user
     const existingUser = await Users.findOne({ email: email });
     if (existingUser) {

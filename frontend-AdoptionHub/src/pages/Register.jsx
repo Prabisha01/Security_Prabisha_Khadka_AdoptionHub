@@ -1,3 +1,4 @@
+
 import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
@@ -13,6 +14,8 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [terms, setTerms] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState("");
+  const [passwordStrengthColor, setPasswordStrengthColor] = useState("gray");
 
   const [fnameerror, setFullnameError] = useState("");
   const [emailerror, setEmailError] = useState("");
@@ -25,6 +28,60 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
     if (e.target.checked) {
       setTermsError("");
     }
+  };
+
+  const checkPasswordStrength = (password) => {
+    let strength = "Weak";
+    let color = "red";
+    let errorMessage = [];
+
+    if (password.length >= 8) {
+      errorMessage.push("At least 8 characters");
+    } else {
+      errorMessage.push("At least 8 characters (X)");
+    }
+
+    if (/[A-Z]/.test(password)) {
+      errorMessage.push("Contains an uppercase letter");
+    } else {
+      errorMessage.push("Contains an uppercase letter (X)");
+    }
+
+    if (/[a-z]/.test(password)) {
+      errorMessage.push("Contains a lowercase letter");
+    } else {
+      errorMessage.push("Contains a lowercase letter (X)");
+    }
+
+    if (/[0-9]/.test(password)) {
+      errorMessage.push("Contains a number");
+    } else {
+      errorMessage.push("Contains a number (X)");
+    }
+
+    if (/[^A-Za-z0-9]/.test(password)) {
+      errorMessage.push("Contains a special character");
+    } else {
+      errorMessage.push("Contains a special character (X)");
+    }
+
+    if (password.length >= 8 && errorMessage.length === 5) {
+      strength = "Strong";
+      color = "green";
+    } else if (password.length >= 8 && errorMessage.length >= 3) {
+      strength = "Medium";
+      color = "orange";
+    }
+
+    return { strength, color, errorMessage };
+  };
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    const { strength, color, errorMessage } = checkPasswordStrength(newPassword);
+    setPasswordStrength(strength);
+    setPasswordStrengthColor(color);
   };
 
   const Validate = () => {
@@ -50,12 +107,12 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
       isValid = false;
     }
     if (confirmPassword.trim() === "") {
-      setCpasswordError("Password doesnot match");
+      setCpasswordError("Password does not match");
       isValid = false;
     }
 
     if (password.trim() !== confirmPassword.trim()) {
-      setCpasswordError("Password doesnot match");
+      setCpasswordError("Password does not match");
       isValid = false;
     }
     if (!terms) {
@@ -69,7 +126,10 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
     e.preventDefault();
     setIsLoading(true);
     const isValid = Validate();
-    if (!isValid) return;
+    if (!isValid) {
+      setIsLoading(false);
+      return;
+    }
     const data = new FormData();
     data.append("fullName", fullName);
     data.append("email", email);
@@ -157,11 +217,28 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                 <input
                   placeholder="Password"
                   type="password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   className="w-full pl-8 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
                 />
               </div>
               {passworderror && <p className="text-danger">{passworderror}</p>}
+              <div className="mt-2">
+                <div
+                  style={{
+                    backgroundColor: passwordStrengthColor,
+                    height: "4px",
+                    width: "100%",
+                  }}
+                ></div>
+                <p className={`text-${passwordStrengthColor} mt-1`}>
+                  Password Strength: {passwordStrength}
+                </p>
+                <ul className="text-xs">
+                  {checkPasswordStrength(password).errorMessage.map((msg, index) => (
+                      <li key={index}>{msg}</li>
+                    ))}
+                </ul>
+              </div>
             </div>
             <div className="mb-4">
               <div className="relative">
@@ -213,4 +290,5 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
     </div>
   );
 };
+
 export default RegisterModal;
