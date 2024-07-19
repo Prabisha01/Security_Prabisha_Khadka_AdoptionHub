@@ -7,7 +7,7 @@ const AdminRoute = () => {
   return user != null 
   && user.isAdmin ?
   <Outlet/> 
-  : navigate('/login')
+  : navigate('/')
 }
 
 export default AdminRoute

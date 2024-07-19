@@ -2,22 +2,31 @@ import React from "react";
 import { FiX } from "react-icons/fi";
 
 const TermsAndConditions = () => {
+
+  const handleClose = () => {
+    window.history.back();
+  };
+
   return (
     <div className="flex flex-col items-center min-h-screen mb-3 bg-gray-50">
       <img
         src="assets/images/terms.png"
         alt="Background"
-        className="w-full h-64 object-cover"
+        className="w-full"
+        style={{ height: "518px" }}
       />
-      <div className="bg-white mt-[-145px] p-8 rounded-lg shadow-lg w-full max-w-3xl relative">
-        <button className="absolute top-4 right-4">
-          <FiX className="text-gray-500" size={24} />
+      <div className="bg-white mt-[-145px] p-8 rounded-lg shadow-lg w-full max-w-[1062px] relative border border-black">
+        <button className="absolute top-8 right-4" onClick={handleClose}>
+          <FiX className="text-balck-500" size={40} />
         </button>
-        <h2 className="text-2xl font-bold mb-4">Terms and Conditions</h2>
-        <p className="text-lg mb-4">
-          <strong>Welcome to AdoptionHub!</strong>
+        <h2 className="text-4xl font-semibold mb-[27px]" style={{ fontSize: '46px', fontFamily: 'Poppins', fontWeight: '600' }}>Terms and Conditions</h2>
+        <p className="text-2xl mb-[27px]" style={{ fontSize: '20px', fontWeight: '400', fontFamily: 'Poppins' }}>
+          <strong>Welcome to 
+            <span style={{ color: '#F24E1E' }}> Adoption</span>
+            <span style={{ color: '#004AAD' }}>HUB!!</span>
+          </strong>
         </p>
-        <p className="mb-4">
+        <p className="text-lg mb-[27px]" style={{ fontSize: '20px', fontFamily: 'Poppins', fontWeight: '400' }}>
           These terms and conditions outline the rules and regulations for the
           use of the AdoptionHub Website, located at
           <a href="https://www.adoptionhub.com" className="text-blue-500">
@@ -27,7 +36,7 @@ const TermsAndConditions = () => {
           conditions. Do not continue to use AdoptionHub if you do not agree to
           take all of the terms and conditions stated on this page.
         </p>
-        <p className="mb-4">
+        <p className="mb-[27px]" style={{ fontSize: '20px', fontFamily: 'Poppins', fontWeight: '400' }}>
           The following terminology applies to these Terms and Conditions,
           Privacy Statement and Disclaimer Notice and all Agreements: "Client",
           "You" and "Your" refers to you, the person log on this website and
@@ -43,8 +52,8 @@ const TermsAndConditions = () => {
           capitalization and/or he/she or they, are taken as interchangeable and
           therefore as referring to same.
         </p>
-        <h3 className="text-xl font-semibold mb-2">Cookies</h3>
-        <p className="mb-4">
+        <h3 className="text-xl font-bold mb-[27px]" style={{ fontWeight: '700' }}>Cookies</h3>
+        <p className="mb-[27px]" style={{ fontSize: '20px', fontFamily: 'Poppins', fontWeight: '400' }}>
           We employ the use of cookies. By accessing AdoptionHub, you agreed to
           use cookies in agreement with the AdoptionHub’s Privacy Policy. Most
           interactive websites use cookies to let us retrieve the user’s details
@@ -53,23 +62,23 @@ const TermsAndConditions = () => {
           our website. Some of our affiliate/advertising partners may also use
           cookies.
         </p>
-        <h3 className="text-xl font-semibold mb-2">License</h3>
-        <p className="mb-4">
+        <h3 className="text-xl font-bold mb-[27px]" style={{ fontWeight: '700' }}>License</h3>
+        <p className="mb-[27px]" style={{ fontSize: '20px', fontFamily: 'Poppins', fontWeight: '400' }}>
           Unless otherwise stated, AdoptionHub and/or its licensors own the
           intellectual property rights for all material on AdoptionHub. All
           intellectual property rights are reserved. You may access this from
           AdoptionHub for your own personal use subjected to restrictions set in
           these terms and conditions.
         </p>
-        <p className="mb-4">You must not:</p>
-        <ul className="list-disc list-inside mb-4">
+        <h3 className="text-xl font-bold mb-[27px]" style={{ fontWeight: '700' }}>You must not:</h3>
+        <ul className="list-disc list-inside mb-[27px]" style={{ fontSize: '20px', fontFamily: 'Poppins', fontWeight: '400' }}>
           <li>Republish material from AdoptionHub</li>
           <li>Sell, rent or sub-license material from AdoptionHub</li>
           <li>Reproduce, duplicate or copy material from AdoptionHub</li>
           <li>Redistribute content from AdoptionHub</li>
         </ul>
-        <p className="mb-4">This Agreement shall begin on the date hereof.</p>
-        <p className="mb-4">
+        <p className="mb-[27px]" style={{ fontSize: '20px', fontFamily: 'Poppins', fontWeight: '400' }}>This Agreement shall begin on the date hereof.</p>
+        <p className="mb-[27px]" style={{ fontSize: '20px', fontFamily: 'Poppins', fontWeight: '400' }}>
           As long as the website and the information and services on the website
           are provided free of charge, we will not be liable for any loss or
           damage of any nature.

@@ -7,6 +7,8 @@ const randomstring = require("randomstring");
 const res = require("express/lib/response");
 const path = require("path");
 const fs = require("fs");
+const { sendEmailController } = require("./sendEmailController");
+const { Console } = require("console");
 
 const sendResetPasswordMail = async (fullName, email, token) => {
   try {
@@ -31,7 +33,7 @@ const sendResetPasswordMail = async (fullName, email, token) => {
       html:
         "Hi " +
         fullName +
-        ', Please copy the link and <a href="http://10.12.1.59:3000/reset_password/' +
+        ', Please copy the link and <a href="http://localhost:3000/reset_password/' +
         token +
         '">click here</a> to reset your password',
     };
@@ -47,6 +49,7 @@ const sendResetPasswordMail = async (fullName, email, token) => {
     res.status(400).send({ success: false, msg: error.message });
   }
 };
+
 const createUser = async (req, res) => {
   try {
     // Step 1: Check if data is coming or not
@@ -61,16 +64,6 @@ const createUser = async (req, res) => {
         message: "Please provide all required fields",
       });
     }
-
-    // Validate password strength
-    const passwordCriteria = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])(?=.{8,})/;
-    if (!passwordCriteria.test(password)) {
-      return res.json({
-        success: false,
-        message: "Password does not meet the required criteria.",
-      });
-    }
-
     // Step 5: Check existing user
     const existingUser = await Users.findOne({ email: email });
     if (existingUser) {
@@ -234,12 +227,11 @@ const getSingleUsers = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  // step 1: Check incoming data
   console.log(req.body);
   console.log(req.files);
 
   // step 2: Destructuring
-  const { fullName, email } = req.body;
+  const { fullName, email,address } = req.body;
   const { userImage } = req.files;
 
   // destructure id from URL
@@ -274,10 +266,11 @@ const updateUser = async (req, res) => {
       const updatedUser = {
         fullName: fullName,
         email: email,
+        address: address,
       };
       await Users.findByIdAndUpdate(id, updatedUser);
       res.json({
-        success: true,
+        success: true,  
         message: "Updated Successfully Without Image",
         user: updatedUser,
       });
@@ -457,6 +450,53 @@ const getUserCount = async (req, res) => {
     });
   }
 };
+const sendOtp = async (req, res) => {
+  const { email } = req.body;
+  const user = await Users.findOne({ email: email });
+  const randomOtp = Math.floor(100000 + Math.random() * 900000);
+  console.log(randomOtp);
+  if (user) {
+    await sendEmailController(
+      email,
+      "Adoption Hub",
+      `Your Otp is: ${randomOtp}`
+    ).then(async (success) => {
+      if (success) {
+        res.status(200).json({
+          success: true,
+          message: "Otp sent successfully",
+          otp: randomOtp,
+        });
+      }
+    });
+  } else {
+    res.json({
+      success: false,
+      message: "User not found",
+    });
+  }
+};
+
+const verifyUser = async (req, res) => {
+  console.log(req.body);
+  const { email } = req.body;
+  const user = await Users.findOne({ email: email });
+  if (user) {
+    const verifyUser = await Users.updateOne(
+      { email: email },
+      { $set: { isVerified: true } }
+    );
+    res.json({
+      success: true,
+      message: "User verified successfully",
+    });
+  } else {
+    res.json({
+      success: false,
+      message: "User not found",
+    });
+  }
+};
 
 module.exports = {
   createUser,
@@ -471,4 +511,6 @@ module.exports = {
   getUserCount,
   changePassword,
   searchUsers,
+  sendOtp,
+  verifyUser,
 };

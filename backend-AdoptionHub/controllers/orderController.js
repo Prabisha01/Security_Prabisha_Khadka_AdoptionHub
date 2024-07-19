@@ -1,119 +1,109 @@
 const Order = require("../model/orderModel");
 const Products = require("../model/productModel");
-const Users = require("../model/userModels")
+const Users = require("../model/userModels");
 
 const createOrder = async (req, res) => {
-  const id = req.user.id;
+  const { user, products: rawProducts, price } = req.body;
+  console.log(req.body);
 
-  const { userId, productIds, cartIds, quantities, totalPrices } = req.body;
-
-  if (!userId || !productIds || !cartIds || !quantities || !totalPrices) {
-    const missingFields = [
-      'userId',
-      'productIds',
-      'cartIds',
-      'quantities',
-      'totalPrices',
-    ].filter((field) => !req.body[field]);
-
-    return res.json({
-      success: false,
-      message: `Please provide all the details, including quantities,  and total prices. Missing fields: ${missingFields.join(
-        ', '
-      )}`,
-    });
+  let products;
+  try {
+    products =
+      typeof rawProducts === "string" ? JSON.parse(rawProducts) : rawProducts;
+  } catch (error) {
+    return res.json({ message: "Invalid products format, must be an array" });
   }
 
-  const uniqueIdentifier = Math.floor(Math.random() * 10000000000); 
-  const orderId = `ORDER-NO${uniqueIdentifier}`;
+  if (!user || !products || !products.length) {
+    return res.json({ message: "Missing user or products information" });
+  }
+
+  if (products.some((product) => !product || product.quantity == null)) {
+    return res.json({
+      message: "Each product entry must include a product ID and a quantity",
+    });
+  }
 
   try {
-    const newOrders = await Promise.all(
-      cartIds.map(async (cartId, index) => {
-        const plantDetails = await Products.findById(productIds[index]);
+    const newOrder = new Order({
+      user,
+      products,
+      price,
+      is_payed: true,
+    });
 
-        const quantity = quantities[index] || 1;
-        const subtotal = quantity * plantDetails.plantPrice;
+    await newOrder.save();
 
-        const newOrder = new Order({
-          userId: id,
-          orderId: orderId, // Use the generated orderId
-          orderDate: new Date().toISOString(),
-          items: [
-            {
-              plantId: productIds[index],
-              quantity: quantity,
-              subtotal: subtotal,
-              totalPrices: totalPrices[index] || 0,
-            },
-          ],
-          totalPrice: subtotal,
-        });
-
-        await newOrder.save();
-        return newOrder;
-      })
-    );
-
-    res.status(200).json({
+    res.status(201).json({
       success: true,
-      message: 'Order Successful',
-      data: newOrders,
+      message: "Order placed successfully",
+      order: newOrder,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json('Server Error');
+    res.status(500).json({
+      success: false,
+      message: "Error creating order",
+      error: error.message,
+    });
   }
 };
-
-
-const getOrder = async (req, res) => {
-  const userId = req.user.id;
+const getMyOrder = async (req, res) => {
+  const userId = req.params.id;
   const requestedPage = parseInt(req.query._page, 5);
   const limit = parseInt(req.query._limit, 5);
   const skip = (requestedPage - 1) * limit;
 
   try {
-    const userOrder = await Order.find({ userId: userId })
-      .populate('items.plantId', 'plantPrice plantName plantImageUrl') 
+    const userOrder = await Order.find({ user: userId })
+      .populate({
+        path: "products.product",
+      })
+      .populate({
+        path: "user",
+        select: "fullName email userImageUrl",
+      })
       .skip(skip)
       .limit(limit);
 
     res.json({
-      message: 'The product available',
+      message: "The product available",
       success: true,
       orders: userOrder,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json('Server error');
+    res.status(500).json("Server error");
   }
 };
-
 
 const getAllOrder = async (req, res) => {
   try {
     const orders = await Order.find()
-    .populate({
-      path: 'items.plantId',
-      select: 'plantPrice plantName plantImageUrl',
-    })
-    .populate({
-      path: 'userId',
-      select: 'fullName',
+      .populate({
+        path: "products.product",
+      })
+      .populate({
+        path: "user",
+        select: "fullName email userImageUrl",
+      });
+
+    console.log(orders);
+
+    // print all the product array of order
+    orders.forEach((order) => {
+      console.log(order.products);
     });
-    
 
     res.status(200).json({
       success: true,
-      message: 'Orders retrieved successfully',
+      message: "Orders retrieved successfully",
       orders,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Server Error',
+      message: "Server Error",
       error: error.message,
     });
   }
@@ -121,6 +111,6 @@ const getAllOrder = async (req, res) => {
 
 module.exports = {
   createOrder,
-  getOrder,
-  getAllOrder
+  getMyOrder,
+  getAllOrder,
 };

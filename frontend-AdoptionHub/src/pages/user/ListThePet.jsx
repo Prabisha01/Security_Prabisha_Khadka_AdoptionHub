@@ -1,13 +1,17 @@
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createApplication } from "../../apis/Api";
+import { addpetApi } from "../../apis/Api";
 
-const ListThePet = ({isOpen, onClose }) => {
+const ListThePet = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [ownership, setOwnership] = useState("found");
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,61 +27,60 @@ const ListThePet = ({isOpen, onClose }) => {
   const [petImageUrlTwo, setPetImageUrlTwo] = useState(null);
   const [petImageUrlThree, setPetImageUrlThree] = useState(null);
   const [petImageUrlFour, setPetImageUrlFour] = useState(null);
-  const [petImageUrlFive, setPetImageUrlFive] = useState(null);
   const [petFileUrl, setPetFileUrl] = useState(null);
   const [previewImageOne, setPreviewImageOne] = useState("");
   const [previewImageTwo, setPreviewImageTwo] = useState("");
   const [previewImageThree, setPreviewImageThree] = useState("");
   const [previewImageFour, setPreviewImageFour] = useState("");
-  const [previewImageFive, setPreviewImageFive] = useState("");
 
   const handleCloseClick = (e) => {
-    e.stopPropagation(); // Stop the event from propagating further
-    console.log("close");
-    onClose(); // Close the modal
+    e.stopPropagation();
+    onClose();
   };
 
-  // functio for image upload
   const handleImageUploadOne = (event) => {
-    const file = event.target.files[0]; //files not file
+    const file = event.target.files[0];
     setPetImageUrlOne(file);
     setPreviewImageOne(URL?.createObjectURL(file));
   };
 
   const handleImageUploadTwo = (event) => {
-    const file = event.target.files[0]; //files not file
+    const file = event.target.files[0];
     setPetImageUrlTwo(file);
     setPreviewImageTwo(URL?.createObjectURL(file));
   };
 
   const handleImageUploadThree = (event) => {
-    const file = event.target.files[0]; //files not file
+    const file = event.target.files[0];
     setPetImageUrlThree(file);
     setPreviewImageThree(URL?.createObjectURL(file));
   };
 
   const handleImageUploadFour = (event) => {
-    const file = event.target.files[0]; //files not file
+    const file = event.target.files[0];
     setPetImageUrlFour(file);
     setPreviewImageFour(URL?.createObjectURL(file));
   };
 
-  const handleImageUploadFive = (event) => {
-    const file = event.target.files[0];
-    setPetImageUrlFive(file);
-    setPreviewImageFive(URL?.createObjectURL(file));
-  };
-  
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setPetFileUrl(file); // Storing the File object directly
+      setPetFileUrl(file);
     }
   };
 
   const handleFoundSubmit = (e) => {
-    setIsLoading(true);
     e.preventDefault();
+    setShowConfirmation(true);
+  };
+
+  const handleOwnSubmit = (e) => {
+    e.preventDefault();
+    setShowConfirmation(true);
+  };
+
+  const confirmSubmit = async () => {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("fullName", fullName);
     formData.append("email", email);
@@ -91,85 +94,92 @@ const ListThePet = ({isOpen, onClose }) => {
     formData.append("petImageUrlTwo", petImageUrlTwo);
     formData.append("petImageUrlThree", petImageUrlThree);
     formData.append("petImageUrlFour", petImageUrlFour);
-    formData.append("status", "found");
-    createApplication(formData)
-      .then((res) => {
-        console.log(res);
-        if (res.data.success === false) {
-          toast.error(res.data.message);
-        } else {
-          toast.success(res.data.message);
-        }
-      })
-      .catch((err) => {
-        toast.error("Server Error");
-        console.log(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+    formData.append("status", ownership);
+    formData.append("user", user._id);
 
-  const handleOwnSubmit = (e) => {
-    setIsLoading(true);
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("fullName", fullName);
-    formData.append("email", email);
-    formData.append("number", phoneNumber);
-    formData.append("address", address);
-    formData.append("petType", petType);
-    formData.append("petAge", petAge);
-    formData.append("petGender", petGender);
-    formData.append("condition", condition);
-    formData.append("purpose", purpose);
-    formData.append("description", description);
-    formData.append("petImageUrlFive", petImageUrlFive);
-    formData.append("petFileUrl", petFileUrl);
-
-    formData.append("status", "own");
-
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
+    if (ownership === "own") {
+      formData.append("petAge", petAge);
+      formData.append("petGender", petGender);
+      formData.append("petFileUrl", petFileUrl);
     }
 
-    createApplication(formData)
+    addpetApi(formData)
       .then((res) => {
-        console.log(res);
         if (res.data.success === false) {
           toast.error(res.data.message);
         } else {
+          onClose();
           toast.success(res.data.message);
         }
       })
       .catch((err) => {
         toast.error("Server Error");
-        console.log(err);
+        console.error(err);
       })
       .finally(() => {
         setIsLoading(false);
+        setShowConfirmation(false);
       });
   };
 
   const handleOwnershipChange = (status) => {
     setOwnership(status);
+    resetForm();
+  };
+
+  const resetForm = () => {
+    setFullName("");
+    setEmail("");
+    setPhoneNumber("");
+    setAddress("");
+    setPetType("");
+    setPetAge("");
+    setPetGender("");
+    setCondition("");
+    setPurpose("");
+    setDescription("");
+    setPetImageUrlOne(null);
+    setPetImageUrlTwo(null);
+    setPetImageUrlThree(null);
+    setPetImageUrlFour(null);
+    setPetFileUrl(null);
+    setPreviewImageOne("");
+    setPreviewImageTwo("");
+    setPreviewImageThree("");
+    setPreviewImageFour("");
   };
 
   if (!isOpen) return null;
 
-
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 overflow-y-scroll">
-      <div className="bg-white mt-16 p-6 rounded-lg shadow-lg max-w-4xl w-full overflow-y-scroll">
-        <div className="flex flex-row justify-between items-center mb-4">
-          <h2 className="text-xl text-left font-bold">Application Form</h2>
-          <Link
-            className="bg-red-600 hover:bg-red-800 rounded-md px-3 py-1"
+    <div className="fixed inset-0 flex justify-center items-center z-50">
+      <div className="absolute inset-0 backdrop-filter backdrop-blur-sm bg-black bg-opacity-50"></div>
+      <div
+        className="relative bg-white p-8 rounded"
+        style={{
+          width: '1102px',
+          height: '711px',
+          fontFamily: 'Poppins',
+          border: '2px solid black',
+          borderRadius: '25px',
+          overflowY: 'auto'
+        }}
+      >
+        <div className="flex justify-between items-center mb-4">
+        <h2 className="text-3xl font-bold">
+  <span style={{ color: '#FF8534' }}>Application</span>
+  <span style={{ color: 'black' }}> Form</span>
+</h2>
+
+      
+          <button
+            title="Close Modal"
             onClick={handleCloseClick}
+            className="text-black-500 hover:text-gray-700 rounded-lg text-sm p-2 px-4"
+            style={{ top: '29px', right: '27px', fontSize: '1.7rem', color: 'black' }}
           >
-            <FontAwesomeIcon icon={faClose} />
-          </Link>
+            <FontAwesomeIcon icon={faClose} size="lg" />
+          </button>
         </div>
         <div className="flex flex-row justify-end mb-4">
           <div className="flex flex-row border-1 gap-2 rounded-lg p-1 border-gray-700">
@@ -191,251 +201,122 @@ const ListThePet = ({isOpen, onClose }) => {
             </button>
           </div>
         </div>
-        {ownership === "found" ? (
-          <form onSubmit={handleFoundSubmit}>
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              <input
-                type="text"
-                placeholder="Full Name"
-                onChange={(e) => setFullName(e.target.value)}
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="number"
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="Phone Number"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="text"
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Address"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              <h1 className="col-span-3 font-bold"> Pet Information </h1>
-              <input
-                type="text"
-                onChange={(e) => setPetType(e.target.value)}
-                placeholder="Type"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="text"
-                onChange={(e) => setCondition(e.target.value)}
-                placeholder="Condition"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-            </div>
-            <div className="grid grid-cols-1 gap-4 mb-4">
-              <textarea
-                rows={4}
-                type="text"
-                onChange={(e) => setPurpose(e.target.value)}
-                placeholder="Purpose"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <textarea
-                rows={4}
-                type="text"
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Description"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-            </div>
-            <div className="mb-4">
-              <h3 className="font-bold mb-2 col-span-3">Other Information</h3>
-              <label className="flex flex-row">
+        <div className="max-h-[70vh] overflow-y-auto">
+          {ownership === "found" ? (
+            <form onSubmit={handleFoundSubmit}>
+              <div className="grid grid-cols-3 gap-2 mb-4">
                 <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUploadOne}
-                  className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100
-                "
-                />
-
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUploadTwo}
-                  className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100"
+                  type="text"
+                  placeholder="Full Name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
                 />
                 <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUploadThree}
-                  className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100
-                "
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
                 />
                 <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUploadFour}
-                  className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100
-                "
+                  type="number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="Phone Number"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
                 />
-              </label>
-              <>
-                <div className="flex flex-row gap-16">
-                  {previewImageOne && (
-                    <div className="mt-4">
-                      <img src={previewImageOne} className="w-36 rounded-md" />
-                    </div>
-                  )}
-
-                  {previewImageTwo && (
-                    <div className="mt-4">
-                      <img src={previewImageTwo} className="w-36 rounded-md" />
-                    </div>
-                  )}
-
-                  {previewImageThree && (
-                    <div className="mt-4">
-                      <img
-                        src={previewImageThree}
-                        className="w-36 rounded-md"
-                      />
-                    </div>
-                  )}
-
-                  {previewImageFour && (
-                    <div className="mt-4">
-                      <img src={previewImageFour} className="w-36 rounded-md" />
-                    </div>
-                  )}
-                </div>
-              </>
-            </div>
-            <button
-            type="submit"
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            >
-              {isLoading ? "Loading..." : "Submit"}
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleOwnSubmit}>
-            <div className="grid grid-cols-3 gap-4 mb-4">
-              <input
-                type="text"
-                placeholder="Full Name"
-                onChange={(e) => setFullName(e.target.value)}
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="text"
-                placeholder="Address"
-                onChange={(e) => setAddress(e.target.value)}
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="number"
-                placeholder="Phone Number"
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                className="input bg-gray-100 p-2 rounded border"
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4 mb-4">
-              <h3 className="font-bold col-span-3">Pet Information</h3>
-              <input
-                type="text"
-                onChange={(e) => setPetType(e.target.value)}
-                placeholder="Type"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="text"
-                onChange={(e) => setPetAge(e.target.value)}
-                placeholder="Age"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="text"
-                onChange={(e) => setPetGender(e.target.value)}
-                placeholder="Gender"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <input
-                type="text"
-                onChange={(e) => setCondition(e.target.value)}
-                placeholder="Condition"
-                className="input bg-gray-100 p-2 rounded border"
-              />
-              <textarea
-                placeholder="Purpose"
-                onChange={(e) => setPurpose(e.target.value)}
-                rows={3}
-                className="input bg-gray-100 p-2 col-span-3 rounded border"
-              ></textarea>
-              <textarea
-                rows={3}
-                placeholder="Description"
-                onChange={(e) => setDescription(e.target.value)}
-                className="input bg-gray-100 p-2 col-span-3 rounded border"
-              ></textarea>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-bold mb-4">Other Information</h3>
-              <div className="flex flex-row justify-between">
-                <label className="block mb-2">
-                  <span className="sr-only">Choose Photo:</span>
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Address"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                <h1 className="col-span-3 font-bold"> Pet Information </h1>
+                <input
+                  type="text"
+                  value={petType}
+                  onChange={(e) => setPetType(e.target.value)}
+                  placeholder="Type"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+                <input
+                  type="text"
+                  value={condition}
+                  onChange={(e) => setCondition(e.target.value)}
+                  placeholder="Condition"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+              </div>
+              <div className="grid grid-cols-1 gap-4 mb-4">
+                <textarea
+                  rows={4}
+                  value={purpose}
+                  onChange={(e) => setPurpose(e.target.value)}
+                  placeholder="Purpose"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ borderRadius: '10px', fontSize: '16px' }}
+                />
+                <textarea
+                  rows={4}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Description"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ borderRadius: '10px', fontSize: '16px' }}
+                />
+              </div>
+              <div className="mb-4">
+                <h3 className="font-bold mb-2 col-span-3">Other Information</h3>
+                <label className="flex flex-row">
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleImageUploadFive}
+                    onChange={handleImageUploadOne}
                     className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100
-                "
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                  "
                   />
-                </label>
-                {previewImageFive && (
-                <div className="mt-4">
-                  <img src={previewImageFive} className="w-36 rounded-md" />
-                </div>
-              )}
-                <label className="block">
-                  <span className="sr-only">Choose File:</span>
                   <input
-                    onChange={handleFileUpload}
                     type="file"
-                    accept="application/pdf"
+                    accept="image/*"
+                    onChange={handleImageUploadTwo}
+                    className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUploadThree}
+                    className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                  "
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUploadFour}
                     className="block w-full text-sm text-gray-500
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
@@ -445,18 +326,311 @@ const ListThePet = ({isOpen, onClose }) => {
                   "
                   />
                 </label>
+                <div className="flex flex-row gap-16">
+                  {previewImageOne && (
+                    <div className="mt-4 h-20 w-1/4">
+                      <img
+                        src={previewImageOne}
+                        alt=""
+                        className="rounded-md"
+                      />
+                    </div>
+                  )}
+                  {previewImageTwo && (
+                    <div className="mt-4 h-20 w-1/4">
+                      <img
+                        src={previewImageTwo}
+                        alt=""
+                        className="rounded-md"
+                      />
+                    </div>
+                  )}
+                  {previewImageThree && (
+                    <div className="mt-4 w-1/4">
+                      <img
+                        alt=""
+                        src={previewImageThree}
+                        className="rounded-md"
+                      />
+                    </div>
+                  )}
+                  {previewImageFour && (
+                    <div className="mt-4 w-1/4">
+                      <img
+                        alt=""
+                        src={previewImageFour}
+                        className="rounded-md"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
-            </div>
-            <button
-            type="submit"
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            >
-              {isLoading ? "Loading..." : "Submit"}
-            </button>
-          </form>
-        )}
+              <div className="w-full flex flex-row justify-left mt-16">
+                <button
+                  type="submit"
+                  className="bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-500 ease-in-out"
+                  style={{ width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px', transition: 'all 500ms ease-in-out' }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#FF7148";
+                    e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+                    e.target.style.border = "2px solid black";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "#FF8534";
+                    e.target.style.boxShadow = "none";
+                    e.target.style.border = "none";
+                  }}
+                >
+                  {isLoading ? (
+                    <CircularProgress color={"inherit"} size={20} />
+                  ) : (
+                    "Save"
+                  )}
+                </button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleOwnSubmit}>
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+                <input
+                  type="text"
+                  placeholder="Address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+                <input
+                  type="number"
+                  placeholder="Phone Number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                <h3 className="font-bold col-span-3">Pet Information</h3>
+                <input
+                  type="text"
+                  value={petType}
+                  onChange={(e) => setPetType(e.target.value)}
+                  placeholder="Type"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+                <input
+                  type="number"
+                  value={petAge}
+                  onChange={(e) => setPetAge(e.target.value)}
+                  placeholder="Age"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+                <input
+                  type="text"
+                  value={petGender}
+                  onChange={(e) => setPetGender(e.target.value)}
+                  placeholder="Gender"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+                <input
+                  type="text"
+                  value={condition}
+                  onChange={(e) => setCondition(e.target.value)}
+                  placeholder="Condition"
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+                <textarea
+                  placeholder="Purpose"
+                  value={purpose}
+                  onChange={(e) => setPurpose(e.target.value)}
+                  rows={3}
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950 col-span-3"
+                  style={{ borderRadius: '10px', fontSize: '16px' }}
+                ></textarea>
+                <textarea
+                  rows={3}
+                  placeholder="Description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950 col-span-3"
+                  style={{ borderRadius: '10px', fontSize: '16px' }}
+                ></textarea>
+              </div>
+              <div className="mb-4">
+                <h3 className="font-bold mb-2 col-span-3">Other Information</h3>
+                <label className="flex flex-row">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUploadOne}
+                    className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                  "
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUploadTwo}
+                    className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUploadThree}
+                    className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                  "
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUploadFour}
+                    className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                  "
+                  />
+                </label>
+                <div className="flex flex-row gap-16">
+                  {previewImageOne && (
+                    <div className="mt-4 w-1/4">
+                      <img
+                        src={previewImageOne}
+                        alt=""
+                        className="rounded-md"
+                      />
+                    </div>
+                  )}
+                  {previewImageTwo && (
+                    <div className="mt-4 w-1/4">
+                      <img
+                        src={previewImageTwo}
+                        alt=""
+                        className="rounded-md"
+                      />
+                    </div>
+                  )}
+                  {previewImageThree && (
+                    <div className="mt-4 w-1/4">
+                      <img
+                        alt=""
+                        src={previewImageThree}
+                        className="rounded-md"
+                      />
+                    </div>
+                  )}
+                  {previewImageFour && (
+                    <div className="mt-4 w-1/4">
+                      <img
+                        alt=""
+                        src={previewImageFour}
+                        className="rounded-md"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <label className="block mb-2">
+                <span className="sr-only">Choose Photo:</span>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handleFileUpload}
+                  className="block w-full text-sm text-gray-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-full file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-blue-50 file:text-blue-700
+                  hover:file:bg-blue-100
+                "
+                />
+              </label>
+              <div className="w-full flex flex-row justify-left mt-16">
+                <button
+                  type="submit"
+                  className="bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-500 ease-in-out"
+                  style={{ width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px', transition: 'all 500ms ease-in-out' }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#FF7148";
+                    e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+                    e.target.style.border = "2px solid black";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "#FF8534";
+                    e.target.style.boxShadow = "none";
+                    e.target.style.border = "none";
+                  }}
+                >
+                  {isLoading ? (
+                    <CircularProgress color={"inherit"} size={20} />
+                  ) : (
+                    "Save"
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
+      {showConfirmation && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          <div className="bg-white rounded-lg p-8 z-10" style={{ width: '400px', fontFamily: 'Poppins', border: '2px solid black' }}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Confirmation</h2>
+              <button onClick={() => setShowConfirmation(false)} className="text-black">
+                <FontAwesomeIcon icon={faClose} />
+              </button>
+            </div>
+            <p>Are you sure you want to list the pet?</p>
+            <div className="flex justify-end mt-4">
+              <button onClick={() => setShowConfirmation(false)} className="bg-red-500 text-white px-4 py-2 rounded mr-2">
+                No
+              </button>
+              <button onClick={confirmSubmit} className="bg-green-500 text-white px-4 py-2 rounded">
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

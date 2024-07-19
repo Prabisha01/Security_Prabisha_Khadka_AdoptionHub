@@ -19,6 +19,8 @@ export default function ProductCategory() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [filterProductName, setFilterProductName] = useState("");
+
   const fetchproducts = async () => {
     try {
       const response = await getAllProductCatApi();
@@ -95,13 +97,21 @@ export default function ProductCategory() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const filterCategories = () => {
+    return products.filter((category) =>
+      category.productCategory
+        .toLowerCase()
+        .includes(filterProductName.toLowerCase())
+    );
+  };
+
   return (
     <>
       <div className="w-full sm:px-6">
         {users.isAdmin ? (
           <div className="px-4 md:px-10 py-2 md:py-7 bg-gray-100 rounded-tl-lg rounded-tr-lg">
             <div className="sm:flex flex-row items-center justify-between">
-              <p className="inline-flex sm:ml-3  sm:mt-0 items-start justify-start px-6 py-3  text-black focus:outline-none rounded">
+              <p className="inline-flex sm:ml-3 sm:mt-0 items-start justify-start px-6 py-3 text-black focus:outline-none rounded">
                 Products Category
               </p>
               <div>
@@ -119,10 +129,12 @@ export default function ProductCategory() {
           <div className="flex flex-col items-center justify-center md:flex-row md:items-start md:justify-between md:gap-4 mb-4 w-full">
             <div className="flex w-100 my-4 gap-2">
               <input
-                className="w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                className="w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
                 type="text"
                 name="productName"
-                placeholder="Filter by product Name"
+                placeholder="Filter by Category Name"
+                value={filterProductName}
+                onChange={(e) => setFilterProductName(e.target.value)}
               />
             </div>
           </div>
@@ -136,7 +148,7 @@ export default function ProductCategory() {
                 </tr>
               </thead>
               <tbody className="w-full">
-                {products?.map((item) => (
+                {filterCategories().map((item) => (
                   <tr
                     key={item._id}
                     className="h-20 text-sm leading-none text-gray-800 bg-white hover:bg-gray-100 border-b border-t border-gray-100"
@@ -146,14 +158,14 @@ export default function ProductCategory() {
                         <div className="w-10 h-10">
                           <img
                             className="w-full h-full"
-                            src={item.productCategoryImageUrl}
+                            src={item?.productCategoryImageUrl}
                             alt="Thumbnail Image"
                           />
                         </div>
                       </div>
                     </td>
                     <td className="pl-12">
-                      <p className="font-medium">{item.productCategory}</p>
+                      <p className="font-medium">{item?.productCategory}</p>
                     </td>
                     <td className="px-7 2xl:px-0">
                       {/* Delete Button */}
@@ -175,7 +187,7 @@ export default function ProductCategory() {
                         className="fixed inset-0 flex items-center justify-center bg-opacity-20 overflow-y-auto h-full w-full"
                         id="my-modal"
                       >
-                        <div className="relative mx-auto p-5 border  shadow-sm w-1/4 rounded-md bg-white space-y-8 justify-center items-center flex flex-col">
+                        <div className="relative mx-auto p-5 border shadow-sm w-1/4 rounded-md bg-white space-y-8 justify-center items-center flex flex-col">
                           <h6 className="font-medium w-3/4 mx-auto text-center">
                             <FontAwesomeIcon
                               className="me-4"
@@ -185,7 +197,7 @@ export default function ProductCategory() {
                               src="../assets/images/sure_about_that.jpg"
                               alt=""
                             />
-                            Are you sure about that 👁️👁️?
+                            Are you sure about ?
                           </h6>
                           <div className="flex flex-wrap items-center justify-between mx-auto w-full">
                             <button

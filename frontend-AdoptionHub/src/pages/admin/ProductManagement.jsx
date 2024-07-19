@@ -23,6 +23,11 @@ export default function ProductManagement() {
   const [productsCat, setProductsCat] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [filterProductName, setFilterProductName] = useState("");
+  const [filterProductPrice, setFilterProductPrice] = useState("");
+  const [filterProductCategory, setFilterProductCategory] = useState("");
+  const [filterProductDescription, setFilterProductDescription] = useState("");
+
   const fetchproducts = async () => {
     try {
       const response = await getAllProductApi();
@@ -31,7 +36,7 @@ export default function ProductManagement() {
       await getAllProductCatApi().then((res) => {
         console.log(res);
         setProductsCat(res?.data?.productCategory);
-      })
+      });
     } catch (error) {
       console.error("Error Fetching products", error);
     }
@@ -112,6 +117,17 @@ export default function ProductManagement() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const filterProducts = () => {
+    return products.filter((product) => {
+      return (
+        (filterProductName === "" || product.productName.toLowerCase().includes(filterProductName.toLowerCase())) &&
+        (filterProductPrice === "" || product.productPrice.toString().includes(filterProductPrice)) &&
+        (filterProductCategory === "" || product.productCategory.productCategory.toLowerCase().includes(filterProductCategory.toLowerCase())) &&
+        (filterProductDescription === "" || product.productDescription.toLowerCase().includes(filterProductDescription.toLowerCase()))
+      );
+    });
+  };
+
   return (
     <>
       <div className="w-full sm:px-6">
@@ -136,22 +152,36 @@ export default function ProductManagement() {
           <div className="flex flex-col items-center justify-center md:flex-row md:items-start md:justify-between md:gap-4 mb-4 w-full">
             <div className="flex w-100 my-4 gap-2">
               <input
-                className="w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                className="w-1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
                 type="text"
-                name="productName"
+                name="filterProductName"
                 placeholder="Filter by product Name"
+                value={filterProductName}
+                onChange={(e) => setFilterProductName(e.target.value)}
               />
               <input
-                className="w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                className="w-1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
                 type="text"
-                name="productAddress"
-                placeholder="Filter by product District"
+                name="filterProductPrice"
+                placeholder="Filter by product Price"
+                value={filterProductPrice}
+                onChange={(e) => setFilterProductPrice(e.target.value)}
               />
               <input
-                className="w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                className="w-1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
                 type="text"
-                name="municipality"
-                placeholder="Filter by Municipality"
+                name="filterProductCategory"
+                placeholder="Filter by product Category"
+                value={filterProductCategory}
+                onChange={(e) => setFilterProductCategory(e.target.value)}
+              />
+              <input
+                className="w-1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                type="text"
+                name="filterProductDescription"
+                placeholder="Filter by product Description"
+                value={filterProductDescription}
+                onChange={(e) => setFilterProductDescription(e.target.value)}
               />
             </div>
           </div>
@@ -177,7 +207,7 @@ export default function ProductManagement() {
                 </tr>
               </thead>
               <tbody className="w-full">
-                {products?.map((item) => (
+                {filterProducts().map((item) => (
                   <tr
                     key={item._id}
                     className="h-20 text-sm leading-none text-gray-800 bg-white hover:bg-gray-100 border-b border-t border-gray-100"

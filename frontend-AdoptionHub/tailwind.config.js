@@ -11,5 +11,17 @@ module.exports = {
   },
   plugins: [
     flowbite.plugin(),
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.no-spinners': {
+          '&::-webkit-inner-spin-button, &::-webkit-outer-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+          },
+          '-moz-appearance': 'textfield',
+        }
+      };
+      addUtilities(newUtilities, ['responsive']);
+    }
   ],
 }

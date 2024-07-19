@@ -1,19 +1,20 @@
 const Cart = require("../model/cartModel");
 
 const addToCart = async (req, res) => {
-  const { userId, quantity, plantId } = req.body;
+  console.log(req.body);
+  const { user, quantity, products } = req.body;
 
-  if (!userId || !quantity || !plantId) {
+  if (!user || !quantity || !products) {
     return res.json({
       success: false,
-      message: "User ID, quantity, and plant ID are required fields",
+      message: "Please fill required fields",
     });
   }
 
   try {
     const cart = await Cart.findOne({
-      userId: userId,
-      plantId: plantId,
+      user: user,
+      products: products,
     });
 
     if (cart) {
@@ -24,8 +25,8 @@ const addToCart = async (req, res) => {
     }
 
     const carts = new Cart({
-      userId: userId,
-      plantId: plantId,
+      user: user,
+      products: products,
       quantity: quantity,
     });
 
@@ -45,9 +46,9 @@ const addToCart = async (req, res) => {
 };
 
 const getCart = async (req, res) => {
-  const userId = req.params.id;
+  const user = req.params.id;
 
-  if (!userId) {
+  if (!user) {
     return res.json({
       success: false,
       message: "User ID is required",
@@ -60,11 +61,8 @@ const getCart = async (req, res) => {
 
   try {
     const carts = await Cart.find({
-      userId: userId,
-    })
-      .populate("plantId")
-      .skip(skip)
-      .limit(limit);
+      user: user,
+    }).populate("products");
 
     res.json({
       success: true,
@@ -79,7 +77,6 @@ const getCart = async (req, res) => {
     });
   }
 };
-
 
 const removeFromCart = async (req, res) => {
   try {
@@ -142,7 +139,7 @@ const updateCart = async (req, res) => {
   console.log(req.body);
 
   const products = req.body.products;
-  const userId = req.params.id;
+  const user = req.params.id;
 
   if (!products || !Array.isArray(products)) {
     return res.json({
@@ -153,7 +150,7 @@ const updateCart = async (req, res) => {
 
   try {
     for (const product of products) {
-      const { plantId, quantity } = product;
+      const { products, quantity } = product;
 
       const numericQuantity = parseInt(quantity, 10);
 
@@ -166,11 +163,11 @@ const updateCart = async (req, res) => {
 
       const updatedCartItem = {
         quantity: numericQuantity,
-        userId: userId,
-        plantId: plantId,
+        user: user,
+        products: products,
       };
 
-      const query = { userId: userId, plantId: plantId };
+      const query = { user: user, products: products };
       const options = { new: true, upsert: true, setDefaultsOnInsert: true };
       const updatedItem = await Cart.findOneAndUpdate(
         query,
@@ -179,12 +176,12 @@ const updateCart = async (req, res) => {
       );
 
       console.log(
-        `Cart item with userID ${userId} and plantID ${plantId} updated successfully:`,
+        `Cart item with userID ${user} and plantID ${products} updated successfully:`,
         updatedItem
       );
     }
 
-    const updatedCartItems = await Cart.find({ userId: userId });
+    const updatedCartItems = await Cart.find({ user: user });
 
     res.json({
       success: true,

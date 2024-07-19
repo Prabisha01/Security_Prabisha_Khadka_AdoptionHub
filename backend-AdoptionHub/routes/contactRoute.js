@@ -14,7 +14,7 @@ router.get("/get_single_contact/:id" , contactController.getSingleContact)
 
 
 //delete product API
-router.delete("/delete_contact/:id", authGuardAdmin, contactController.deleteContact)
+router.delete("/delete_contact/:id", contactController.deleteContact)
 
 //get pagination
 router.get("/get_contact_pagination" , contactController.getContactPagination)

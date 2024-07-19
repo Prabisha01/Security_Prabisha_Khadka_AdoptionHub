@@ -1,138 +1,110 @@
-import React, { useState }  from "react";
-import wall from "../images/wall.jpg";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Navbar from "../components/Navbar";
-import UpNavbar from "../components/UpNavbar";
 import { forgotPasswordApi } from "../apis/Api";
+import { faEnvelope, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const PasswordForgot = () => {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-  
-  
-    const bgImage = {
-      backgroundImage: `url(${wall})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    };
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      try {
-        const response = await forgotPasswordApi({ email });
-        console.log(response.data); // Handle the response as needed
-  
-        // Check the response for success or failure
-        if (response.data.success == true) {
-          // Show success message or navigate to another page
-          toast.success(response.data.message);
-          // You can also navigate to the login page or another page
-          navigate('/home');
-        } else {
-          // Show an error message
-          toast.error(response.data.message);
-        }
-      } catch (error) {
-        console.error(error);
-        // Handle error, show an error message, etc.
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await forgotPasswordApi({ email });
+      console.log(response.data); // Handle the response as needed
+
+      // Check the response for success or failure
+      if (response.data.success === true) {
+        // Show success message or navigate to another page
+        toast.success(response.data.message);
+        // You can also navigate to the login page or another page
+        navigate('/home');
+      } else {
+        // Show an error message
+        toast.error(response.data.message);
       }
-    };
-  
-    return (
-      <>
-        <div>
-          <UpNavbar />
+    } catch (error) {
+      console.error(error);
+      // Handle error, show an error message, etc.
+      toast.error('Server Error');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
+      <div className="bg-white rounded-lg shadow-lg flex border border-black w-full max-w-[1102px] h-[711px] mx-4 p-6" style={{ borderRadius: '25px' }}>
+        <div className="w-1/2">
+          <img
+            src="assets/images/login.png"
+            alt="Adopt Me"
+            className="h-full w-[600px] object-cover rounded-l-lg"
+          />
         </div>
-        <div>
-          <Navbar />
-        </div>
-        <>
-          <div style={bgImage}></div>
-          <div
-            style={{
-              position: "fixed",
-              top: "80px",
-              right: "20px",
-              borderRadius: "8px",
-            }}
+        <div className="w-1/2 p-6 relative">
+          <button
+            onClick={() => navigate('/')}
+            className="absolute"
+            style={{ top: '29px', right: '27px', fontSize: '1.5rem', color: 'black' }}
           >
-            <div
-              style={{
-                backgroundColor: "white",
-                padding: "30px",
-                borderRadius: "4px",
-              }}
-            >
-          
-              <h1
-              style={{
-                  color: "green",
-                  fontSize: "2em",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  marginBottom: "20px",
+            <FontAwesomeIcon icon={faTimes} size="lg" />
+          </button>
+          <img src="assets/logo/logo.png" alt="" className="mb-5" />
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Forgot Your Password
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <FontAwesomeIcon icon={faEnvelope} className="text-gray-950" />
+                </span>
+                <input
+                  placeholder="Enter your email"
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-3">
+              <button
+                type="submit"
+                className="bg-orange-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-500 ease-in-out"
+                style={{ width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px', transition: 'all 500ms ease-in-out' }}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = "#FF7148";
+                  e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+                  e.target.style.border = "2px solid black";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = "#FF8534";
+                  e.target.style.boxShadow = "none";
+                  e.target.style.border = "none";
                 }}
               >
-                 Forgot Your Password
-              </h1>
-  
-              <form style={{ display: "flex", flexDirection: "column" }}>
-                <label style={{ color: "#333", marginBottom: "5px" }}>
-                  Enter the Email
-                </label>
-                <input
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  placeholder="Enter your email"
-                  style={{
-                    padding: "10px",
-                    marginBottom: "15px",
-                    width: "100%",
-                    borderRadius: "4px",
-                    border: "1px solid #ccc",
-                  }}
-                />
-                
-                <button
-                type ="submit"
-                  style={{
-                    backgroundColor: "#28a745",
-                    color: "#fff",
-                    padding: "10px 20px",
-                    borderRadius: "4px",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "1em",
-                    fontWeight: "bold",
-                    transition: "background-color 0.3s",
-                  }}
-                  onClick={handleSubmit}
-                >
-                  Send the link
-                </button>
-              </form>
+                Send the link
+              </button>
               <p
                 style={{ textAlign: "center", marginTop: "20px", color: "#666" }}
               >
                 Remembered the Password?{" "}
                 <a
-                  href="/login"
-                  style={{ color: "green", textDecoration: "none" }}
+                  href="/"
+                  className="text-blue-800 underline"
                 >
                   Back to login
                 </a>
               </p>
             </div>
-          </div>
-        </>
-      </>
-    );
-  };
-  
-export default PasswordForgot
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PasswordForgot;

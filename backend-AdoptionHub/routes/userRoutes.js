@@ -43,4 +43,10 @@ router.put("/change_password/:id", userController.changePassword);
 //usercount
 router.get('/users/count', userController.getUserCount);
 
+router.post('/send_otp', userController.sendOtp);
+
+router.post('/verify_user', userController.verifyUser);
+
+
+
 module.exports = router;

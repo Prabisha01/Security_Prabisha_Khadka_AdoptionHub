@@ -1,4 +1,11 @@
 import {
+  faCartArrowDown,
+  faPersonCircleQuestion,
+  faRightFromBracket,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
   Disclosure,
   Menu,
   MenuButton,
@@ -12,13 +19,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoginModal from "../pages/Login";
 import RegisterModal from "../pages/Register";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartArrowDown, faRightFromBracket, faShop, faUser } from "@fortawesome/free-solid-svg-icons";
 
 const navigation = [
   { name: "Adopt", href: "/adopt", current: false },
   { name: "Shop", href: "/products", current: false },
-  { name: "Event", href: "/donation-form", current: false },
+  { name: "Event", href: "/event", current: false },
 ];
 
 function classNames(...classes) {
@@ -36,7 +41,6 @@ export default function Navbar() {
   };
   const location = useLocation();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   const openLoginModal = () => {
@@ -58,69 +62,53 @@ export default function Navbar() {
   };
 
   return (
-    <Disclosure as="nav" className="p-2 bg-white border-gray-500 z-50">
+    <Disclosure as="nav" className="bg-white border-b border-gray-300 fixed w-full z-50" style={{ fontFamily: "Poppins" }}>
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
-              <div className="inset-y-0 left-0 flex items-center sm:hidden">
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-800 hover:bg-[#F24E1E] hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+          <div className="relative mx-auto w-full max-w-screen-xl h-24 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="absolute left-[-70px] top-[12px] flex-shrink-0">
+              <Link to="/home">
+                <img
+                  className="h-16 w-auto"
+                  src="/assets/logo/logo.png"
+                  alt="logo here"
+                />
+              </Link>
+            </div>
+            <div className="hidden md:flex md:space-x-12 absolute left-[140px] top-[28px]">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={classNames(
+                    location.pathname === item.href
+                      ? "text-[#1d1f8d] font-semibold"
+                      : "text-gray-800 hover:text-[#1d1f8d]",
+                    "px-3 py-2 text-lg font-medium"
                   )}
-                </Disclosure.Button>
-              </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start mr-5">
-                <div className="flex flex-shrink-0 items-center">
-                  <Link to={"/home"}>
-                    <img
-                      className="h-16 w-auto"
-                      src="/assets/logo/logo.png"
-                      alt="logo here"
-                    />
-                  </Link>
-                </div>
-              </div>
-              <div className="inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <div className="hidden sm:ml-6 sm:block">
-                  <div className="flex space-x-2">
-                    {navigation.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.href}
-                        className={classNames(
-                          location.pathname === item.href
-                            ? "text-[#1d1f8d]"
-                            : "text-gray-800 hover:text-[#1d1f8d]",
-                          "rounded-md px-3 py-2 text-sm font-medium"
-                        )}
-                        aria-current={
-                          location.pathname === item.href ? "page" : undefined
-                        }
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                {user ? (
-                  <Menu as="div" className="relative ml-3">
-                    <div>
-                      <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src={
-                            user?.userImageUrl ? user?.userImageUrl : "/assets/images/profile.png"
-                          }
-                          alt=""
-                        />
-                      </MenuButton>
-                    </div>
+                  style={{
+                    fontSize: '25px',
+                    fontFamily: 'Poppins',
+                    fontWeight: '600',
+                  }}
+                  aria-current={location.pathname === item.href ? "page" : undefined}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+            <div className="hidden md:flex md:items-center md:space-x-4 absolute right-[-60px] top-[28px]">
+              {user ? (
+                <div className="flex items-center space-x-4">
+                  <Menu as="div" className="relative">
+                    <MenuButton className="flex rounded-full bg-orange text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800">
+                      <img
+                        className="rounded-circle"
+                        src={user?.userImageUrl || "/assets/images/profile.png"}
+                        alt=""
+                        style={{ width: '40px', height: '40px' }}
+                      />
+                    </MenuButton>
                     <Transition
                       enter="transition ease-out duration-100"
                       enterFrom="transform opacity-0 scale-95"
@@ -130,80 +118,218 @@ export default function Navbar() {
                       leaveTo="transform opacity-0 scale-95"
                     >
                       <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                       <MenuItem>
-                          {({ focus }) => (
-                            <Link
-                              href="#"
-                              className={classNames(
-                                focus ? "bg-[#F24E1E]" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                             < FontAwesomeIcon className="me-1" icon={faUser}/> Profile
-                            </Link>
-                          )}
-                        </MenuItem>
                         <MenuItem>
-                          {({ focus }) => (
+                          {({ active }) => (
                             <Link
                               to={`/profile/${user._id}`}
                               className={classNames(
-                                focus ? "bg-[#F24E1E]" : "",
-                                "block px-4 py-2 text-sm text-gray-950"
+                                active ? "bg-[#FFA500]" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
                               )}
                             >
-                            <FontAwesomeIcon className="me-1" icon={faCartArrowDown} /> Cart
+                              Profile
                             </Link>
                           )}
                         </MenuItem>
                         <MenuItem>
-                          {({ focus }) => (
+                          {({ active }) => (
                             <Link
-                              onClick={logout}
+                              to={`/pet-req/${user._id}`}
                               className={classNames(
-                                focus ? "bg-[#F24E1E]" : "",
-                                "block px-4 py-2 text-sm text-gray-950"
+                                active ? "bg-[#FFA500]" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
                               )}
                             >
-                            <FontAwesomeIcon className="me-2" icon={faRightFromBracket}/>Logout
+                              My Pet Requests
                             </Link>
+                          )}
+                        </MenuItem>
+                        <MenuItem>
+                          {({ active }) => (
+                            <Link
+                              to={`/changePassword/${user._id}`}
+                              className={classNames(
+                                active ? "bg-[#FFA500]" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
+                              )}
+                            >
+                              Reset Password
+                            </Link>
+                          )}
+                        </MenuItem>
+                        <MenuItem>
+                          {({ active }) => (
+                            <Link
+                              to={`/my-cart`}
+                              className={classNames(
+                                active ? "bg-[#FFA500]" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
+                              )}
+                            >
+                              Cart
+                            </Link>
+                          )}
+                        </MenuItem>
+                        <MenuItem>
+                          {({ active }) => (
+                            <Link
+                              to={`/my-orders/${user._id}`}
+                              className={classNames(
+                                active ? "bg-[#FFA500]" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
+                              )}
+                            >
+                              My Orders
+                            </Link>
+                          )}
+                        </MenuItem>
+                        <MenuItem>
+                          {({ active }) => (
+                            <button
+                              onClick={logout}
+                              className={classNames(
+                                active ? "bg-[#FFA500]" : "",
+                                "block px-4 py-2 text-sm text-gray-700 w-full text-left"
+                              )}
+                            >
+                              Logout
+                            </button>
                           )}
                         </MenuItem>
                       </MenuItems>
                     </Transition>
                   </Menu>
-                ) : (
-                  <div className="relative gap-3 ml-1 hidden sm:flex sm:flex-row md:items-center">
-                    <Link
-                      onClick={openLoginModal}
-                      className="w-full bg-[#FFFFFF] hover:bg-[#F24E1E] outline border-solid text-black px-4 p-2 rounded-lg"
-                    >
-                      Login
-                    </Link>
-                    <LoginModal
-                      isOpen={isLoginModalOpen}
-                      onClose={closeLoginModal}
-                      onOpenSignup={openSignupModal}
-                    />
-                    <RegisterModal
-                      isOpen={isSignupModalOpen}
-                      onClose={closeSignupModal}
-                      onOpenLogin={openLoginModal}
-                    />
-                    <Link
-                      to="/signup"
-                      className="w-full bg-[#F24E1E] hover:bg-[#F24E1E] text-white px-4 p-2 rounded"
-                    >
-                      Donor
-                    </Link>
+                  <div className="ml-2">
+                    <span className="block text-sm font-medium text-gray-900">Welcome!!</span>
+                    <span className="block text-sm font-medium text-gray-500">{user?.fullName}</span>
                   </div>
+                  <Link
+                    to="/donate"
+                    className="bg-[#F24E1E] text-white px-4 py-2 rounded-lg"
+                    style={{
+                      backgroundColor: "#FF8534",
+                      color: "#FFFFFF",
+                      width: "115px",
+                      height: "41px",
+                      fontSize: "15px",
+                      fontWeight: "bold",
+                      borderRadius: "10px",
+                      fontFamily: "Poppins",
+                      border: "none",
+                      transition: "background-color 500ms ease, border 500ms ease",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      position: "relative",
+                      left: "10px",
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.backgroundColor = "#FF7148";
+                      e.target.style.border = "2px solid black";
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.backgroundColor = "#FF8534";
+                      e.target.style.border = "none";
+                    }}
+                  >
+                    Donor
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex space-x-4">
+                  <button
+                    onClick={openLoginModal}
+                    className="bg-white text-black border border-solid border-gray-300 px-4 py-2 rounded-lg"
+                    style={{
+                      color: "#000",
+                      border: "2px solid #000",
+                      fontSize: "15px",
+                      fontWeight: "bold",
+                      borderRadius: "10px",
+                      fontFamily: "Poppins",
+                      padding: "8px 20px",
+                      textAlign: "center",
+                      textDecoration: "none",
+                      transition: "background-color 500ms ease, border 500ms ease, color 500ms ease",
+                      width: "115px",
+                      height: "41px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      position: "relative",
+                      left: "10px",
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.backgroundColor = "#FFA500";
+                      e.target.style.border = "none";
+                      e.target.style.color = "#FFFFFF";
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.backgroundColor = "transparent";
+                      e.target.style.border = "2px solid #000";
+                      e.target.style.color = "#000000";
+                    }}
+                  >
+                    Login
+                  </button>
+                  <LoginModal
+                    isOpen={isLoginModalOpen}
+                    onClose={closeLoginModal}
+                    onOpenSignup={openSignupModal}
+                  />
+                  <RegisterModal
+                    isOpen={isSignupModalOpen}
+                    onClose={closeSignupModal}
+                    onOpenLogin={openLoginModal}
+                  />
+                  <Link
+                    to="/donate"
+                    className="bg-[#F24E1E] text-white px-4 py-2 rounded-lg"
+                    style={{
+                      backgroundColor: "#FF8534",
+                      color: "#FFFFFF",
+                      width: "115px",
+                      height: "41px",
+                      fontSize: "15px",
+                      fontWeight: "bold",
+                      borderRadius: "10px",
+                      fontFamily: "Poppins",
+                      border: "none",
+                      transition: "background-color 500ms ease, border 500ms ease",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      position: "relative",
+                      left: "10px",
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.backgroundColor = "#FF7148";
+                      e.target.style.border = "2px solid black";
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.backgroundColor = "#FF8534";
+                      e.target.style.border = "none";
+                    }}
+                  >
+                    Donor
+                  </Link>
+                </div>
+              )}
+            </div>
+            <div className="flex items-center md:hidden absolute top-7 right-4">
+              <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <span className="sr-only">Open main menu</span>
+                {open ? (
+                  <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                ) : (
+                  <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                 )}
-              </div>
+              </Disclosure.Button>
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
+          <Disclosure.Panel className="md:hidden">
+            <div className="px-0 pt-2 pb-3 space-y-1">
               {navigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
@@ -211,17 +337,57 @@ export default function Navbar() {
                   to={item.href}
                   className={classNames(
                     location.pathname === item.href
-                      ? "bg-[#F24E1E] text-white"
-                      : "text-gray-800 hover:bg-[#F24E1E] hover:text-white",
-                    "block rounded-md px-3 py-2 text-base font-medium"
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-800 hover:bg-gray-700 hover:text-white",
+                    "block px-3 py-2 rounded-md text-base font-medium"
                   )}
-                  aria-current={
-                    location.pathname === item.href ? "page" : undefined
-                  }
+                  aria-current={location.pathname === item.href ? "page" : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>
               ))}
+            </div>
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {user ? (
+                <div className="space-y-1">
+                  <Disclosure.Button
+                    as={Link}
+                    to={`/profile/${user._id}`}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                  >
+                    Profile
+                  </Disclosure.Button>
+                  <Disclosure.Button
+                    as={Link}
+                    to={`/changePassword/${user._id}`}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                  >
+                    Reset Password
+                  </Disclosure.Button>
+                  <Disclosure.Button
+                    onClick={logout}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                  >
+                    Logout
+                  </Disclosure.Button>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  <Disclosure.Button
+                    onClick={openLoginModal}
+                    className="block w-full text-center px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                  >
+                    Login
+                  </Disclosure.Button>
+                  <Disclosure.Button
+                    as={Link}
+                    to="/donate"
+                    className="block w-full text-center px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                  >
+                    Donor
+                  </Disclosure.Button>
+                </div>
+              )}
             </div>
           </Disclosure.Panel>
         </>

@@ -6,6 +6,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const EditHospital = () => {
+  
   const { id } = useParams();
 
   const navigate = useNavigate();

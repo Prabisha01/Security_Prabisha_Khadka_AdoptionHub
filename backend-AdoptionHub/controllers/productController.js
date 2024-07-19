@@ -1,4 +1,4 @@
-const ProductCategory = require("../model/ProductCategoryModel");
+const ProductCategory = require("../model/productCategoryModel");
 const Products = require("../model/productModel");
 const cloudinary = require("cloudinary");
 
@@ -104,10 +104,12 @@ const createProductCategory = async (req, res) => {
 const getAllProducts = async (req, res) => {
   try {
     const listOfProducts = await Products.find().populate("productCategory");
+    const fewProducts = listOfProducts.slice(0, 5);
     return res.json({
       success: true,
       message: "Products fetched successfully",
       products: listOfProducts,
+      fewProducts: fewProducts,
     });
   } catch (error) {
     console.error("Failed to fetch products:", error);

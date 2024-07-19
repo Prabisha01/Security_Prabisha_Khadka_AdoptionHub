@@ -54,7 +54,13 @@ app.get('/test',(req,res)=>{
 app.use('/api/user', require('./routes/userRoutes'))
 app.use('/api/product', require('./routes/productRoute'))
 app.use('/api/order', require('./routes/orderRoute'))
-app.use('/api/application', require('./routes/appplicationRoute'))
+app.use('/api/pet', require('./routes/petRoute'))
+app.use('/api/adopt', require('./routes/adoptionRoute'))
+app.use('/api/event', require('./routes/eventRoute'))
+app.use('/api/addtocart', require('./routes/cartRoute'))
+app.use('/api/story', require('./routes/storyRoute'))
+app.use('/api/contact', require('./routes/contactRoute'))
+app.use('/api/fund', require('./routes/fundingRoute'))
 // our actual routes
 // http://localhost:5000/api/user/create
 // http://localhost:5000/api/user/login

@@ -1,4 +1,3 @@
-
 import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
@@ -14,8 +13,6 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [terms, setTerms] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState("");
-  const [passwordStrengthColor, setPasswordStrengthColor] = useState("gray");
 
   const [fnameerror, setFullnameError] = useState("");
   const [emailerror, setEmailError] = useState("");
@@ -28,60 +25,6 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
     if (e.target.checked) {
       setTermsError("");
     }
-  };
-
-  const checkPasswordStrength = (password) => {
-    let strength = "Weak";
-    let color = "red";
-    let errorMessage = [];
-
-    if (password.length >= 8) {
-      errorMessage.push("At least 8 characters");
-    } else {
-      errorMessage.push("At least 8 characters (X)");
-    }
-
-    if (/[A-Z]/.test(password)) {
-      errorMessage.push("Contains an uppercase letter");
-    } else {
-      errorMessage.push("Contains an uppercase letter (X)");
-    }
-
-    if (/[a-z]/.test(password)) {
-      errorMessage.push("Contains a lowercase letter");
-    } else {
-      errorMessage.push("Contains a lowercase letter (X)");
-    }
-
-    if (/[0-9]/.test(password)) {
-      errorMessage.push("Contains a number");
-    } else {
-      errorMessage.push("Contains a number (X)");
-    }
-
-    if (/[^A-Za-z0-9]/.test(password)) {
-      errorMessage.push("Contains a special character");
-    } else {
-      errorMessage.push("Contains a special character (X)");
-    }
-
-    if (password.length >= 8 && errorMessage.length === 5) {
-      strength = "Strong";
-      color = "green";
-    } else if (password.length >= 8 && errorMessage.length >= 3) {
-      strength = "Medium";
-      color = "orange";
-    }
-
-    return { strength, color, errorMessage };
-  };
-
-  const handlePasswordChange = (e) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-    const { strength, color, errorMessage } = checkPasswordStrength(newPassword);
-    setPasswordStrength(strength);
-    setPasswordStrengthColor(color);
   };
 
   const Validate = () => {
@@ -126,10 +69,7 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
     e.preventDefault();
     setIsLoading(true);
     const isValid = Validate();
-    if (!isValid) {
-      setIsLoading(false);
-      return;
-    }
+    if (!isValid) return;
     const data = new FormData();
     data.append("fullName", fullName);
     data.append("email", email);
@@ -157,114 +97,109 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg shadow-lg flex">
-        <div className="w-1/2">
+    <div className="fixed inset-0 flex items-center justify-center z-10 backdrop-blur-sm">
+      <div className="bg-white rounded-lg shadow-lg flex border border-black" style={{ width: '1102px', height: '711px', borderRadius: '25px' }}>
+        <div className="w-1/2 p-4">
           <img
             src="assets/images/login.png"
             alt="Adopt Me"
-            className="h-full w-[700px] object-cover rounded-l-lg"
+            className="h-full w-full object-cover rounded-l-lg"
+            style={{ borderRadius: '40px' }}
           />
         </div>
-        <div className="w-1/2 p-6 relative">
+        <div className="w-1/2 p-6 relative flex flex-col justify-center">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-700 text-xl"
+            className="absolute"
+            style={{ top: '29px', right: '27px', fontSize: '3.2rem', color: 'black' }}
           >
             &times;
           </button>
-          <img src="assets/logo/logo.png" alt="" className="mb-5" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <div className="absolute" style={{ top: '40px', left: '10px' }}>
+            <img src="assets/logo/logo.png" alt="AdoptionHub" className="w-48 h-20" style={{ width: '193px', height: '80px' }} />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 mt-24" style={{ fontFamily: 'Poppins', fontSize: '30px', fontWeight: 'bold' }}>
             Create an Account
           </h2>
-          <form>
-            <div className="mb-4">
+          <form className="flex flex-col items-center">
+            <div className="mb-2 w-full">
               <div className="relative">
-                <span className="absolute bottom-3 flex items-center pl-3">
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: '55%' }}>
                   <FontAwesomeIcon icon={faUser} className="text-gray-950" />
                 </span>
                 <input
                   placeholder="Full Name"
                   type="text"
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full pl-8 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
               {fnameerror && <p className="text-danger">{fnameerror}</p>}
             </div>
-            <div className="mb-4">
+            <div className="mb-2 w-full">
               <div className="relative">
-                <span className="absolute bottom-3 flex items-center pl-3">
-                  <FontAwesomeIcon
-                    icon={faEnvelope}
-                    className="text-gray-950"
-                  />
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: '55%' }}>
+                  <FontAwesomeIcon icon={faEnvelope} className="text-gray-950" />
                 </span>
                 <input
-                  placeholder="Email Address"
+                  placeholder="Email"
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-8 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
               {emailerror && <p className="text-danger">{emailerror}</p>}
             </div>
-            <div className="mb-4">
+            <div className="mb-2 w-full">
               <div className="relative">
-                <span className="absolute bottom-3 flex items-center pl-3">
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: '55%' }}>
                   <FontAwesomeIcon icon={faLock} className="text-gray-950" />
                 </span>
                 <input
                   placeholder="Password"
                   type="password"
-                  onChange={handlePasswordChange}
-                  className="w-full pl-8 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
               {passworderror && <p className="text-danger">{passworderror}</p>}
-              <div className="mt-2">
-                <div
-                  style={{
-                    backgroundColor: passwordStrengthColor,
-                    height: "4px",
-                    width: "100%",
-                  }}
-                ></div>
-                <p className={`text-${passwordStrengthColor} mt-1`}>
-                  Password Strength: {passwordStrength}
-                </p>
-                <ul className="text-xs">
-                  {checkPasswordStrength(password).errorMessage.map((msg, index) => (
-                      <li key={index}>{msg}</li>
-                    ))}
-                </ul>
-              </div>
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-full">
               <div className="relative">
-                <span className="absolute bottom-3 flex items-center pl-3">
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: '55%' }}>
                   <FontAwesomeIcon icon={faLock} className="text-gray-950" />
                 </span>
                 <input
                   placeholder="Confirm Password"
                   type="password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-8 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
-              {cpassworderror && (
-                <p className="text-danger">{cpassworderror}</p>
-              )}
+              {cpassworderror && <p className="text-danger">{cpassworderror}</p>}
             </div>
-            <div className="flex flex-col items-start gap-3">
+            <div className="flex flex-col  w-full" style={{ paddingLeft: '0px', marginBottom: '16px' }}>
               <button
-                className="bg-orange-500 w-full hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-[#FF8534] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
                 onClick={handleRegister}
+                style={{ width: '431px', height: '62px', borderRadius: '10px', fontSize: '22px', fontWeight: '800', marginBottom: '16px', border: 'none', transition: 'background-color 500ms ease, border 500ms ease' }}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = "#FF7148";
+                  e.target.style.border = "2px solid black";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = "#FF8534";
+                  e.target.style.border = "none";
+                }}
               >
                 Sign Up
               </button>
-              <div className="col-span-3 mt-4">
+              <div className="flex items-start w-full mb-2">
                 <input
                   onChange={handleTermsChange}
                   className="cursor-pointer"
@@ -272,13 +207,16 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                   id="terms"
                 />
                 <label htmlFor="terms" className="ml-2 cursor-pointer">
-                  I agree to the terms and conditions.
+                  I agree to the <a href="/terms-and-condition" className="text-blue-800 hover:underline">terms and conditions</a>.
                 </label>
                 {termsError && <p className="text-danger">{termsError}</p>}
               </div>
-              <p className="inline-block align-baseline font-bold text-sm text-black">
+              <p
+                className="inline-block align-baseline font-bold text-sm text-black"
+                style={{ fontFamily: 'Poppins', fontSize: '16px', fontWeight: '400' }}
+              >
                 Already a member?
-                <Link onClick={onOpenLogin} className="text-blue-800 underline">
+                <Link onClick={onOpenLogin} className="text-blue-800 hover:underline">
                   {" "}
                   Login{" "}
                 </Link>

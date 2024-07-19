@@ -1,32 +1,156 @@
-import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ButtonBack, ButtonNext, CarouselProvider, Slide, Slider } from "pure-react-carousel";
+import { CircularProgress } from "@mui/material";
 import "pure-react-carousel/dist/react-carousel.es.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import {
+  addToCartApi,
+  contactApi,
+  getAllEventsApi,
+  getAllProductApi,
+  getAllStoryApi,
+} from "../apis/Api";
+import useAuthCheck from "../components/IsAuthenticated";
+import StorySlider from "../components/StorySlider";
+import ShareStory from "./user/ShareStory";
 
 const LandingPage = () => {
-  const products = [
-    {
-      id: 1,
-      name: "Chicken Flavour",
-      image: "assets/images/product.png",
-    },
-    {
-      id: 2,
-      name: "Chicken Flavour",
-      image: "assets/images/product.png",
-    },
-    {
-      id: 3,
-      name: "Chicken Flavour",
-      image: "assets/images/product.png",
-    },
-    {
-      id: 4,
-      name: "Chicken Flavour",
-      image: "assets/images/product.png",
-    },
-  ];
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [events, setEvents] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const verifyAuthBeforeAction = useAuthCheck();
+
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append("contactName", fullName);
+    data.append("contactEmail", email);
+    data.append("contactMessage", message);
+
+    setIsLoading(true);
+
+    contactApi(data)
+      .then((res) => {
+        if (res.data.success) {
+          toast.success(res.data.message);
+        } else {
+          toast.error(res.data.message);
+        }
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        toast.error(err.message);
+      });
+  };
+
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
+  const openShareModal = () => {
+    verifyAuthBeforeAction(() => {
+      setIsShareModalOpen(true);
+    });
+  };
+
+  const closeShareModal = () => {
+    setIsShareModalOpen(false);
+  };
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const delay = 3000;
+
+  const fetchStory = () => {
+    getAllStoryApi()
+      .then((res) => {
+        setStories(res?.data?.story);
+      })
+      .catch((err) => {
+        console.error("Error Fetching Stories", err);
+        toast.error(err.message);
+      });
+  };
+
+  const fetchEvents = async () => {
+    getAllEventsApi()
+      .then((res) => {
+        setEvents(res?.data?.events);
+        console.log(res?.data?.events);
+      })
+      .catch((err) => {
+        console.error("Error Fetching Events", err);
+        toast.error(err.message);
+      });
+  };
+
+  const fetchProducts = () => {
+    getAllProductApi()
+      .then((res) => {
+        setProducts(res?.data?.fewProducts);
+      })
+      .catch((err) => {
+        console.error("Error Fetching Products", err);
+        toast.error(err.message);
+      });
+  };
+
+  const addToCart = (id) => {
+    verifyAuthBeforeAction(() => {
+      console.log(id);
+      const data = new FormData();
+      data.append("products", id);
+      data.append("user", user?._id);
+      data.append("quantity", 1);
+
+      addToCartApi(data)
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+          } else {
+            toast.error(res.data.message);
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    });
+  };
+
+  useEffect(() => {
+    fetchEvents();
+    fetchProducts();
+    fetchStory();
+  }, [stories.length, events.length, products.length]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      goToNext();
+    }, delay);
+
+    return () => clearInterval(timer);
+  }, [currentIndex]);
+
+  const numberOfSlidesToShow = events.length > 3 ? 3 : events.length;
+  const slideWidth = 100 / numberOfSlidesToShow;
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex < events.length - numberOfSlidesToShow ? prevIndex + 1 : 0
+    );
+  };
+
+  const goToPrev = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : events.length - numberOfSlidesToShow
+    );
+  };
+
+  const translateX = -(currentIndex * slideWidth);
+
   return (
     <>
       <div className="bg-white">
@@ -38,20 +162,20 @@ const LandingPage = () => {
           }}
         >
           <div
-            className="absolute bottom-40 right-0 p-8 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg shadow"
+            className="absolute bottom-40 right-0 p-8 bg-white bg-opacity-10 backdrop-blur-md rounded-lg shadow"
             style={{ border: "solid" }}
           >
             <div className="flex justify-between w-96 text-center">
               <div>
-                <div className="font-bold text-3xl">23</div>
+                <div className="font-bold text-3xl">2</div>
                 <div className="text-3xl">Adopted</div>
               </div>
               <div>
-                <div className="font-bold text-3xl">236</div>
+                <div className="font-bold text-3xl">7</div>
                 <div className="text-3xl">Waiting</div>
               </div>
               <div>
-                <div className="font-bold text-3xl">45</div>
+                <div className="font-bold text-3xl">20</div>
                 <div className="text-3xl">Pet Item</div>
               </div>
             </div>
@@ -69,7 +193,7 @@ const LandingPage = () => {
           <div className="text-center md:text-left">
             <h1 className="font-bold text-left text-2xl md:text-4xl">
               Welcome Your New{" "}
-              <span className="text-orange-600">Furry Friend</span> into a{" "}
+              <span className="text-[#FF8534]">Furry Friend</span> into a{" "}
               <br className="hidden md:inline" />
               Loving Home Today
             </h1>
@@ -78,61 +202,140 @@ const LandingPage = () => {
               Unconditional Love
             </p>
             <div className="flex justify-center md:justify-end mt-8">
-              <button className="bg-orange-500 text-white font-bold text-xl md:text-2xl px-16 py-2 w-full md:w-auto rounded hover:bg-orange-600">
+              <Link
+                to={"/adopt"}
+                className="bg-[#FF8534] text-center text-white font-bold text-xl w-full md:w-auto md:text-2xl px-16 py-2 md:py-2 lg:py-2 rounded"
+                style={{
+                  transition: "background-color 500ms ease, border 500ms ease",
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = "#FF7148";
+                  e.target.style.border = "2px solid black";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = "#FF8534";
+                  e.target.style.border = "none";
+                }}
+              >
                 Adopt
-              </button>
+              </Link>
             </div>
           </div>
         </div>
 
-        <div className="text-center md:text-left">
-          <h1 className="font-bold text-2xl md:text-4xl">
-            Pamper Your Pet with
-            <span className="text-orange-600">Tasty</span> Treats
-          </h1>
-          <p className="mt-1">Because Your Pet Deserves the Best</p>
-        </div>
+        <div className="bg-white py-4 mb-14">
+          <div className="text-center mb-8 md:text-left">
+            <h1 className="font-bold text-2xl md:text-4xl">
+              Pamper Your Pet with
+              <span className="text-[#FF8534]">Tasty</span> Treats
+            </h1>
+            <p className="mt-1">Because Your Pet Deserves the Best</p>
+          </div>
 
-        <div className="bg-white py-4">
-          <h2 className="text-xl font-semibold text-center mb-4">
-            Recently Added
-          </h2>
-          <div className="flex justify-between overflow-x-auto no-scrollbar md:px-80 mb-4">
+          <div className="flex flex-col mx-4 lg:flex-row items-center md:flex-row md:px-48 md:p-3 justify-between">
+            <h2 className="text-3xl font-semibold text-center mb-4">
+              Recently Added
+            </h2>
+            <Link
+              to={"/products"}
+              className="bg-[#FF8534] text-center text-white font-bold text-xl w-full md:w-auto md:text-2xl px-12 py-2 md:py-2 lg:py-2 rounded"
+              style={{
+                transition: "background-color 500ms ease, border 500ms ease",
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = "#FF7148";
+                e.target.style.border = "2px solid black";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = "#FF8534";
+                e.target.style.border = "none";
+              }}
+            >
+              Explore
+            </Link>
+          </div>
+          <div className="flex md:flex-row flex-col items-center justify-between gap-5 md:px-52 mb-12">
             {products.map((product) => (
               <div
-                key={product.id}
-                className="min-w-[160px] w-[400px] bg-gray-100 rounded-lg shadow-md p-2"
+                key={product._id}
+                className="min-w-[200px] w-[400px] bg-gray-100 rounded-lg shadow-md p-2 relative"
               >
                 <img
-                  src={product.image}
-                  alt={product.name}
+                  src={product.productImageUrl}
+                  alt={product.productName}
                   className="h-40 w-full object-cover rounded-t-lg"
                 />
-                <div className="text-center mt-2">
-                  <p className="text-sm font-medium">{product.name}</p>
-                  <button className="bg-orange-400 text-white text-xs px-3 py-1 rounded hover:bg-orange-600 mt-2">
-                    Add to Cart
-                  </button>
-                </div>
+                <button
+                  onClick={() => addToCart(product._id)}
+                  className="absolute bottom-0 right-0 mb-[-20px] mr-[-10px] bg-[#FF8534] hover:bg-[#FF7148] border-1 border-black text-white font-bold py-2 px-4 rounded"
+                  style={{
+                    transition: "background-color 500ms ease, border 500ms ease",
+                  }}
+                >
+                  Add to Cart
+                </button>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="text-center md:text-left">
+        <div className="text-center mb-8 md:text-left">
           <h1 className="font-bold text-2xl md:text-4xl mb-3">
             Be Part of the Cause. Participate in <br />
-            Pet <span className="text-orange-600">Adoption</span> Event
+            Pet <span className="text-[#FF8534]">Adoption</span> Event
           </h1>
-          <p className="mt-1">
+          <p className="my-4">
             Are you ready to join with multiple organizations for a paw-some
             cause? We're thrilled to invite you to
             <br /> our <span className="font-bold">Collaborative</span> pet
             adoption event.
           </p>
         </div>
+        <div className="mx-52">
+          <div className="flex flex-col md:flex-row justify-center items-center overflow-hidden">
+            <div
+              className="flex items-center gap-x-2 transition-transform duration-1000 ease-in-out"
+              style={{ transform: `translateX(${translateX}%)` }}
+            >
+              {events.map((event) => (
+                <div
+                  key={event.id}
+                  className="min-w-[33%] md:min-w-[50%] lg:min-w-[33%]"
+                  style={{ width: `${slideWidth}%` }}
+                >
+                  <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
+                    <img
+                      src={event.eventImageOneUrl}
+                      alt="event"
+                      className="lg:h-48 md:h-36 w-full object-cover object-center"
+                    />
+                    <div className="p-6">
+                      <h2 className="tracking-widest text-xs title-font font-medium text-gray-500 mb-1">
+                        {event.eventTitle}
+                      </h2>
 
-        <div className="flex flex-col md:flex-row p-6 md:p-20 items-center gap-6 md:gap-48 justify-center">
+                      <h2 className="tracking-widest text-xs title-font font-medium text-gray-500 mb-1">
+                        Date :{" "}
+                        {(() => {
+                          const date = new Date(event.eventDate);
+                          return `${
+                            date.getMonth() + 1
+                          }/${date.getDate()}/${date.getFullYear()}`;
+                        })()}
+                      </h2>
+
+                      <p className="leading-relaxed mb-3">
+                        Organized By : {event.organizedBy}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row p-6 md:p-20 items-center gap-6 md:gap-12 justify-center">
           <div className="">
             <img
               src="assets/images/empower.png"
@@ -143,10 +346,10 @@ const LandingPage = () => {
           </div>
           <div className="text-center md:text-left">
             <h1 className="font-bold text-left text-2xl md:text-4xl">
-              Empowering
-              <span className="text-orange-600">Happy Lives,</span> One
+              Empowering{"  "}
+              <span className="text-[#FF8534]">Happy Lives,</span> One Donation
               <br className="hidden md:inline" />
-              Donation at a Time.
+              at a Time.
             </h1>
             <p className="mt-4 text-left">
               Discover the Joy of Adopting a Pet and Transforming Your Life with
@@ -154,48 +357,112 @@ const LandingPage = () => {
               <span className="font-bold">Unconditional</span> Love
             </p>
             <div className="flex justify-center md:justify-end mt-8">
-              <button className="bg-orange-500 text-white font-bold text-xl md:text-2xl px-16 py-2 w-full md:w-auto rounded hover:bg-orange-600">
+              <Link
+                to={"/why-donate"}
+                className="bg-[#FF8534] text-white font-bold text-xl md:text-2xl px-16 py-2 w-full md:w-auto rounded"
+                style={{
+                  transition: "background-color 500ms ease, border 500ms ease",
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = "#FF7148";
+                  e.target.style.border = "2px solid black";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = "#FF8534";
+                  e.target.style.border = "none";
+                }}
+              >
                 Donate
-              </button>
+              </Link>
             </div>
           </div>
         </div>
 
-        <div className="md:mx-80 m-5 md:p-20" style={{ backgroundImage: "url('assets/images/landingpage.png')",}}>
-          <div className=" bg-white flex flex-col md:flex-row md:p-8 md:mx-8 border border-black items-center gap-6 md:gap- justify-center">
+        <div
+          className="md:!mx-[13rem] lg:mx-80 m-5 md:p-20 rounded-lg mb-8"
+          style={{
+            backgroundImage: "url('assets/images/landingpage.png')",
+            width: "1300px",
+            height: "338px",
+          }}
+        >
+          <div className="bg-white flex flex-col md:flex-row md:p-8 md:mx-8 border border-black items-center gap-6 md:gap- justify-center">
             <form className="space-y-4 w-full">
               <h1 className="font-bold text-5xl">
-                Get In <span className="text-orange-500">Touch</span>
+                Get In <span className="text-[#FF8534]">Touch</span>
               </h1>
-              <div>
+              <div className="relative">
                 <input
                   type="text"
                   placeholder="Full Name"
-                  className="w-full p-4 border-2 border-gray-800 rounded-md focus:border-orange-500"
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full pl-4 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{
+                    color: "black",
+                    width: "431px",
+                    height: "62px",
+                    borderRadius: "10px",
+                    fontSize: "16px",
+                  }}
                 />
               </div>
-              <div>
+              <div className="relative">
                 <input
                   type="email"
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
-                  className="w-full p-4 border-2 border-gray-800 rounded-md focus:border-orange-500"
+                  className="w-full pl-4 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
+                  style={{
+                    color: "black",
+                    width: "431px",
+                    height: "62px",
+                    borderRadius: "10px",
+                    fontSize: "16px",
+                  }}
                 />
               </div>
               <div>
                 <textarea
                   placeholder="Your Message"
-                  className="w-full p-4 border-2 border-gray-800 rounded-md focus:border-orange-500"
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="w-full p-2 border-2 border-gray-800 rounded-md focus:border-[#FF8534]"
+                  style={{
+                    color: "black",
+                    width: "431px",
+                    height: "62px",
+                    borderRadius: "10px",
+                    fontSize: "16px",
+                  }}
                   rows="4"
                 ></textarea>
               </div>
               <button
                 type="submit"
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-md"
+                onClick={handleContactSubmit}
+                className="bg-[#FF8534] text-white font-bold py-3 px-4 rounded-md"
+                style={{
+                  width: "431px", // Matching the width of the message field
+                  fontSize: "22px",
+                  fontWeight: "800",
+                  transition: "background-color 500ms ease, border 500ms ease",
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = "#FF7148";
+                  e.target.style.border = "2px solid black";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = "#FF8534";
+                  e.target.style.border = "none";
+                }}
               >
-                Send
+                {isLoading ? (
+                  <CircularProgress color={"inherit"} size={20} />
+                ) : (
+                  "Send"
+                )}
               </button>
             </form>
-            <div className="w-full">
+            <div className="w-full" style={{ padding: 0 }}>
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1401.8199301169543!2d85.32952567350087!3d27.7060244248381!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb190a74aa1f23%3A0x74ebef82ad0e5c15!2z4KS44KSr4KWN4KSf4KS14KS-4KSw4KS_4KSV4KS-IOCkleCksuClh-CknA!5e0!3m2!1sne!2snp!4v1719846302324!5m2!1sne!2snp"
                 className="rounded-lg shadow-lg border-black border-2 w-full h-[200px] md:h-[500px]"
@@ -206,255 +473,43 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-        <div className="text-center md:text-left">
+
+        <div className="text-center md:text-left mx-4 mt-8" style={{ marginTop: "400px" }}>
           <h1 className="font-bold text-2xl md:text-4xl mb-3">
-          Where Dreams Find Their <span className="text-orange-600">Happily </span>Ever After  Event
+            Where Dreams Find Their{" "}
+            <span className="text-[#FF8534]">Happily </span>Ever After Event
           </h1>
           <p className="mt-1">
-          "Adopt now and become part of our  
-             our <span className="font-bold">Success</span> Story! Share your journey with us."
+            "Adopt now and become part of our our{" "}
+            <span className="font-bold">Success</span> Story! Share your journey
+            with us."
           </p>
+          <div className="flex justify-center md:mx-52 md:justify-end mt-8">
+            <button
+              onClick={openShareModal}
+              className="bg-[#FF8534] text-white font-bold text-xl md:text-2xl px-16 py-2 w-full md:w-auto rounded"
+              style={{
+                transition: "background-color 500ms ease, border 500ms ease",
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = "#FF7148";
+                e.target.style.border = "2px solid black";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = "#FF8534";
+                e.target.style.border = "none";
+              }}
+            >
+              Share Story
+            </button>
+          </div>
+          <ShareStory isOpen={isShareModalOpen} onClose={closeShareModal} />
         </div>
 
-        <div className="container mx-auto">
-            <div className="flex items-center justify-center w-full h-full py-24 sm:py-8 px-4">
-                {/* Carousel for desktop and large size devices */}
-                <CarouselProvider className="lg:block hidden" naturalSlideWidth={100} isIntrinsicHeight={true} totalSlides={6} visibleSlides={3} step={1} infinite={true}>
-                    <div className="w-full relative flex items-center justify-center">
-                        <ButtonBack role="button" aria-label="slide backward" className="absolute z-30 left-0 ml-8 bg-gray-950 text-white px-2 py-3 focus:outline-none focus:bg-gray-900 focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 cursor-pointer" id="prev">
-                            <FontAwesomeIcon icon={faChevronLeft} />
-                        </ButtonBack>
-                        <div className="w-full h-full mx-auto overflow-x-hidden overflow-y-hidden">
-                            <Slider>
-                                <div id="slider" className="h-full flex lg:gap-8 md:gap-6 gap-14 items-center justify-start transition ease-out duration-700">
-                                    <Slide index={0}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={1}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={2}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={3}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={4}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={5}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                   
-                                </div>
-                            </Slider>
-                        </div>
-                        <ButtonNext role="button" aria-label="slide forward" className="absolute z-30 right-0 mr-8 bg-gray-950 text-white px-2 py-3 focus:outline-none focus:bg-gray-900 focus:ring-2 focus:ring-offset-2 focus:ring-gray-900" id="next">
-                            <FontAwesomeIcon icon={faChevronRight} />
-                        </ButtonNext>
-                    </div>
-                </CarouselProvider>
-
-                {/* Carousel for tablet and medium size devices */}
-                <CarouselProvider className="lg:hidden md:block hidden" naturalSlideWidth={100} isIntrinsicHeight={true} totalSlides={6} visibleSlides={2} step={1} infinite={true}>
-                <div className="w-full relative flex items-center justify-center">
-                        <ButtonBack role="button" aria-label="slide backward" className="absolute z-30 left-0 ml-8 bg-gray-950 text-white px-2 py-3 focus:outline-none focus:bg-gray-900 focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 cursor-pointer" id="prev">
-                           <FontAwesomeIcon icon={faChevronLeft} />
-                        </ButtonBack>
-                        <div className="w-full h-full mx-auto overflow-x-hidden overflow-y-hidden">
-                            <Slider>
-                                <div id="slider" className="h-full flex lg:gap-8 md:gap-6 gap-14 items-center justify-start transition ease-out duration-700">
-                                    <Slide index={0}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={1}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={2}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={3}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={4}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={5}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                   
-                                </div>
-                            </Slider>
-                        </div>
-                        <ButtonNext role="button" aria-label="slide forward" className="absolute z-30 right-0 mr-8 bg-gray-950 text-white px-2 py-3 focus:outline-none focus:bg-gray-900 focus:ring-2 focus:ring-offset-2 focus:ring-gray-900" id="next">
-                            <FontAwesomeIcon icon={faChevronRight} />
-                        </ButtonNext>
-                    </div>
-                </CarouselProvider>
-
-                {/* Carousel for mobile and Small size Devices */}
-                <CarouselProvider className="block md:hidden " naturalSlideWidth={50} isIntrinsicHeight={true} totalSlides={6} visibleSlides={1} step={1} infinite={true}>
-                <div className="w-full relative flex items-center justify-center">
-                        <ButtonBack role="button" aria-label="slide backward" className="absolute z-30 left-0 ml-8 bg-gray-950 text-white px-2 py-3 focus:outline-none focus:bg-gray-900 focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 cursor-pointer" id="prev">
-                            <FontAwesomeIcon icon={faChevronLeft} />
-                        </ButtonBack>
-                        <div className="w-full h-full mx-auto overflow-x-hidden overflow-y-hidden">
-                            <Slider>
-                                <div id="slider" className="h-full flex lg:gap-8 md:gap-6 gap-14 items-center justify-start transition ease-out duration-700">
-                                    <Slide index={0}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={1}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={2}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={3}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={4}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                    <Slide index={5}>
-                                    <div className="max-w-sm mx-auto border-2 border-black bg-gradient-to-b from-blue-500 via-blue-200 to-blue-100 rounded-lg p-6 h-[400px] space-y-4 shadow-md">
-                                      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto border-4 border-white bg-white">
-                                        <img src="/assets/images/cat.png" alt="profile" className="w-full h-full object-cover" />
-                                      </div>
-                                      <blockquote className="text-center bg-white p-4 text-gray-600">
-                                        <p className="text-sm font-medium">Meet Max, a lovable Labrador mix who spent most of his life in a shelter waiting for his forever home. Max had a rough start in life and was overlooked by....</p>
-                                      </blockquote>
-                                    </div>
-                                    </Slide>
-                                   
-                                </div>
-                            </Slider>
-                        </div>
-                        <ButtonNext role="button" aria-label="slide forward" className="absolute z-30 right-0 mr-8 bg-gray-950 text-white px-2 py-3 focus:outline-none focus:bg-gray-900 focus:ring-2 focus:ring-offset-2 focus:ring-gray-900" id="next">
-                            <FontAwesomeIcon icon={faChevronRight} />
-                        </ButtonNext>
-                    </div>
-                </CarouselProvider>
-            </div>
+        <div className="mx-36">
+          <div className="flex flex-row items-center justify-center w-full h-full py-24 sm:py-8 px-4">
+            <StorySlider stories={stories} />
+          </div>
         </div>
       </div>
     </>
