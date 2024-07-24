@@ -50,6 +50,34 @@ const sendResetPasswordMail = async (fullName, email, token) => {
   }
 };
 
+
+const validatePassword = (password) => {
+  const minLength = 8;
+  const maxLength = 16;
+  const upperCasePattern = /[A-Z]/;
+  const lowerCasePattern = /[a-z]/;
+  const numberPattern = /\d/;
+  const specialCharPattern = /[\W_]/;
+
+  if (password.length < minLength || password.length > maxLength) {
+    return 'Password must be between 8 and 16 characters long';
+  }
+  if (!upperCasePattern.test(password)) {
+    return 'Password must include at least one uppercase letter';
+  }
+  if (!lowerCasePattern.test(password)) {
+    return 'Password must include at least one lowercase letter';
+  }
+  if (!numberPattern.test(password)) {
+    return 'Password must include at least one number';
+  }
+  if (!specialCharPattern.test(password)) {
+    return 'Password must include at least one special character';
+  }
+
+  return null; // Password is valid
+};
+
 const createUser = async (req, res) => {
   try {
     // Step 1: Check if data is coming or not
@@ -64,6 +92,16 @@ const createUser = async (req, res) => {
         message: "Please provide all required fields",
       });
     }
+
+    // Step 4: Validate password
+    const passwordValidationError = validatePassword(password);
+    if (passwordValidationError) {
+      return res.status(400).json({
+        success: false,
+        message: passwordValidationError,
+      });
+    }
+
     // Step 5: Check existing user
     const existingUser = await Users.findOne({ email: email });
     if (existingUser) {
@@ -100,6 +138,7 @@ const createUser = async (req, res) => {
     });
   }
 };
+
 
 const loginUser = async (req, res) => {
   // Step 1 : Check if data is coming or not

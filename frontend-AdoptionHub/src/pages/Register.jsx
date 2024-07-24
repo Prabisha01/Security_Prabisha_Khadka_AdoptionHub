@@ -1,12 +1,12 @@
-import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import zxcvbn from "zxcvbn";
 import { createUserApi } from "../apis/Api";
 
 const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,11 +20,77 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
   const [cpassworderror, setCpasswordError] = useState("");
   const [termsError, setTermsError] = useState("");
 
+  const [passwordStrengthText, setPasswordStrengthText] = useState("");
+  const [passwordStrengthColor, setPasswordStrengthColor] = useState("gray");
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    specialChar: false,
+  });
+
   const handleTermsChange = (e) => {
     setTerms(e.target.checked);
     if (e.target.checked) {
       setTermsError("");
     }
+  };
+
+  const validatePasswordStrength = (password) => {
+    const result = zxcvbn(password);
+    const score = result.score;
+    let strengthText = "Weak";
+    let strengthColor = "gray";
+
+    const criteria = {
+      length: password.length >= 8 && password.length <= 16,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      specialChar: /[\W_]/.test(password),
+    };
+
+    setPasswordCriteria(criteria);
+
+    if (criteria.length && criteria.uppercase && criteria.lowercase && criteria.number && criteria.specialChar) {
+      switch (score) {
+        case 0:
+          strengthText = "Very Weak";
+          strengthColor = "red";
+          break;
+        case 1:
+          strengthText = "Weak";
+          strengthColor = "orange";
+          break;
+        case 2:
+          strengthText = "Fair";
+          strengthColor = "yellow";
+          break;
+        case 3:
+          strengthText = "Good";
+          strengthColor = "lightgreen";
+          break;
+        case 4:
+          strengthText = "Strong";
+          strengthColor = "green";
+          break;
+        default:
+          strengthText = "Weak";
+          strengthColor = "gray";
+      }
+    } else {
+      strengthText = "Password must be 8-16 characters long, with a mix of uppercase, lowercase, numbers, and special characters";
+      strengthColor = "red";
+    }
+
+    setPasswordStrengthText(strengthText);
+    setPasswordStrengthColor(strengthColor);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    validatePasswordStrength(e.target.value);
   };
 
   const Validate = () => {
@@ -50,12 +116,12 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
       isValid = false;
     }
     if (confirmPassword.trim() === "") {
-      setCpasswordError("Password does not match");
+      setCpasswordError("Confirm Password is Required");
       isValid = false;
     }
 
     if (password.trim() !== confirmPassword.trim()) {
-      setCpasswordError("Password does not match");
+      setCpasswordError("Passwords do not match");
       isValid = false;
     }
     if (!terms) {
@@ -69,7 +135,10 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
     e.preventDefault();
     setIsLoading(true);
     const isValid = Validate();
-    if (!isValid) return;
+    if (!isValid) {
+      setIsLoading(false);
+      return;
+    }
     const data = new FormData();
     data.append("fullName", fullName);
     data.append("email", email);
@@ -96,9 +165,13 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
 
   if (!isOpen) return null;
 
+  const remainingCriteria = Object.keys(passwordCriteria).filter(
+    (key) => !passwordCriteria[key]
+  );
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-lg flex border border-black" style={{ width: '1102px', height: '711px', borderRadius: '25px' }}>
+      <div className="bg-white rounded-lg shadow-lg flex border border-black" style={{ width: '1102px', height: '711px', borderRadius: '25px', marginTop: '-40px' }}>
         <div className="w-1/2 p-4">
           <img
             src="assets/images/login.png"
@@ -115,10 +188,8 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
           >
             &times;
           </button>
-          <div className="absolute" style={{ top: '40px', left: '10px' }}>
-            <img src="assets/logo/logo.png" alt="AdoptionHub" className="w-48 h-20" style={{ width: '193px', height: '80px' }} />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 mt-24" style={{ fontFamily: 'Poppins', fontSize: '30px', fontWeight: 'bold' }}>
+          
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 mt-10" style={{ fontFamily: 'Poppins', fontSize: '30px', fontWeight: 'bold' }}>
             Create an Account
           </h2>
           <form className="flex flex-col items-center">
@@ -152,7 +223,7 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
               </div>
               {emailerror && <p className="text-danger">{emailerror}</p>}
             </div>
-            <div className="mb-2 w-full">
+            <div className="mb-2 w-full relative">
               <div className="relative">
                 <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: '55%' }}>
                   <FontAwesomeIcon icon={faLock} className="text-gray-950" />
@@ -160,12 +231,33 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                 <input
                   placeholder="Password"
                   type="password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
                   style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
                 />
+                <span
+                  style={{ 
+                    color: passwordStrengthColor,
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {passwordStrengthText}
+                </span>
               </div>
               {passworderror && <p className="text-danger">{passworderror}</p>}
+              {remainingCriteria.length > 0 && (
+                <div className="absolute right-0 top-12 mt-2 w-56 bg-white border border-gray-300 rounded p-2 shadow-lg" style={{ zIndex: 1000 }}>
+                  {remainingCriteria.includes("length") && <p className='text-red-500'>8-16 Characters</p>}
+                  {remainingCriteria.includes("uppercase") && <p className='text-red-500'>At least one uppercase letter</p>}
+                  {remainingCriteria.includes("lowercase") && <p className='text-red-500'>At least one lowercase letter</p>}
+                  {remainingCriteria.includes("number") && <p className='text-red-500'>At least one number</p>}
+                  {remainingCriteria.includes("specialChar") && <p className='text-red-500'>At least one special character</p>}
+                </div>
+              )}
             </div>
             <div className="mb-4 w-full">
               <div className="relative">
