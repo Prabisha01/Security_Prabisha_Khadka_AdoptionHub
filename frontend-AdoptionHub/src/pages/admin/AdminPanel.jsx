@@ -7,11 +7,7 @@ import AdminDashBoard from "./admin_dashboard/AdminDashboard";
 import Adopt from "./AdoptManagement";
 import ContactManagement from "./ContactManagement";
 import EventManagenent from "./EventManagement";
-import OrderManagement from "./OrderManagement";
-import ProductCategory from "./ProductCategory";
-import ProductManagement from "./ProductManagement";
-import StoryManagement from "./StoryManagement";
-import DonationManagement from "./DonationManagement";
+
 
 function AdminPanel() {
   const storedPage = localStorage.getItem("currentPage");
@@ -35,27 +31,15 @@ function AdminPanel() {
 
   let content;
   switch (currentPage) {
-    case "Product":
-      content = <ProductManagement />;
-      break;
-    // case "ProductCategory":
-    //   content = <ProductCategory />;
-    //   break;
-    case "OrderManagement":
-      content = <OrderManagement />;
-      break;
+    
     case "Adopt":
       content = <Adopt />;
       break;
-    case "DOnation Management":
-      content = <DonationManagement />;
-      break;
+    
     case "Event":
       content = <EventManagenent />;
       break;
-    case "StoryManagement":
-      content = <StoryManagement />;
-      break;
+    
     case "ContactManagement":
       content = <ContactManagement />;
       break;
