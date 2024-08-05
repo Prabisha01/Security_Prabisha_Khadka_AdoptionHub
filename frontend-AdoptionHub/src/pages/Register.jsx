@@ -79,11 +79,8 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
           strengthText = "Weak";
           strengthColor = "gray";
       }
-    } else {
-      strengthText = "Password must be 8-16 characters long, with a mix of uppercase, lowercase, numbers, and special characters";
-      strengthColor = "red";
-    }
-
+    } 
+    
     setPasswordStrengthText(strengthText);
     setPasswordStrengthColor(strengthColor);
   };
@@ -218,7 +215,7 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
-                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px', paddingRight: '120px' }} // Adjust padding here
                 />
               </div>
               {emailerror && <p className="text-danger">{emailerror}</p>}
@@ -233,7 +230,7 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                   type="password"
                   onChange={handlePasswordChange}
                   className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
-                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px', paddingRight: '120px' }} // Adjust padding here
                 />
                 <span
                   style={{ 
@@ -269,7 +266,7 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                   type="password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
-                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px', paddingRight: '120px' }} // Adjust padding here
                 />
               </div>
               {cpassworderror && <p className="text-danger">{cpassworderror}</p>}
