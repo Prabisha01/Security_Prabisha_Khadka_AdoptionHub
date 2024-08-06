@@ -36,18 +36,18 @@ export const getAllContactApi = () => Api.get("/api/contact/get_contact");
 
 //get single contact API
 export const getSingleContactApi = (id) =>
-  Api.get(`/api/contact/get_single_contact/${id}`);
+  Api.get(`/api/contact/get_single_contact/${id}`, config);
 
 //delete contact API
 export const deleteContactApi = (id) =>
-  Api.delete(`/api/contact/delete_contact/${id}`);
+  Api.delete(`/api/contact/delete_contact/${id}`, config);
 
 //get all user
-export const getAllUserApi = () => Api.get("/api/user/get_user");
+export const getAllUserApi = () => Api.get("/api/user/get_user" , config);
 
 //get single contact API
 export const getSingleUserApi = (id) =>
-  Api.get(`/api/user/get_single_user/${id}`);
+  Api.get(`/api/user/get_single_user/${id}`, config);
 
 export const sendOtpApi = (data) => Api.post("/api/user/send_otp", data);
 
@@ -62,7 +62,7 @@ export const deleteUserApi = (id) =>
   Api.delete(`/api/user/delete_user/${id}`, config);
 
 //get single event API
-export const getSingleEventApi = (id) => Api.get(`/api/event/get_event/${id}`);
+export const getSingleEventApi = (id) => Api.get(`/api/event/get_event/${id}`, config);
 
 // create event api
 export const deleteEventApi = (id) =>
@@ -75,24 +75,24 @@ export const updateEventApi = (id, formData) =>
 export const updateUserApi = (id, formData) =>
   Api.put(`/api/user/update_user/${id}`, formData, config);
 //get all user
-export const getAllEventsApi = () => Api.get("/api/event/get_event");
+export const getAllEventsApi = () => Api.get("/api/event/get_event", config);
 
 // Create product API
-export const createProductApi = (data) => Api.post("/api/product/create", data);
+export const createProductApi = (data) => Api.post("/api/product/create", data, config);
 
 // Create product API
 export const createProductCatApi = (data) =>
-  Api.post("/api/product/create-cat", data);
+  Api.post("/api/product/create-cat", data, config);
 
 //get all products
-export const getAllProductCatApi = () => Api.get("/api/product/get-all-cat");
+export const getAllProductCatApi = () => Api.get("/api/product/get-all-cat", config);
 
 //get all products
-export const getAllProductApi = () => Api.get("/api/product/get_products");
+export const getAllProductApi = () => Api.get("/api/product/get_products", config);
 
 //get single product API
 export const getSingleProductApi = (id) =>
-  Api.get(`/api/product/get_product/${id}`);
+  Api.get(`/api/product/get_product/${id}`, config);
 
 //update product API with ID
 export const updateProductApi = (id, formData) =>
@@ -171,30 +171,30 @@ export const removeFromWishlistApi = (id) =>
 
 //add to cart
 export const addToCartApi = (data) =>
-  Api.post("/api/addtocart/add_to_cart", data);
+  Api.post("/api/addtocart/add_to_cart", data, config);
 
 //getallcart
-export const getAllCartApi = (id) => Api.get(`/api/addtocart/get_carts/${id}`);
+export const getAllCartApi = (id) => Api.get(`/api/addtocart/get_carts/${id}`, config);
 
 //remove cart
 export const removeCartApi = (id) =>
-  Api.delete(`/api/addtocart/delete_cart/${id}`);
+  Api.delete(`/api/addtocart/delete_cart/${id}`, config);
 
 //updatecart
 export const updateCart = (id, formData) =>
   Api.put(`/api/addtocart/update_cart/${id}`, formData, config);
 
 //user count
-export const getUserCountApi = () => Api.get("/api/user/users/count");
+export const getUserCountApi = () => Api.get("/api/user/users/count", config);
 
 //Contact count
-export const getContactCountApi = () => Api.get("/api/contact/contacts/count");
+export const getContactCountApi = () => Api.get("/api/contact/contacts/count", config);
 
 //event count
-export const getEventCountApi = () => Api.get("/api/event/events/count");
+export const getEventCountApi = () => Api.get("/api/event/events/count", config);
 
 //product count
-export const getProductsCountApi = () => Api.get("/api/product/products/count");
+export const getProductsCountApi = () => Api.get("/api/product/products/count", config);
 
 //notification
 export const createNotificationApi = (data) =>
@@ -205,49 +205,49 @@ export const createOrderApi = (data) =>
   Api.post("/api/order/createOrder", data, config);
 
 //get order
-export const getMyOrderApi = (id) => Api.get(`/api/order/getOrder/${id}`);
+export const getMyOrderApi = (id) => Api.get(`/api/order/getOrder/${id}`, config);
 
 //get all
-export const getAllOrderApi = () => Api.get(`/api/order/get_all_orders`);
+export const getAllOrderApi = () => Api.get(`/api/order/get_all_orders`, config);
 
 //get all notification
 export const getallnotification = () =>
   Api.get("/api/notification/get_notification", config);
 
 // get all aplication
-export const getAllPetsApi = () => Api.get("/api/pet/get-all-pets");
+export const getAllPetsApi = () => Api.get("/api/pet/get-all-pets", config);
 
 // Create product API
-export const addpetApi = (data) => Api.post("/api/pet/add-pet", data);
+export const addpetApi = (data) => Api.post("/api/pet/add-pet", data, config);
 
 // adoptions api
-export const adoptAPetApi = (data) => Api.post("/api/adopt/adopt", data);
+export const adoptAPetApi = (data) => Api.post("/api/adopt/adopt", data, config);
 
 export const getAllAdoptionReqApi = () =>
-  Api.get("/api/adopt/get-all-adoptions");
+  Api.get("/api/adopt/get-all-adoptions", config);
 
 export const deleteAdoptionApi = (id) =>
-  Api.delete(`/api/adopt/delete-adoption/${id}`);
+  Api.delete(`/api/adopt/delete-adoption/${id}`, config);
 
 export const getMyAdoptionReqApi = (id) =>
-  Api.get(`/api/adopt/get-my-adoption/${id}`);
+  Api.get(`/api/adopt/get-my-adoption/${id}`, config);
 
 // story
 export const createStoryApi = (data) =>
   Api.post("/api/story/create-story", data, config);
 
-export const getAllStoryApi = () => Api.get("/api/story/get-all-storys");
+export const getAllStoryApi = () => Api.get("/api/story/get-all-storys",config);
 
-export const getSingleStoryApi = (id) => Api.get(`/api/story/get-story/${id}`);
+export const getSingleStoryApi = (id) => Api.get(`/api/story/get-story/${id}`, config);
 
 export const deleteStoryApi = (id) =>
   Api.delete(`/api/story/delete-story/${id}`, config);
 
 // get all aplication
-export const allFundingsApi = () => Api.get("/api/fund/get-all-funds");
+export const allFundingsApi = () => Api.get("/api/fund/get-all-funds", config);
 
 // Create product API
-export const addFundApi = (data) => Api.post("/api/fund/add-fund", data);
+export const addFundApi = (data) => Api.post("/api/fund/add-fund", data, config);
 
 // adoptions api
-export const getSingleFund = (id , data) => Api.post(`/get-funds/${id}`, data);
+export const getSingleFund = (id, data) => Api.post(`/get-funds/${id}`, data, config);

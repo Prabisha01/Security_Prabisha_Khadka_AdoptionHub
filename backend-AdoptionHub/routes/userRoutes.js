@@ -2,7 +2,7 @@
 const router = require("express").Router();
 const userController = require("../controllers/userController");
 const productController = require("../controllers/productController");
-const { authGuardAdmin, authGuard } = require("../middleware/authGuard");
+const { authGuardAdmin} = require("../middleware/authGuard");
 
 // creating user api
 router.post("/create", userController.createUser);
