@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const path = require("path");
 
 const userSchema = mongoose.Schema(
   {
@@ -19,7 +18,6 @@ const userSchema = mongoose.Schema(
       type: String,
       required: false,
     },
-
     userImageUrl: {
       type: String,
       default: null,
@@ -33,6 +31,14 @@ const userSchema = mongoose.Schema(
     isVerified: {
       type: Boolean,
       default: false,
+    },
+    failedLoginAttempts: {
+      type: Number,
+      default: 0,
+    },
+    lastFailedAttempt: {
+      type: Date,
+      default: null,
     },
   },
   {

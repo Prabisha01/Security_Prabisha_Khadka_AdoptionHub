@@ -1,5 +1,6 @@
 const Users = require("../model/userModels");
 const bcrypt = require("bcrypt");
+const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary");
 const nodemailer = require("nodemailer");
@@ -106,7 +107,7 @@ const loginUser = async (req, res) => {
   console.log(req.body);
 
   // step 2 : Destructure the data
-  const { email, password } = req.body;
+  const { email, password, captcha } = req.body;
 
   // step 3 : validate the incomming data
   if (!email || !password) {
@@ -118,25 +119,54 @@ const loginUser = async (req, res) => {
 
   // step 4 : try catch block
   try {
-    // step 5 : Find user
+    
     const user = await Users.findOne({ email: email }); // user store all the data of user
     if (!user) {
       return res.json({
         success: false,
-        message: "User does not exists.",
-      });
-    }
-    // Step 6 : Check password
-    const passwordToCompare = user.password;
-    const isMatch = await bcrypt.compare(password, passwordToCompare);
-    if (!isMatch) {
-      return res.json({
-        success: false,
-        message: "Password does not match",
+        message: "User does not exist.",
       });
     }
 
-    // Step 7 : Create token
+    if (user.failedLoginAttempts >= 3) {
+      if (!captcha) {
+        return res.json({
+          success: false,
+          message: "Please complete the captcha.",
+        });
+      }
+
+      const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+      const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captcha}`;
+
+      const response = await axios.post(verificationUrl);
+      const { success } = response.data;
+
+      if (!success) {
+        return res.json({
+          success: false,
+          message: "Captcha validation failed.",
+        });
+      }
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      user.failedLoginAttempts += 1;
+      user.lastFailedAttempt = new Date();
+      await user.save();
+
+      return res.json({
+        success: false,
+        message: "Password does not match.",
+      });
+    }
+
+    user.failedLoginAttempts = 0;
+    user.lastFailedAttempt = null;
+    await user.save();
+
     const token = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.JWT_TOKEN_SECRET
@@ -154,6 +184,7 @@ const loginUser = async (req, res) => {
     res.json(error);
   }
 };
+
 const getUserPagination = async (req, res) => {
   // res.send('Pagination')
   //step 1: get pageNo form frontend
