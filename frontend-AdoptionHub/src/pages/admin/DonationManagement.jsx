@@ -7,7 +7,7 @@ export default function DonationManagement() {
   const fetchUsers = () => {
     allFundingsApi()
       .then((response) => {
-        setFundings(response.data.funding);
+        setFundings(response?.data?.funding);
       })
       .catch((err) => {
         console.log(err);
@@ -49,13 +49,25 @@ export default function DonationManagement() {
               </tr>
             </thead>
             <tbody>
-              {fundings.map((item) => (
+              {fundings?.map((item) => (
                 <tr
                   key={item._id}
                   className="border-b border-gray-200 hover:bg-gray-100"
                 >
-                  <td className="py-2 px-4">{item?.user?.userImageUrl || "Null"}</td>
-                  <td className="py-2 px-4">{item?.user?.fullName || "Null"}</td>
+                  <td className="py-2 px-4">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10">
+                        <img
+                          className="w-full h-full"
+                          src={item?.user?.userImageUrl || "Null"}
+                          alt="Adoption Image"
+                        />
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-2 px-4">
+                    {item?.user?.fullName || "Null"}
+                  </td>
                   <td className="py-2 px-4">{item?.user?.email || "Null"}</td>
                   <td className="py-2 px-4">{item?.amount || "Null"}</td>
                 </tr>
