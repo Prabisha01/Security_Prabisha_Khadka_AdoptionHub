@@ -100,7 +100,7 @@ const addPet = async (req, res) => {
 
       await newPet.save();
     } else if (req.body.status === "own") {
-      const { petAge, petGender } = req.body;
+      const { petAge, petGender, vaccines } = req.body;
       const {
         petImageUrlOne,
         petImageUrlTwo,
@@ -149,6 +149,11 @@ const addPet = async (req, res) => {
         cloudinary.v2.uploader.upload(petFileUrl.path, { folder: "Pet" }),
       ]);
 
+      if (vaccines) {
+        isVaccinated = true;
+      } else {
+        isVaccinated = false;
+      }
       const newPet = new Pet({
         fullName,
         email,
@@ -167,6 +172,8 @@ const addPet = async (req, res) => {
         petImageUrlFour: uploadedImageUrlFour.secure_url,
         petFileUrl: uploadedFileUrl.secure_url,
         user,
+        vaccines,
+        isVaccinated,
       });
 
       await newPet.save();
@@ -184,10 +191,13 @@ const addPet = async (req, res) => {
 
 const getAllPets = async (req, res) => {
   try {
-    const Pets = await Pet.find();
+    const allPets = await Pet.find();
+    const Pets = await allPets.filter((pet) => pet.isVaccinated === false);
+    const vaccinatedPets = allPets.filter((pet) => pet.isVaccinated === true);
     res.status(200).json({
       success: true,
       allPets: Pets,
+      vaccinatedPets: vaccinatedPets,
     });
   } catch (error) {
     console.log(error);

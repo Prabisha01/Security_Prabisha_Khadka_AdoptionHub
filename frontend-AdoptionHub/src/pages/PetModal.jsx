@@ -1,4 +1,3 @@
-
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
@@ -23,13 +22,21 @@ const PetModal = ({ isOpen, onClose, pet }) => {
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-white w-full max-w-[1102px] rounded-lg shadow-xl border-2 border-black" style={{ borderRadius: '25px' }}>
+      <div
+        className="bg-white w-full max-w-[1102px] rounded-lg shadow-xl border-2 border-black"
+        style={{ borderRadius: "25px" }}
+      >
         <div className="relative p-2">
           <button
             title="Close Modal"
             onClick={onClose}
             className="absolute"
-            style={{ top: '29px', right: '27px', fontSize: '1.8rem', color: 'black' }}
+            style={{
+              top: "29px",
+              right: "27px",
+              fontSize: "1.8rem",
+              color: "black",
+            }}
           >
             <FontAwesomeIcon icon={faTimes} />
           </button>
@@ -46,26 +53,38 @@ const PetModal = ({ isOpen, onClose, pet }) => {
               }
               alt="Kali"
               className="rounded-lg"
-              style={{ width: '480.75px', height: '335px' }}
+              style={{ width: "480.75px", height: "335px" }}
             />
             <div className="grid grid-cols-3 gap-3 mt-3">
               <img
                 src={pet.petImageUrlOne ?? pet.petImageUrlFive}
                 alt={"imageOne"}
                 className="object-cover rounded"
-                style={{ width: '135.95px', height: '141.9px', borderRadius: '25px' }}
+                style={{
+                  width: "135.95px",
+                  height: "141.9px",
+                  borderRadius: "25px",
+                }}
               />
               <img
                 src={pet.petImageUrlTwo ?? pet.petImageUrlFive}
                 alt={"imageTwo"}
                 className="object-cover rounded"
-                style={{ width: '135.95px', height: '141.9px', borderRadius: '25px' }}
+                style={{
+                  width: "135.95px",
+                  height: "141.9px",
+                  borderRadius: "25px",
+                }}
               />
               <img
                 src={pet.petImageUrlThree ?? pet.petImageUrlFive}
                 alt={"imageThree"}
                 className="object-cover rounded"
-                style={{ width: '135.95px', height: '141.9px', borderRadius: '25px' }}
+                style={{
+                  width: "135.95px",
+                  height: "141.9px",
+                  borderRadius: "25px",
+                }}
               />
             </div>
           </div>
@@ -77,7 +96,7 @@ const PetModal = ({ isOpen, onClose, pet }) => {
               <p>
                 <strong>Name:</strong> {pet.fullName}
               </p>
-              {pet.petGender && (
+              {pet.status == "own" && (
                 <p>
                   <strong>Gender:</strong> {pet?.gender}
                 </p>
@@ -94,6 +113,7 @@ const PetModal = ({ isOpen, onClose, pet }) => {
                 <strong>Uploaded by:</strong> {pet.fullName}
               </p>
               <a
+                download={pet.petFileUrl}
                 href={pet.petFileUrl}
                 className="text-blue-600 visited:text-purple-600"
               >
@@ -116,10 +136,10 @@ const PetModal = ({ isOpen, onClose, pet }) => {
                   openAdoptModal();
                 }}
                 className="w-full border-1 border-black text-center text-white font-extrabold py-2 px-4 rounded"
-                style={{ 
-                  width: '500px', 
-                  height: '58px', 
-                  fontSize: '22px',
+                style={{
+                  width: "500px",
+                  height: "58px",
+                  fontSize: "22px",
                   backgroundColor: "#FF8534",
                   border: "none",
                   transition: "background-color 500ms ease, border 500ms ease",

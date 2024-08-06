@@ -78,6 +78,27 @@ const petSchema = new mongoose.Schema(
       ref: "users",
       required: false,
     },
+    vaccines: [
+      {
+        name: {
+          type: String,
+          required: true,
+        },
+        dateAdministered: {
+          type: Date,
+          required: false,
+        },
+        additionalInfo: {
+          type: String,
+          required: false,
+        },
+      },
+    ],
+    isVaccinated: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,
