@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
@@ -16,13 +16,10 @@ const userSchema = mongoose.Schema(
     },
     address: {
       type: String,
-      required: false,
     },
     userImageUrl: {
       type: String,
       default: null,
-      required: false,
-      trim: true,
     },
     isAdmin: {
       type: Boolean,
@@ -38,12 +35,16 @@ const userSchema = mongoose.Schema(
     },
     lastFailedAttempt: {
       type: Date,
-      default: null,
+    },
+    isLocked: {
+      type: Boolean,
+      default: false,
+    },
+    lockUntil: {
+      type: Date,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const Users = mongoose.model("users", userSchema);

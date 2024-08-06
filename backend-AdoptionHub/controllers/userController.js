@@ -102,14 +102,42 @@ const createUser = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
-  // Step 1 : Check if data is coming or not
-  console.log(req.body);
+const sendUnlockNotification = async (fullName, email) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_MAIL,
+        pass: process.env.SMTP_PASSWORD,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
 
-  // step 2 : Destructure the data
+    const mailOptions = {
+      from: process.env.SMTP_MAIL,
+      to: email,
+      subject: "Account Unlocked",
+      html: `Hi ${fullName},<br/><br/>Your account has been unlocked. You can now try logging in again.<br/><br/>Regards,<br/>Adoption Hub`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Unlock notification sent: ", info.response);
+      }
+    });
+  } catch (error) {
+    console.error("Error sending unlock notification:", error);
+  }
+};
+const loginUser = async (req, res) => {
   const { email, password, captcha } = req.body;
 
-  // step 3 : validate the incomming data
   if (!email || !password) {
     return res.json({
       success: false,
@@ -117,14 +145,30 @@ const loginUser = async (req, res) => {
     });
   }
 
-  // step 4 : try catch block
   try {
-    
-    const user = await Users.findOne({ email: email }); // user store all the data of user
+    const user = await Users.findOne({ email: email });
     if (!user) {
       return res.json({
         success: false,
         message: "User does not exist.",
+      });
+    }
+
+    if (user.isLocked && new Date() < user.lockUntil) {
+      const remainingTime = Math.ceil((user.lockUntil - new Date()) / 60000);
+      return res.json({
+        success: false,
+        message: `Your account is locked. Try again in ${remainingTime} minutes.`,
+      });
+    }
+
+    if (user.failedLoginAttempts >= 5) {
+      user.isLocked = true;
+      user.lockUntil = new Date(Date.now() + 5 * 60000); // lock for 5 minutes
+      await user.save();
+      return res.json({
+        success: false,
+        message: "Your account is locked due to multiple failed login attempts. Please try again after 5 minutes.",
       });
     }
 
@@ -151,11 +195,29 @@ const loginUser = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
       user.failedLoginAttempts += 1;
       user.lastFailedAttempt = new Date();
       await user.save();
+
+      if (user.failedLoginAttempts >= 5) {
+        user.isLocked = true;
+        user.lockUntil = new Date(Date.now() + 5 * 60000); // lock for 5 minutes
+        await user.save();
+
+        setTimeout(async () => {
+          user.isLocked = false;
+          user.failedLoginAttempts = 0;
+          user.lockUntil = null;
+          await user.save();
+          await sendUnlockNotification(user.fullName, user.email);
+        }, 5 * 60000); // 5 minutes in milliseconds
+
+        return res.json({
+          success: false,
+          message: "Your account is locked due to multiple failed login attempts. Please try again after 5 minutes.",
+        });
+      }
 
       return res.json({
         success: false,
@@ -165,6 +227,8 @@ const loginUser = async (req, res) => {
 
     user.failedLoginAttempts = 0;
     user.lastFailedAttempt = null;
+    user.isLocked = false;
+    user.lockUntil = null;
     await user.save();
 
     const token = jwt.sign(
@@ -172,7 +236,6 @@ const loginUser = async (req, res) => {
       process.env.JWT_TOKEN_SECRET
     );
 
-    // Step 8 : Send Response
     res.status(200).json({
       success: true,
       token: token,
@@ -184,6 +247,8 @@ const loginUser = async (req, res) => {
     res.json(error);
   }
 };
+
+
 
 const getUserPagination = async (req, res) => {
   // res.send('Pagination')
@@ -545,4 +610,5 @@ module.exports = {
   searchUsers,
   sendOtp,
   verifyUser,
+  
 };

@@ -48,13 +48,14 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
       password: password,
       captcha: captcha,
     };
-
     loginUserApi(loginData)
       .then((res) => {
         if (res.data.success === false) {
           toast.error(res.data.message);
           if (res.data.message.includes("captcha")) {
             setShowCaptcha(true);
+          } else {
+            setCaptcha(null); 
           }
         } else {
           toast.success(res.data.message);
@@ -81,26 +82,63 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-lg flex border border-black" style={{ width: "1102px", height: "711px", borderRadius: "25px" }}>
+      <div
+        className="bg-white rounded-lg shadow-lg flex border border-black"
+        style={{ width: "1102px", height: "711px", borderRadius: "25px" }}
+      >
         <div className="w-2/2 p-4">
-          <img src="assets/images/login.png" alt="Adopt Me" className="h-full w-full object-cover rounded-l-lg" style={{ borderRadius: "40px" }} />
+          <img
+            src="assets/images/login.png"
+            alt="Adopt Me"
+            className="h-full w-full object-cover rounded-l-lg"
+            style={{ borderRadius: "40px" }}
+          />
         </div>
         <div className="w-1/2 p-6 relative">
-          <button onClick={onClose} className="absolute" style={{ top: "29px", right: "27px", fontSize: "3.2rem", color: "black" }}>
+          <button
+            onClick={onClose}
+            className="absolute"
+            style={{
+              top: "29px",
+              right: "27px",
+              fontSize: "3.2rem",
+              color: "black",
+            }}
+          >
             &times;
           </button>
           <div className="mb-5 absolute" style={{ top: "80px", left: "10px" }}>
-            <img src="assets/logo/logo.png" alt="AdoptionHub" className="w-48 h-20 bg-white p-2" style={{ width: "193px", height: "95px" }} />
+            <img
+              src="assets/logo/logo.png"
+              alt="AdoptionHub"
+              className="w-48 h-20 bg-white p-2"
+              style={{ width: "193px", height: "95px" }}
+            />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4" style={{ fontFamily: "Poppins", fontSize: "30px", fontWeight: "bold", marginTop: "175px" }}>
+          <h2
+            className="text-2xl font-bold text-gray-800 mb-4"
+            style={{
+              fontFamily: "Poppins",
+              fontSize: "30px",
+              fontWeight: "bold",
+              marginTop: "175px",
+            }}
+          >
             Welcome to <span className="text-orange-500">Adoption</span>
-            <span style={{ color: "#004AAD" }}>Hub</span> <span style={{ color: "#004AAD" }}>!!</span>
+            <span style={{ color: "#004AAD" }}>Hub</span>{" "}
+            <span style={{ color: "#004AAD" }}>!!</span>
           </h2>
           <form>
             <div className="mb-4">
               <div className="relative">
-                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: "55%" }}>
-                  <FontAwesomeIcon icon={faEnvelope} className="text-gray-950" />
+                <span
+                  className="absolute top-1/2 transform -translate-y-1/2 left-8"
+                  style={{ top: "55%" }}
+                >
+                  <FontAwesomeIcon
+                    icon={faEnvelope}
+                    className="text-gray-950"
+                  />
                 </span>
                 <input
                   placeholder="Email"
@@ -120,7 +158,10 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
             </div>
             <div className="mb-4">
               <div className="relative">
-                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: "55%" }}>
+                <span
+                  className="absolute top-1/2 transform -translate-y-1/2 left-8"
+                  style={{ top: "55%" }}
+                >
                   <FontAwesomeIcon icon={faLock} className="text-gray-950" />
                 </span>
                 <input
@@ -144,11 +185,15 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
                 <ReCAPTCHA
                   sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
                   onChange={(value) => setCaptcha(value)}
+                  onExpired={() => setCaptcha(null)}
                 />
               </div>
             )}
             <div className="flex items-center justify-between mb-4">
-              <a href="/passwordForget" className="inline-block align-baseline font-bold text-sm text-black hover:text-[#004AAD] hover:underline">
+              <a
+                href="/passwordForget"
+                className="inline-block align-baseline font-bold text-sm text-black hover:text-[#004AAD] hover:underline"
+              >
                 Forgot Password?
               </a>
             </div>
@@ -176,9 +221,19 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
               >
                 Login
               </button>
-              <p className="inline-block align-baseline font-bold text-sm text-black" style={{ fontFamily: "Poppins", fontSize: "16px", fontWeight: "400" }}>
+              <p
+                className="inline-block align-baseline font-bold text-sm text-black"
+                style={{
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  fontWeight: "400",
+                }}
+              >
                 Not a member?
-                <Link onClick={onOpenSignup} className="text-blue-800 hover:underline">
+                <Link
+                  onClick={onOpenSignup}
+                  className="text-blue-800 hover:underline"
+                >
                   {" "}
                   Sign Up{" "}
                 </Link>
