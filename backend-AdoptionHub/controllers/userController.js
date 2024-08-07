@@ -74,7 +74,7 @@ const createUser = async (req, res) => {
       });
     }
 
-    // Step 6: Password encryption
+    
     const randomSalt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, randomSalt);
 
@@ -164,7 +164,7 @@ const loginUser = async (req, res) => {
 
     if (user.failedLoginAttempts >= 5) {
       user.isLocked = true;
-      user.lockUntil = new Date(Date.now() + 5 * 60000); // lock for 5 minutes
+      user.lockUntil = new Date(Date.now() + 15 * 60000); 
       await user.save();
       return res.json({
         success: false,
@@ -202,7 +202,7 @@ const loginUser = async (req, res) => {
 
       if (user.failedLoginAttempts >= 5) {
         user.isLocked = true;
-        user.lockUntil = new Date(Date.now() + 5 * 60000); // lock for 5 minutes
+        user.lockUntil = new Date(Date.now() + 1 * 60000); // lock for 5 minutes
         await user.save();
 
         setTimeout(async () => {
