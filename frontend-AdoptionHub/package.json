@@ -51,7 +51,11 @@
     "start": "set HTTPS=true&& set SSL_CRT_FILE=cert.crt&& set SSL_KEY_FILE=cert.key&& react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+   "secureBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "secureDeploy": "cross-env NODE_ENV=production serve -s build --listen 3000 --ssl-cert ./cert.crt --ssl-key ./cert.key"
+
+
   },
   "eslintConfig": {
     "extends": [
@@ -72,8 +76,11 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "autoprefixer": "^10.4.19",
+    "cross-env": "^7.0.3",
     "postcss": "^8.4.38",
+    "serve": "^14.2.3",
     "tailwindcss": "^3.4.3"
   }
 }
