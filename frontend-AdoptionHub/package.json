@@ -48,14 +48,12 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
-    "start": "set HTTPS=true&& set SSL_CRT_FILE=cert.crt&& set SSL_KEY_FILE=cert.key&& react-scripts start",
+    "start": "cross-env HTTPS=true SSL_CRT_FILE=cert.crt SSL_KEY_FILE=cert.key PORT=3000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-   "secureBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "secureBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "secureDeploy": "cross-env NODE_ENV=production serve -s build --listen 3000 --ssl-cert ./cert.crt --ssl-key ./cert.key"
-
-
   },
   "eslintConfig": {
     "extends": [
