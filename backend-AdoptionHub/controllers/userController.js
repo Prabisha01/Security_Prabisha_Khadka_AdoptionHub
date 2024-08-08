@@ -34,7 +34,7 @@ const sendResetPasswordMail = async (fullName, email, token) => {
       html:
         "Hi " +
         fullName +
-        ', Please copy the link and <a href="http://localhost:3000/reset_password/' +
+        ', Please copy the link and <a href="https://localhost:3000/reset_password/' +
         token +
         '">click here</a> to reset your password',
     };
@@ -230,6 +230,8 @@ const loginUser = async (req, res) => {
     user.isLocked = false;
     user.lockUntil = null;
     await user.save();
+
+
 
     const token = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
@@ -505,7 +507,7 @@ const resetPassword = async (req, res) => {
     if (!tokenData) {
       res.status(200).send({ success: false, message: "The token is expired" });
     } else {
-      // Ensure that the password is defined and not an empty string
+      
       const { password } = req.body;
       if (!password || password.trim() === "") {
         return res

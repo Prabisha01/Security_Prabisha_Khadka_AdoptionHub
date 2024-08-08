@@ -14,21 +14,17 @@ const PasswordForgot = () => {
 
     try {
       const response = await forgotPasswordApi({ email });
-      console.log(response.data); // Handle the response as needed
+      console.log(response.data); 
 
-      // Check the response for success or failure
+      
       if (response.data.success === true) {
-        // Show success message or navigate to another page
         toast.success(response.data.message);
-        // You can also navigate to the login page or another page
         navigate('/home');
       } else {
-        // Show an error message
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error(error);
-      // Handle error, show an error message, etc.
+      console.error(error)
       toast.error('Server Error');
     }
   };

@@ -11,7 +11,6 @@ const ProductModal = ({ isOpen, onClose, product, addToCart }) => {
       id="my-modal"
     >
       <div className="relative bg-white rounded-lg shadow-lg border border-black w-full max-w-[1102px] h-[711px] mx-4 p-6" style={{ borderRadius: '25px' }}>
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute"

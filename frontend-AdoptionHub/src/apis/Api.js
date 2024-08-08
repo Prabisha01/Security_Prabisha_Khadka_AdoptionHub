@@ -1,23 +1,20 @@
 import axios from "axios";
 
 const Api = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://localhost:5000",
   withCredentials: true,
   headers: {
     "Content-Type": "multipart/form-data",
   },
 });
 
-// make separate header for authorization
 const config = {
   headers: {
     authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 };
 
-export const testApi = () => Api.get("/test");
 
-// create user api
 export const createUserApi = (data) =>
   Api.post("/api/user/create", data, config);
 
