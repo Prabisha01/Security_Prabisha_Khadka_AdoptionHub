@@ -28,11 +28,13 @@ import Profile from "./pages/user/Profile";
 import WhyDonate from "./pages/WhyDonate";
 import Donate from "./pages/user/Donate";
 import VaccinatedPet from "./pages/user/VaccinatedPet";
+import useTokenExpiryCheck from "./components/TokenExpire";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
   return (
     <Router>
+      <TokenExpiryWrapper />
       <ToastContainer />
       {user?.isAdmin ? null : <Navbar />}
 
@@ -61,10 +63,15 @@ function App() {
         <Route path="/passwordForget" element={<PasswordForgot />} />
         <Route path="/why-donate" element={<WhyDonate />} />
         <Route path="/donate" element={<Donate />} />
+
       </Routes>
       {user?.isAdmin ? null : <Footers />}
     </Router>
   );
 }
 
+const TokenExpiryWrapper = () => {
+  useTokenExpiryCheck();
+  return null;
+};
 export default App;

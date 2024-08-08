@@ -52,7 +52,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-   "secureBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "secureBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "secureDeploy": "cross-env NODE_ENV=production serve -s build --listen 3000 --ssl-cert ./cert.crt --ssl-key ./cert.key"
 
 

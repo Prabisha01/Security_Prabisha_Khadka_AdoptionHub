@@ -3,7 +3,7 @@ const eventController = require("../controllers/eventController");
 const { authGuardAdmin } = require('../middleware/authGuard');
 
 // Create Event API
-router.post('/create_event', eventController.createEvent)
+router.post('/create_event', authGuardAdmin, eventController.createEvent)
 
 //get all event API
 router.get("/get_event", eventController.getAllEvents)
@@ -13,11 +13,11 @@ router.get("/get_event", eventController.getAllEvents)
 router.get("/get_event/:id" , eventController.getSingleEvent)
 
 //update event API
-router.put("/update_event/:id" , eventController.updateEvent)
+router.put("/update_event/:id" ,authGuardAdmin,  eventController.updateEvent)
 
 
 //delete delete API
-router.delete("/delete_event/:id",  eventController.deleteEvent)
+router.delete("/delete_event/:id",authGuardAdmin,   eventController.deleteEvent)
 
 //get pagination
 router.get("/get_event_pagination" , eventController.getEventPagination)

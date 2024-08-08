@@ -73,10 +73,12 @@ const getAllAdoptions = async (req, res) => {
 const getAllAdoptionsByUser = async (req, res) => {
   const userId = req.params.id;
   try {
-    const adoptions = await Adopt.find({ user: userId }).populate("user").populate("pet");
+    const adoptions = await Adopt.find({ user: userId })
+      .populate("user")
+      .populate("pet");
     res.status(200).json({ adoptions });
   } catch (error) {
-    res.status(500).json({success:false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

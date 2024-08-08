@@ -233,10 +233,12 @@ const loginUser = async (req, res) => {
 
 
 
-    const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
-      process.env.JWT_TOKEN_SECRET
-    );
+        // Step 7: Create token
+        const token = jwt.sign(
+          { id: user._id, isAdmin: user.isAdmin },
+          process.env.JWT_TOKEN_SECRET,
+          { expiresIn: "1m" } // token expiration
+        );
 
     res.status(200).json({
       success: true,

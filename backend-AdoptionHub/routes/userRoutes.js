@@ -2,7 +2,7 @@
 const router = require("express").Router();
 const userController = require("../controllers/userController");
 const productController = require("../controllers/productController");
-const { authGuardAdmin} = require("../middleware/authGuard");
+const { authGuardAdmin, authGuard } = require("../middleware/authGuard");
 
 // creating user api
 router.post("/create", userController.createUser);
@@ -13,13 +13,13 @@ router.post("/create-product", productController.createProduct);
 router.post("/login", userController.loginUser);
 
 //get all users API
-router.get("/get_user", userController.getAllUsers);
+router.get("/get_user", authGuardAdmin,  userController.getAllUsers);
 
 //Get single user API | /get_product/:id
-router.get("/get_single_user/:id", userController.getSingleUsers);
+router.get("/get_single_user/:id", authGuard, userController.getSingleUsers);
 
 //update user API
-router.put("/update_user/:id", userController.updateUser);
+router.put("/update_user/:id", authGuard, userController.updateUser);
 
 //get pagination
 router.get("/get_user_pagination", userController.getUserPagination);
