@@ -29,9 +29,9 @@ const LandingPage = () => {
   const handleContactSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
-    data.append("contactName", fullName);
-    data.append("contactEmail", email);
-    data.append("contactMessage", message);
+    data.append("contactName", fullName.trim());
+    data.append("contactEmail", email.trim());
+    data.append("contactMessage", message.trim());
 
     setIsLoading(true);
 
@@ -39,6 +39,10 @@ const LandingPage = () => {
       .then((res) => {
         if (res.data.success) {
           toast.success(res.data.message);
+          // Clear form fields
+          setFullName("");
+          setEmail("");
+          setMessage("");
         } else {
           toast.error(res.data.message);
         }
@@ -46,7 +50,7 @@ const LandingPage = () => {
       })
       .catch((err) => {
         setIsLoading(false);
-        toast.error(err.message);
+        toast.error("Server Error: " + err.message);
       });
   };
 
@@ -68,40 +72,35 @@ const LandingPage = () => {
   const fetchStory = () => {
     getAllStoryApi()
       .then((res) => {
-        setStories(res?.data?.story);
+        setStories(res?.data?.story || []);
       })
       .catch((err) => {
-        console.error("Error Fetching Stories", err);
-        toast.error(err.message);
+        toast.error("Error Fetching Stories: " + err.message);
       });
   };
 
-  const fetchEvents = async () => {
+  const fetchEvents = () => {
     getAllEventsApi()
       .then((res) => {
-        setEvents(res?.data?.events);
-        console.log(res?.data?.events);
+        setEvents(res?.data?.events || []);
       })
       .catch((err) => {
-        console.error("Error Fetching Events", err);
-        toast.error(err.message);
+        toast.error("Error Fetching Events: " + err.message);
       });
   };
 
   const fetchProducts = () => {
     getAllProductApi()
       .then((res) => {
-        setProducts(res?.data?.fewProducts);
+        setProducts(res?.data?.fewProducts || []);
       })
       .catch((err) => {
-        console.error("Error Fetching Products", err);
-        toast.error(err.message);
+        toast.error("Error Fetching Products: " + err.message);
       });
   };
 
   const addToCart = (id) => {
     verifyAuthBeforeAction(() => {
-      console.log(id);
       const data = new FormData();
       data.append("products", id);
       data.append("user", user?._id);
@@ -116,7 +115,7 @@ const LandingPage = () => {
           }
         })
         .catch((err) => {
-          toast.error(err.message);
+          toast.error("Error Adding to Cart: " + err.message);
         });
     });
   };
@@ -125,7 +124,7 @@ const LandingPage = () => {
     fetchEvents();
     fetchProducts();
     fetchStory();
-  }, [stories.length, events.length, products.length]);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -133,7 +132,7 @@ const LandingPage = () => {
     }, delay);
 
     return () => clearInterval(timer);
-  }, [currentIndex]);
+  }, [currentIndex, events]);
 
   const numberOfSlidesToShow = events.length > 3 ? 3 : events.length;
   const slideWidth = 100 / numberOfSlidesToShow;
@@ -396,6 +395,7 @@ const LandingPage = () => {
                   type="text"
                   placeholder="Full Name"
                   onChange={(e) => setFullName(e.target.value)}
+                  value={fullName}
                   className="w-full pl-4 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
                   style={{
                     color: "black",
@@ -410,6 +410,7 @@ const LandingPage = () => {
                 <input
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                   placeholder="Email"
                   className="w-full pl-4 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
                   style={{
@@ -425,6 +426,7 @@ const LandingPage = () => {
                 <textarea
                   placeholder="Your Message"
                   onChange={(e) => setMessage(e.target.value)}
+                  value={message}
                   className="w-full p-2 border-2 border-gray-800 rounded-md focus:border-[#FF8534]"
                   style={{
                     color: "black",
@@ -474,7 +476,10 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <div className="text-center md:text-left mx-4 mt-8" style={{ marginTop: "400px" }}>
+        <div
+          className="text-center md:text-left mx-4 mt-8"
+          style={{ marginTop: "400px" }}
+        >
           <h1 className="font-bold text-2xl md:text-4xl mb-3">
             Where Dreams Find Their{" "}
             <span className="text-[#FF8534]">Happily </span>Ever After Event

@@ -3,7 +3,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import React, { useEffect, useRef, useState } from "react";
 import { getAllEventsApi } from "../apis/Api";
-import "../style/calendar.css"; // Import the CSS file
+import "../style/calendar.css";
 import EventDetailsModal from "./SingleEvent";
 
 const AllEvents = () => {
@@ -17,7 +17,6 @@ const AllEvents = () => {
   const fetchEvents = async () => {
     try {
       const response = await getAllEventsApi();
-      console.log("API Response:", response.data.events);
       const fetchedEvents = response.data.events.map((event) => ({
         id: event._id, 
         title: event.eventTitle,
@@ -30,10 +29,10 @@ const AllEvents = () => {
           eventImageTwoUrl: event.eventImageTwoUrl,
         },
       }));
-      console.log("Processed Events:", fetchedEvents); 
       setEvents(fetchedEvents);
     } catch (error) {
       console.error("Error Fetching Events", error);
+      // Handle the error appropriately, e.g., display a message to the user
     }
   };
 
@@ -45,7 +44,6 @@ const AllEvents = () => {
   }, []);
 
   const handleEventClick = (info) => {
-    console.log("Event clicked:", info.event);
     setSelectedEvent(info.event);
     setIsModalOpen(true);
   };
@@ -83,7 +81,6 @@ const AllEvents = () => {
     setCurrentTitle(calendarApi.currentData.viewTitle);
     setActiveView(view);
   };
-
 
   return (
     <div className="h-screen w-screen flex flex-col">
@@ -137,9 +134,9 @@ const AllEvents = () => {
           initialView="dayGridMonth"
           events={events}
           eventClick={handleEventClick}
-          height="auto" // Use 'auto' to allow the calendar to grow with the content
+          height="auto"
           eventContent={renderEventContent}
-          headerToolbar={false} // Hide the default header
+          headerToolbar={false}
           titleFormat={{ year: "numeric", month: "long" }}
           buttonText={{
             month: "Month",

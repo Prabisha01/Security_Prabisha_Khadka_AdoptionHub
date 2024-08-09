@@ -74,7 +74,7 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
       })
       .catch((err) => {
         toast.error("Server Error");
-        console.log(err.message);
+        
       });
   };
 

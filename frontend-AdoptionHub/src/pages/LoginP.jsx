@@ -35,23 +35,14 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password);
+    
 
     const data = {
       email: email,
       password: password,
     };
 
-    // making API Call
-    // const response  = loginUserApi(data)
-    // console.log(response.data)
-    // if(response.data.success == false){
-    //     toast.error(response.data.message)
-    // } else if (response.data.success == true){
-    //     toast.success(response.data.message)
-    // } else {
-    //     toast.error("Server Error")
-    // }
+   
 
     loginUserApi(data)
       .then((res) => {
@@ -76,7 +67,7 @@ const Login = () => {
       })
       .catch((err) => {
         toast.error("Server Error");
-        console.log(err.message);
+        
       });
   };
 

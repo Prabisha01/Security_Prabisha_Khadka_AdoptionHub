@@ -81,7 +81,7 @@ export default function EventManagement() {
       })
       .catch((e) => {
         toast.error("Server Error");
-        console.log(e);
+    
       })
       .finally(() => {
         setIsLoading(false);

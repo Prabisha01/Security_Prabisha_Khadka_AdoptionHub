@@ -20,7 +20,6 @@ const Cart = () => {
 
   const { id } = useParams();
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user._id);
 
   const [quantity, setQuantity] = useState(1);
   const [plantPrice, setProductPrice] = useState(0);
@@ -42,6 +41,7 @@ const Cart = () => {
     // Show confirmation dialogue
     setShowConfirmation(true);
   };
+
   const handleConfirmOrder = (e) => {
     e.preventDefault();
   
@@ -52,7 +52,6 @@ const Cart = () => {
     const formData = new FormData();
     formData.append("userId", user._id);
   
-    // Append arrays of cart IDs, product IDs, quantities, and totalPrices
     cartIds.forEach((cartId, index) => {
       formData.append(`cartIds[${index}]`, cartId);
       formData.append(`productIds[${index}]`, productIds[index]);
@@ -73,22 +72,17 @@ const Cart = () => {
         } else {
           toast.success(res.data.message);
   
-          // Clear the cart locally
           setCart([]);
-          // Set total to 0
           setTotal(0);
-  
-          // Close the confirmation dialogue
           setShowConfirmation(false);
         }
       })
       .catch((err) => {
         toast.error("Server Error");
-        console.log(err.message);
       });
   };
+
   const handleCancelOrder = () => {
-    // Close the confirmation dialogue
     setShowConfirmation(false);
   };
 
@@ -99,30 +93,25 @@ const Cart = () => {
   useEffect(() => {
     getAllCartApi(user._id)
       .then((res) => {
-        console.log("API Response:", res.data);
         setCart(res.data.carts);
 
-        // Set initial quantity and productPrice from the first item in the cart
         if (res.data.carts && res.data.carts.length > 0) {
           setQuantity(res.data.carts[0].quantity || 1);
           setProductPrice(res.data.carts[0].plantID.plantPrice || 0);
         }
       })
       .catch((err) => {
-        // toast.error("Server Error");
-        console.log(err.message);
+        toast.error("Server Error");
       });
   }, [user._id]);
 
   const calculateCartTotal = () => {
     let newSubtotal = 0;
 
-    // Calculate subtotal based on the items in the cart
     carts.forEach((item) => {
       newSubtotal += (item.quantity || 1) * item.plantId.plantPrice;
     });
 
-    // Set both subtotal and total to the calculated subtotal
     setSubtotal(newSubtotal);
     setTotal(newSubtotal);
   };
@@ -144,7 +133,7 @@ const Cart = () => {
           }
         })
         .catch((error) => {
-          console.error(error.message);
+          toast.error("Server Error");
         });
     }
   };
@@ -167,12 +156,11 @@ const Cart = () => {
       }));
 
       updateCart(user._id, { products: updatedProducts })
-        .then((res) => {
-          console.log(res.data);
+        .then(() => {
           setCartUpdated(false);
         })
-        .catch((error) => {
-          console.error(error.message);
+        .catch(() => {
+          toast.error("Server Error");
           setCartUpdated(false);
         });
     }

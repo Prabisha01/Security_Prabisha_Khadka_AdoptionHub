@@ -10,7 +10,6 @@ describe("User Testing" , () =>{
 it("User Create ", async () => {
         const res = await axios.post(`${baseURL}/api/user/create`, add_user_mock);
         expect(res.status).toEqual(200);
-        console.log(res.data);
         expect(res.data.success).toEqual(false);
         expect(res.data.message).toEqual("Please provide all required fields and an image.");
     });

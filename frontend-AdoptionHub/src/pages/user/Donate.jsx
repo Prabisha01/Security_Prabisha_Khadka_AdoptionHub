@@ -3,14 +3,17 @@ import { allFundingsApi } from "../../apis/Api";
 
 const DonorPage = ({ onClose }) => {
   const getTopDonors = () => {
-    // Call the API to get the top donors
+    
     allFundingsApi().then((res) => {
-      console.log(res?.data?.topDonors);
+      const topDonors = res?.data?.topDonors;
+
     });
   };
+
   useEffect(() => {
     getTopDonors();
   }, []);
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-white">
       <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg relative">

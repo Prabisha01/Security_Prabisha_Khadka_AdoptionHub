@@ -28,9 +28,6 @@ function OTPVerify({ userOtp, isOpen, closeModal, onResend }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     let otpValue = parseInt(otp.join(""));
-    console.log(user?.email);
-    console.log(otpValue);
-    console.log(userOtp);
     const data = new FormData();
     data.append("email", user?.email);
     if (otpValue === userOtp) {

@@ -73,23 +73,7 @@ const EditHospital = () => {
     formData.append("longitude", longitude);
     formData.append("hospitalImage", hospitalImage);
 
-    // updatehospitalApi(id, formData)
-    //   .then((res) => {
-    //     // console.log(res.data);
-    //     if (res.data.success == false) {
-    //       toast.error(res.data.message);
-    //     } else {
-    //       toast.success(res.data.message);
-    //       navigate("/admin-dashboard");
-    //     }
-    //   })
-    //   .catch((e) => {
-    //     toast.error(e.message);
-    //     console.log(e);
-    //   })
-    //   .finally(() => {
-    //     setIsLoading(false);
-    //   });
+    
   };
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];

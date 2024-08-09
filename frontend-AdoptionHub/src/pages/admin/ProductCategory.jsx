@@ -72,7 +72,7 @@ export default function ProductCategory() {
       })
       .catch((e) => {
         toast.error("Server Error");
-        console.log(e);
+        
       })
       .finally(() => {
         setIsLoading(false);

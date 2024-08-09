@@ -27,7 +27,7 @@ const PaymentForm = ({ onClose, amount }) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 

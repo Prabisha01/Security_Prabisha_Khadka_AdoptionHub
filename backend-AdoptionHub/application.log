@@ -1,1 +1,84 @@
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-09T03:40:57.638Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-09T03:41:43.412Z"}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:41:56.035Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:41:56.052Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:41:56.510Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:41:56.537Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:41:57.031Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:41:57.036Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:41:57.642Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:41:57.647Z","totalStories":3}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:41:58.255Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:41:58.262Z","totalProducts":8}
+{"level":"info","message":"Send Message request received","requestBody":{"contactEmail":"","contactMessage":"","contactName":""},"timestamp":"2024-08-09T03:43:06.847Z"}
+{"level":"info","message":"User logged in successfully","timestamp":"2024-08-09T03:43:27.865Z","userId":"66971ce4626602fc26186bd4"}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:43:38.711Z","totalCategories":4}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:43:39.021Z","totalCategories":4}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:43:39.025Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:43:39.636Z","totalProducts":8}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-09T03:43:44.041Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-09T03:43:44.346Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":734108,"timestamp":"2024-08-09T03:43:52.489Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723175035 d2e1a72fcca58-710cb2e563csm1862944b3a.147 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-09T03:43:57.559Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-09T03:43:57.568Z"}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:44:09.842Z","totalCategories":4}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:44:10.075Z","totalCategories":4}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:44:10.083Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:44:10.661Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:44:59.675Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:44:59.706Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:45:00.216Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:45:00.224Z","totalStories":3}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:45:00.698Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:45:00.720Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:45:01.247Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:45:01.254Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:45:01.718Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:45:01.747Z","totalStories":3}
+{"level":"info","message":"User logged in successfully","timestamp":"2024-08-09T03:45:15.277Z","userId":"66971ce4626602fc26186bd4"}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:55:15.048Z","totalCategories":4}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:55:15.281Z","totalCategories":4}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:55:15.861Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:55:16.476Z","totalProducts":8}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-09T03:55:22.193Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-09T03:55:24.059Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:55:29.180Z","totalCategories":4}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:55:29.456Z","totalCategories":4}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:55:29.460Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:55:29.993Z","totalProducts":8}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:55:38.492Z","totalCategories":4}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:55:38.798Z","totalCategories":4}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:55:38.802Z","totalProducts":8}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-09T03:55:39.314Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:55:39.321Z","totalProducts":8}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-09T03:55:40.540Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:58:06.258Z","totalCategories":4}
+{"level":"info","message":"Fetched all product categories","timestamp":"2024-08-09T03:58:06.564Z","totalCategories":4}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:58:06.568Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:58:07.180Z","totalProducts":8}
+{"level":"info","message":"User logged in successfully","timestamp":"2024-08-09T03:58:24.701Z","userId":"66971ce4626602fc26186bd4"}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:58:25.274Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:58:25.303Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:58:25.730Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:58:25.804Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:58:26.227Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:58:26.306Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:58:26.740Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:58:26.796Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T03:58:27.273Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T03:58:27.293Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T04:05:17.986Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T04:05:17.999Z","totalStories":3}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T04:05:27.836Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T04:05:27.879Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T04:09:03.907Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T04:09:03.916Z","totalStories":3}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T05:27:38.487Z","totalStories":3}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T05:27:39.083Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T05:27:39.903Z","totalProducts":8}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T05:27:40.516Z","totalProducts":8}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-09T06:32:29.530Z"}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T06:32:41.479Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T06:32:41.523Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T06:32:41.978Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T06:32:42.022Z","totalStories":3}

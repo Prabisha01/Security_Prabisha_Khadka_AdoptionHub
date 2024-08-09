@@ -10,7 +10,7 @@ export default function DonationManagement() {
         setFundings(response?.data?.funding);
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 

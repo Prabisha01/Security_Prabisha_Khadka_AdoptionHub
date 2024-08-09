@@ -23,7 +23,7 @@ export default function AdoptManagement() {
     try {
       await getAllAdoptionReqApi().then((res) => {
         setAdoption(res?.data?.adoptions);
-        console.log(res?.data?.adoptions);
+        
       });
     } catch (error) {
       console.error("Error Fetching Adoptions", error);

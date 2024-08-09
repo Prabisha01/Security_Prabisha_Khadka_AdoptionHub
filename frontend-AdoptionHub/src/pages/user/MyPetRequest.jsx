@@ -42,20 +42,7 @@ const MyPetRequests = () => {
 
   // delete
   const handleDelete = (id) => {
-    // make Api call
-    // deleteRequestApi(id)
-    //   .then((res) => {
-    //     if (res.data.success == true) {
-    //       toast.success(res.data.message);
-    //       closedeleteModal(true);
-    //       setAdoptions(adoptions.filter((item) => item._id !== id));
-    //     } else {
-    //       toast.error(res.data.message);
-    //     }
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   });
+   
   };
 
   useEffect(() => {

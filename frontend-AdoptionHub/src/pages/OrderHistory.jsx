@@ -14,12 +14,12 @@ const OrderHistory = () => {
   useEffect(() => {
     getOrder(id)
       .then((res) => {
-        console.log('API Response:', res.data);
+        
         setOrders(res.data.orders);
       })
       .catch((err) => {
         toast.error('Server Error');
-        console.log(err.message);
+        
       });
   }, [id]);
 

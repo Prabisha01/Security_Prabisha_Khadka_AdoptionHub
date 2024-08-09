@@ -32,9 +32,9 @@ export default function ProductManagement() {
     try {
       const response = await getAllProductApi();
       setProducts(response?.data?.products);
-      console.log(response?.data?.products);
+
       await getAllProductCatApi().then((res) => {
-        console.log(res);
+     
         setProductsCat(res?.data?.productCategory);
       });
     } catch (error) {
@@ -92,7 +92,7 @@ export default function ProductManagement() {
       })
       .catch((e) => {
         toast.error("Server Error");
-        console.log(e);
+        
       })
       .finally(() => {
         setIsLoading(false);

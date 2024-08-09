@@ -54,7 +54,6 @@ function VerifyPage({ isOpen, pet, close }) {
   const handleAdoptPet = (e) => {
     e.preventDefault();
     if (handleAgreementsValidation()) {
-      console.log(formData);
       adoptAPetApi(formData).then((res) => {
         if (res.data.success === true) {
           toast.success(res.data.message);
@@ -95,7 +94,6 @@ function VerifyPage({ isOpen, pet, close }) {
   const navigate = useNavigate();
 
   const updateAddress = (e) => {
-    console.log(id);
     setIsLoading(true);
     e.preventDefault();
     const data = new FormData();
@@ -103,12 +101,8 @@ function VerifyPage({ isOpen, pet, close }) {
     data.append("address", address);
     data.append("fullName", fullName);
 
-    for (var pair of data.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
-
     updateUserApi(id, data).then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         toast.success(res.data.message);
         setIsLoading(false);
       } else {
@@ -127,7 +121,7 @@ function VerifyPage({ isOpen, pet, close }) {
 
     sendOtpApi(data)
       .then((res) => {
-        if (res.data.success == true) {
+        if (res.data.success === true) {
           setOtp(res.data.otp);
           toast.success(res.data.message);
           setOtpModal(true);
@@ -151,12 +145,12 @@ function VerifyPage({ isOpen, pet, close }) {
       <div
         className="relative bg-white p-8 rounded"
         style={{
-          width: '1102px',
-          height: '711px',
-          fontFamily: 'Poppins',
-          border: '2px solid black',
-          borderRadius: '25px',
-          overflowY: 'auto'
+          width: "1102px",
+          height: "711px",
+          fontFamily: "Poppins",
+          border: "2px solid black",
+          borderRadius: "25px",
+          overflowY: "auto",
         }}
       >
         <div className="flex justify-between items-center mb-4">
@@ -165,7 +159,12 @@ function VerifyPage({ isOpen, pet, close }) {
               title="Close Modal"
               onClick={close}
               className="text-black-500 hover:text-gray-700 rounded-lg text-sm p-2 px-4"
-              style={{ top: '29px', right: '27px', fontSize: '1.7rem', color: 'black' }}
+              style={{
+                top: "29px",
+                right: "27px",
+                fontSize: "1.7rem",
+                color: "black",
+              }}
             >
               <FontAwesomeIcon icon={faTimes} size="lg" />
             </button>
@@ -180,13 +179,18 @@ function VerifyPage({ isOpen, pet, close }) {
                     ? "bg-blue-500 text-white"
                     : "bg-gray-200 text-gray-400"
                 }`}
-                style={{ width: '73px', height: '70px', fontSize: '35px' }}
+                style={{ width: "73px", height: "70px", fontSize: "35px" }}
               >
                 {index + 1 <= step && (
                   <FontAwesomeIcon
                     icon={faCheck}
                     className="absolute"
-                    style={{ top: '-10px', right: '-10px', color: 'white', fontSize: '15px' }}
+                    style={{
+                      top: "-10px",
+                      right: "-10px",
+                      color: "white",
+                      fontSize: "15px",
+                    }}
                   />
                 )}
                 {index + 1}
@@ -195,7 +199,7 @@ function VerifyPage({ isOpen, pet, close }) {
                 className={`text-sm mt-2 ${
                   index + 1 < step ? "text-blue-500" : "text-gray-600"
                 } `}
-                style={{ fontSize: '20px', marginLeft: '10px' }}
+                style={{ fontSize: "20px", marginLeft: "10px" }}
               >
                 {item}
               </div>
@@ -222,7 +226,7 @@ function VerifyPage({ isOpen, pet, close }) {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Email"
                       className="form-input mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                      style={{ width: '431px', height: '58px' }}
+                      style={{ width: "431px", height: "58px" }}
                     />
                   </div>
                   <div className="flex flex-row justify-start">
@@ -242,10 +246,11 @@ function VerifyPage({ isOpen, pet, close }) {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Email"
                       className="form-input mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                      style={{ width: '431px', height: '58px' }}
+                      style={{ width: "431px", height: "58px" }}
                     />
                     <span className="text-sm text-gray-600 mb-1 mt-2">
-                      Note: Please verify first to move to further step of Adopting the Pet.
+                      Note: Please verify first to move to further step of
+                      Adopting the Pet.
                     </span>
                   </label>
                   <Link
@@ -255,22 +260,23 @@ function VerifyPage({ isOpen, pet, close }) {
                     }}
                     className="text-center bg-[#FF8534] hover:bg-[#FF7148] text-white font-bold py-2 px-4 rounded"
                     style={{
-                      width: '431px',
-                      height: '58px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '10px',
-                      border: 'none',
-                      transition: 'background-color 500ms ease, border 500ms ease',
+                      width: "431px",
+                      height: "58px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "10px",
+                      border: "none",
+                      transition:
+                        "background-color 500ms ease, border 500ms ease",
                     }}
                     onMouseOver={(e) => {
-                      e.target.style.backgroundColor = '#FF7148';
-                      e.target.style.border = '2px solid black';
+                      e.target.style.backgroundColor = "#FF7148";
+                      e.target.style.border = "2px solid black";
                     }}
                     onMouseOut={(e) => {
-                      e.target.style.backgroundColor = '#FF8534';
-                      e.target.style.border = 'none';
+                      e.target.style.backgroundColor = "#FF8534";
+                      e.target.style.border = "none";
                     }}
                   >
                     {isLoading ? (
@@ -303,7 +309,7 @@ function VerifyPage({ isOpen, pet, close }) {
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="FullName"
                     className="form-input mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    style={{ width: '431px', height: '58px' }}
+                    style={{ width: "431px", height: "58px" }}
                   />
                 </label>
                 <label
@@ -316,7 +322,7 @@ function VerifyPage({ isOpen, pet, close }) {
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Address"
                     className="form-input mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    style={{ width: '431px', height: '58px' }}
+                    style={{ width: "431px", height: "58px" }}
                   />
                 </label>
                 <Link
@@ -324,22 +330,22 @@ function VerifyPage({ isOpen, pet, close }) {
                   onClick={updateAddress}
                   className="mt-4 text-center bg-[#FF8534] hover:bg-[#FF7148] text-white font-bold py-2 px-4 rounded"
                   style={{
-                    width: '431px',
-                    height: '58px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '10px',
-                    border: 'none',
-                    transition: 'background-color 500ms ease, border 500ms ease',
+                    width: "431px",
+                    height: "58px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "10px",
+                    border: "none",
+                    transition: "background-color 500ms ease, border 500ms ease",
                   }}
                   onMouseOver={(e) => {
-                    e.target.style.backgroundColor = '#FF7148';
-                    e.target.style.border = '2px solid black';
+                    e.target.style.backgroundColor = "#FF7148";
+                    e.target.style.border = "2px solid black";
                   }}
                   onMouseOut={(e) => {
-                    e.target.style.backgroundColor = '#FF8534';
-                    e.target.style.border = 'none';
+                    e.target.style.backgroundColor = "#FF8534";
+                    e.target.style.border = "none";
                   }}
                 >
                   {isLoading ? (
@@ -352,7 +358,10 @@ function VerifyPage({ isOpen, pet, close }) {
             </div>
           )}
           {step === 3 && (
-            <div className="bg-white p-6 rounded-lg overflow-y-auto overflow-x-hidden max-w-full mx-auto" style={{ height: 'calc(100% - 150px)' }}>
+            <div
+              className="bg-white p-6 rounded-lg overflow-y-auto overflow-x-hidden max-w-full mx-auto"
+              style={{ height: "calc(100% - 150px)" }}
+            >
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-3 gap-6">
                   <div>
@@ -539,7 +548,7 @@ function VerifyPage({ isOpen, pet, close }) {
                     value={formData.peopleInHouse}
                     onChange={handleChange}
                     className="form-input mt-4 rounded-lg block w-full"
-                    style={{ height: '58px' }}
+                    style={{ height: "58px" }}
                   />
                   <input
                     type="text"
@@ -548,7 +557,7 @@ function VerifyPage({ isOpen, pet, close }) {
                     value={formData.hoursPetAlone}
                     onChange={handleChange}
                     className="form-input mt-4 rounded-lg block w-full"
-                    style={{ height: '58px' }}
+                    style={{ height: "58px" }}
                   />
                   <input
                     type="text"
@@ -557,7 +566,7 @@ function VerifyPage({ isOpen, pet, close }) {
                     value={formData.travelFrequency}
                     onChange={handleChange}
                     className="form-input mt-4 rounded-lg block w-full"
-                    style={{ height: '58px' }}
+                    style={{ height: "58px" }}
                   />
                   <input
                     type="text"
@@ -566,7 +575,7 @@ function VerifyPage({ isOpen, pet, close }) {
                     value={formData.petCareArrangement}
                     onChange={handleChange}
                     className="form-input mt-4 rounded-lg block w-full"
-                    style={{ height: '58px' }}
+                    style={{ height: "58px" }}
                   />
                 </div>
                 <textarea
@@ -622,22 +631,23 @@ function VerifyPage({ isOpen, pet, close }) {
                     onClick={handleAdoptPet}
                     className="text-center bg-[#FF8534] hover:bg-[#FF7148] text-white font-bold py-2 px-4 rounded"
                     style={{
-                      width: '431px',
-                      height: '58px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '10px',
-                      border: 'none',
-                      transition: 'background-color 500ms ease, border 500ms ease',
+                      width: "431px",
+                      height: "58px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "10px",
+                      border: "none",
+                      transition:
+                        "background-color 500ms ease, border 500ms ease",
                     }}
                     onMouseOver={(e) => {
-                      e.target.style.backgroundColor = '#FF7148';
-                      e.target.style.border = '2px solid black';
+                      e.target.style.backgroundColor = "#FF7148";
+                      e.target.style.border = "2px solid black";
                     }}
                     onMouseOut={(e) => {
-                      e.target.style.backgroundColor = '#FF8534';
-                      e.target.style.border = 'none';
+                      e.target.style.backgroundColor = "#FF8534";
+                      e.target.style.border = "none";
                     }}
                   >
                     {isLoading ? (
@@ -658,11 +668,11 @@ function VerifyPage({ isOpen, pet, close }) {
               onClick={prevStep}
               className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
               style={{
-                width: '181px',
-                height: '58px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                width: "181px",
+                height: "58px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               Back
@@ -675,11 +685,11 @@ function VerifyPage({ isOpen, pet, close }) {
               }}
               className="bg-blue-500 cursor-pointer hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r"
               style={{
-                width: '181px',
-                height: '58px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                width: "181px",
+                height: "58px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               Next

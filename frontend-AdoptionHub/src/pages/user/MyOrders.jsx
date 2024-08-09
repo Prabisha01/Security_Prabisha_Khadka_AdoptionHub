@@ -9,7 +9,6 @@ const MyOrders = () => {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
 
   const fetchMyOrdersApi = () => {
-    console.log(user?._id);
     getMyOrderApi(user?._id).then((res) => {
       setOrders(res?.data?.orders);
     });

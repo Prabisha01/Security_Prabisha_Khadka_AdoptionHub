@@ -43,7 +43,6 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
       })
       .catch((err) => {
         toast.error("Server Error");
-        console.log(err.message);
         setIsLoading(false);
       });
   };
@@ -131,7 +130,7 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
       .catch((err) => {
         setIsLoading(false);
         toast.error("Server Error");
-        console.log(err.message);
+      
       });
   };
 

@@ -15,52 +15,45 @@ const NotificationComponent = () => {
       return;
     }
 
-    // Fetch all notifications when the component mounts
+
     fetchAllNotifications();
 
-    // Poll the server for new notifications every 30 seconds
+    
     const notificationPollingInterval = setInterval(fetchAllNotifications, 10000);
 
-    // Clear the interval when the component unmounts
+    
     return () => clearInterval(notificationPollingInterval);
   }, [userId]);
 
-  // Function to fetch all notifications
+  
   const fetchAllNotifications = async () => {
     try {
       const response = await getallnotification();
       const { notifications: allNotifications, unreadCount: newUnreadCount } = response.data;
-      console.log('Fetched all notifications:', allNotifications);
 
-      // Compare with the existing notifications to find new ones
+      
       const newNotifications = allNotifications.filter(
         (newNotification) => !notifications.some((oldNotification) => oldNotification._id === newNotification._id)
       );
 
       if (newNotifications.length > 0 && !isNewNotificationReceived) {
         setNotifications((prevNotifications) => [...prevNotifications, ...newNotifications]);
-  
-
-        // Show toast only when new notifications are received
+        
+    
         toast.info(`New Notification Received`);
         setIsNewNotificationReceived(true);
       }
     } catch (error) {
-      console.error('Error fetching all notifications:', error.message);
+      toast.error('Error fetching all notifications');
     }
   };
 
   return (
     <>
-      <div>
-        <UpNavbar />
-      </div>
-      <div>
-        <Navbar />
-      </div>
+      <UpNavbar />
+      <Navbar />
       <div>
         <h2>Notifications</h2>
-       
         <ul>
           {notifications.map((notification) => (
             <li key={notification._id} className={`notification-item${notification.completed ? ' completed' : ''}`}>

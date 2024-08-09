@@ -16,11 +16,8 @@ function PaymentPage() {
     cardholderName: "",
   });
 
-  const products = cartItems.map((item) => {
-    return item.products._id;
-  });
+  const products = cartItems.map((item) => item.products._id);
 
-console.log(products)
   const validateCardNumber = (number) => {
     const regex = new RegExp("^[0-9]{16}$");
     return regex.test(number.replace(/\s+/g, ""));
@@ -69,15 +66,12 @@ console.log(products)
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      console.log("Payment Info: ", paymentInfo);
-
       const data = new FormData();
       data.append("cardNumber", paymentInfo.cardNumber);
       data.append("expiryDate", paymentInfo.expiryDate);
       data.append("cvv", paymentInfo.cvv);
       data.append("cardholderName", paymentInfo.cardholderName);
       data.append("price", total);
-      //   print cartItems
 
       const productsInfo = cartItems.map((item) => ({
         product: item.products._id,
@@ -96,7 +90,6 @@ console.log(products)
           }
         })
         .catch((err) => {
-          console.error(err);
           toast.error("Server Error");
         });
     }
