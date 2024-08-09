@@ -82,3 +82,5 @@
 {"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T06:32:41.523Z","totalStories":3}
 {"level":"info","message":"Fetched all products","timestamp":"2024-08-09T06:32:41.978Z","totalProducts":8}
 {"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T06:32:42.022Z","totalStories":3}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-09T17:09:20.837Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-09T17:41:41.423Z"}

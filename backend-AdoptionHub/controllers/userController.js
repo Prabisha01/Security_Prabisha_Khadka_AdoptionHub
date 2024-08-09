@@ -65,13 +65,34 @@ const createUser = async (req, res) => {
 
     const { fullName, email, password } = req.body;
 
-    if (!fullName || !email || !password) {
+    
+    const nameRegex = /^[a-zA-Z]+(?:\s[a-zA-Z]+)+$/;
+    if (!fullName || !nameRegex.test(fullName)) {
       return res.json({
         success: false,
-        message: "Please provide all required fields",
+        message: "Please enter a valid full name (first and last name, letters only).",
       });
     }
 
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      return res.json({
+        success: false,
+        message: "Please enter a valid email address.",
+      });
+    }
+
+    
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!password || !passwordRegex.test(password)) {
+      return res.json({
+        success: false,
+        message: "Password must be at least 8 characters long, and include an uppercase letter, a lowercase letter, a number, and a special character.",
+      });
+    }
+
+    
     const existingUser = await Users.findOne({ email: email });
     if (existingUser) {
       return res.json({
@@ -80,6 +101,7 @@ const createUser = async (req, res) => {
       });
     }
 
+    
     const randomSalt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, randomSalt);
 
@@ -106,6 +128,7 @@ const createUser = async (req, res) => {
     });
   }
 };
+
 
 const sendUnlockNotification = async (fullName, email) => {
   try {
