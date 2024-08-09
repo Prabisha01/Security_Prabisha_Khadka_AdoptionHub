@@ -1,26 +1,27 @@
 const ProductCategory = require("../model/productCategoryModel");
 const Products = require("../model/productModel");
 const cloudinary = require("cloudinary");
+const winston = require('winston');
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'application.log' })
+    ]
+});
 
 const createProduct = async (req, res) => {
-  // step 1 : Check incomming data
-  console.log(req.body);
-  console.log(req.files);
+  logger.info('Create Product request received', { requestBody: req.body, requestFiles: req.files });
 
-  // step:2 destructuring
-  const { productName, productPrice, productDescription, productCategory } =
-    req.body;
-
+  const { productName, productPrice, productDescription, productCategory } = req.body;
   const { productImageUrl } = req.files;
 
-  // step 3 : validate the data
-  if (
-    !productName ||
-    !productPrice ||
-    !productDescription ||
-    !productCategory ||
-    !productImageUrl
-  ) {
+  if (!productName || !productPrice || !productDescription || !productCategory || !productImageUrl) {
     return res.json({
       success: false,
       message: "Please fill all the fields.",
@@ -36,38 +37,35 @@ const createProduct = async (req, res) => {
       }
     );
 
-    // save the products
     const newProduct = new Products({
-      productName: productName,
-      productPrice: productPrice,
-      productDescription: productDescription,
-      productCategory: productCategory,
+      productName,
+      productPrice,
+      productDescription,
+      productCategory,
       productImageUrl: uploadedImage.secure_url,
     });
 
     await newProduct.save();
+    logger.info('Product created successfully', { productId: newProduct._id });
+
     res.status(200).json({
       success: true,
       message: "Product created successfully",
       data: newProduct,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error creating product', { error: error.message });
     res.status(500).json("Server Error");
   }
 };
 
 const createProductCategory = async (req, res) => {
-  // step 1 : Check incomming data
-  console.log(req.body);
+  logger.info('Create Product Category request received', { requestBody: req.body });
 
-  // step:2 destructuring
   const { productCategory } = req.body;
-
   const { productCategoryImageUrl } = req.files;
 
-  // step 3 : validate the data
-  if (!productCategory) {
+  if (!productCategory || !productCategoryImageUrl) {
     return res.json({
       success: false,
       message: "Please fill all the fields.",
@@ -83,20 +81,21 @@ const createProductCategory = async (req, res) => {
       }
     );
 
-    // save the products
     const newCat = new ProductCategory({
-      productCategory: productCategory,
+      productCategory,
       productCategoryImageUrl: uploadedImage.secure_url,
     });
 
     await newCat.save();
+    logger.info('Product Category created successfully', { categoryId: newCat._id });
+
     res.status(200).json({
       success: true,
       message: "Product Category created successfully",
       data: newCat,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error creating product category', { error: error.message });
     res.status(500).json("Server Error");
   }
 };
@@ -105,14 +104,17 @@ const getAllProducts = async (req, res) => {
   try {
     const listOfProducts = await Products.find().populate("productCategory");
     const fewProducts = listOfProducts.slice(0, 5);
+
+    logger.info('Fetched all products', { totalProducts: listOfProducts.length });
+
     return res.json({
       success: true,
       message: "Products fetched successfully",
       products: listOfProducts,
-      fewProducts: fewProducts,
+      fewProducts,
     });
   } catch (error) {
-    console.error("Failed to fetch products:", error);
+    logger.error('Failed to fetch products', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -121,37 +123,41 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-//function for getting all the product
 const getAllCat = async (req, res) => {
   try {
     const listOfProducts = await ProductCategory.find();
+
+    logger.info('Fetched all product categories', { totalCategories: listOfProducts.length });
+
     res.json({
       success: true,
       message: "Products fetched successfully",
       productCategory: listOfProducts,
     });
   } catch (error) {
+    logger.error('Error fetching product categories', { error: error.message });
     res.status(500).json("Server Error");
   }
 };
 
 const deleteProductCat = async (req, res) => {
   try {
-    const deleteProduct = await ProductCategory.findByIdAndDelete(
-      req.params.id
-    );
+    const deleteProduct = await ProductCategory.findByIdAndDelete(req.params.id);
     if (!deleteProduct) {
       return res.json({
         success: false,
         message: "Category not found",
       });
     }
+
+    logger.info('Product Category deleted successfully', { categoryId: req.params.id });
+
     res.json({
       success: true,
-      message: "Category deleted Sucesfully",
+      message: "Category deleted successfully",
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error deleting product category', { error: error.message });
     res.status(500).json({
       success: false,
       message: "server error",
@@ -169,16 +175,20 @@ const getSingleProduct = async (req, res) => {
   }
   try {
     const singleProduct = await Products.findById(id);
+
+    logger.info('Fetched single product', { productId: id });
+
     res.json({
       success: true,
-      message: "Products fetched successfully",
+      message: "Product fetched successfully",
       product: singleProduct,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error fetching product', { error: error.message });
     res.status(500).json("Server Error");
   }
 };
+
 const getProductsByCategory = async (req, res) => {
   try {
     const category = req.params.category;
@@ -191,13 +201,15 @@ const getProductsByCategory = async (req, res) => {
       });
     }
 
+    logger.info('Fetched products by category', { category });
+
     res.json({
       success: true,
       message: "Products fetched successfully",
-      products: products,
+      products,
     });
   } catch (error) {
-    console.error(error);
+    logger.error('Error fetching products by category', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -205,22 +217,19 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
-//pagination
 const getProductPagination = async (req, res) => {
-  // res.send('Pagination')
-  //step 1: get pageNo form frontend
   const requestedPage = req.query.page;
-
-  //step 2:  result per page
   const resultPerPage = 5;
+
   try {
-    //all product fetch
     const products = await Products.find({})
-      .skip((requestedPage - 1) * resultPerPage) //no of skips
-      .limit(resultPerPage); //limiting
+      .skip((requestedPage - 1) * resultPerPage)
+      .limit(resultPerPage);
 
     const totalProductsCount = await Products.countDocuments();
-    //if there is no product
+
+    logger.info('Product pagination fetched', { page: requestedPage, totalProducts: totalProductsCount });
+
     if (products.length === 0) {
       return res.json({
         success: false,
@@ -230,11 +239,11 @@ const getProductPagination = async (req, res) => {
 
     res.json({
       success: true,
-      products: products,
+      products,
       totalPages: Math.ceil(totalProductsCount / resultPerPage),
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error fetching product pagination', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -242,22 +251,19 @@ const getProductPagination = async (req, res) => {
   }
 };
 
-//pagination
 const getUserProductPagination = async (req, res) => {
-  // res.send('Pagination')
-  //step 1: get pageNo form frontend
   const requestedPage = req.query.page;
-
-  //step 2:  result per page
   const resultPerPage = 4;
+
   try {
-    //all product fetch
     const products = await Products.find({})
-      .skip((requestedPage - 1) * resultPerPage) //no of skips
-      .limit(resultPerPage); //limiting
+      .skip((requestedPage - 1) * resultPerPage)
+      .limit(resultPerPage);
 
     const totalProductsCount = await Products.countDocuments();
-    //if there is no product
+
+    logger.info('User product pagination fetched', { page: requestedPage, totalProducts: totalProductsCount });
+
     if (products.length === 0) {
       return res.json({
         success: false,
@@ -267,11 +273,11 @@ const getUserProductPagination = async (req, res) => {
 
     res.json({
       success: true,
-      products: products,
+      products,
       totalPages: Math.ceil(totalProductsCount / resultPerPage),
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error fetching user product pagination', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -280,8 +286,7 @@ const getUserProductPagination = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  const { productName, productPrice, productDescription, productCategory } =
-    req.body;
+  const { productName, productPrice, productDescription, productCategory } = req.body;
   const files = req.files;
   const id = req.params.id;
 
@@ -325,13 +330,15 @@ const updateProduct = async (req, res) => {
 
     await Products.findByIdAndUpdate(id, updateData, { new: true });
 
+    logger.info('Product updated successfully', { productId: id });
+
     res.json({
       success: true,
       message: "Product updated successfully",
       updateData,
     });
   } catch (error) {
-    console.error(error);
+    logger.error('Error updating product', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -349,14 +356,15 @@ const searchProducts = async (req, res) => {
         { productName: { $regex: keyRegex } },
         { productCategory: { $regex: keyRegex } },
         { productDescription: { $regex: keyRegex } },
-        // Add more fields as needed
-        isNumeric ? { productPrice: req.params.key } : null, // Example for searching by price (assuming productPrice is a number field)
+        isNumeric ? { productPrice: req.params.key } : null,
       ].filter(Boolean), // Remove null values from the array
     });
 
+    logger.info('Products search performed', { searchKey: req.params.key, resultCount: data.length });
+
     res.send(data);
   } catch (error) {
-    console.error(error);
+    logger.error('Error searching products', { error: error.message });
     res.status(500).send({ error: "Internal Server Error" });
   }
 };
@@ -370,12 +378,15 @@ const deleteProduct = async (req, res) => {
         message: "Product not found",
       });
     }
+
+    logger.info('Product deleted successfully', { productId: req.params.id });
+
     res.json({
       success: true,
-      message: "Product deleted Sucesfully",
+      message: "Product deleted successfully",
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error deleting product', { error: error.message });
     res.status(500).json({
       success: false,
       message: "server error",
@@ -386,12 +397,15 @@ const deleteProduct = async (req, res) => {
 const getProductCount = async (req, res) => {
   try {
     const totalProductsCount = await Products.countDocuments();
+
+    logger.info('Product count retrieved', { totalProductsCount });
+
     res.json({
       success: true,
-      totalProductsCount: totalProductsCount,
+      totalProductsCount,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error retrieving product count', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",

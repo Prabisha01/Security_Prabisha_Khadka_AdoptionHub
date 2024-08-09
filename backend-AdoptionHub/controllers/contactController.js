@@ -1,15 +1,25 @@
 const Contacts = require("../model/contactModel");
-const nodemailer = require("nodemailer");
+const winston = require('winston');
 const { sendEmailController } = require("./sendEmailController");
 
-const sendMessage = async (req, res) => {
-  // Step 1: Check if data is coming or not
-  console.log(req.body);
 
-  // Step 2: Destructure the data
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'application.log' })
+    ]
+});
+
+const sendMessage = async (req, res) => {
+  logger.info('Send Message request received', { requestBody: req.body });
+
   const { contactName, contactEmail, contactMessage } = req.body;
 
-  // Step 3: Validate the incoming data
   if (!contactName || !contactEmail || !contactMessage) {
     return res.json({
       success: false,
@@ -30,7 +40,7 @@ const sendMessage = async (req, res) => {
         contactEmail,
         contactMessage,
       }).catch((error) => {
-        console.error("Error in saving contact:", error);
+        logger.error('Error in saving contact', { error: error.message });
         return res.status(500).json({
           success: false,
           message: "An error occurred while saving the contact",
@@ -44,7 +54,7 @@ const sendMessage = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error in sending email:", error);
+    logger.error('Error in sending email', { error: error.message });
     return res.status(500).json({
       success: false,
       message: "An error occurred while sending the email",
@@ -64,27 +74,22 @@ const searchContacts = async (req, res) => {
     });
     res.send(data);
   } catch (error) {
-    console.error(error);
+    logger.error('Error in searchContacts', { error: error.message });
     res.status(500).send({ error: "Internal Server Error" });
   }
 };
 
 const getContactPagination = async (req, res) => {
-  // res.send('Pagination')
-  //step 1: get pageNo form frontend
   const requestedPage = req.query.page;
-
-  //step 2:  result per page
   const resultPerPage = 8;
+
   try {
-    //all product fetch
     const contacts = await Contacts.find({})
-      .skip((requestedPage - 1) * resultPerPage) //no of skips
-      .limit(resultPerPage); //limiting
+      .skip((requestedPage - 1) * resultPerPage)
+      .limit(resultPerPage);
 
     const totalContactsCount = await Contacts.countDocuments();
 
-    //if there is no product
     if (contacts.length === 0) {
       return res.json({
         success: false,
@@ -98,13 +103,14 @@ const getContactPagination = async (req, res) => {
       totalPages: Math.ceil(totalContactsCount / resultPerPage),
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error in getContactPagination', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
     });
   }
 };
+
 const getAllContacts = async (req, res) => {
   try {
     const listOfContacts = await Contacts.find();
@@ -114,11 +120,11 @@ const getAllContacts = async (req, res) => {
       contacts: listOfContacts,
     });
   } catch (error) {
+    logger.error('Error in getAllContacts', { error: error.message });
     res.status(500).json("Server Error");
   }
 };
 
-// get product by id
 const getSingleContact = async (req, res) => {
   const id = req.params.id;
   if (!id) {
@@ -135,10 +141,11 @@ const getSingleContact = async (req, res) => {
       contact: singleContact,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error in getSingleContact', { error: error.message });
     res.status(500).json("Server Error");
   }
 };
+
 const deleteContact = async (req, res) => {
   try {
     const deleteContact = await Contacts.findByIdAndDelete(req.params.id);
@@ -153,13 +160,14 @@ const deleteContact = async (req, res) => {
       message: "Contact deleted Sucesfully",
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error in deleteContact', { error: error.message });
     res.status(500).json({
       success: false,
       message: "server error",
     });
   }
 };
+
 const getContactCount = async (req, res) => {
   try {
     const totalContactsCount = await Contacts.countDocuments();
@@ -168,7 +176,7 @@ const getContactCount = async (req, res) => {
       totalContactsCount: totalContactsCount,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error in getContactCount', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",

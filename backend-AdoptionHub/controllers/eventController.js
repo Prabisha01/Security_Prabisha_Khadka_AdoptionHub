@@ -1,11 +1,22 @@
 const Events = require("../model/eventModel");
 const cloudinary = require("cloudinary");
+const winston = require('winston');
 
-/// step 1: check incoming data
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'application.log' })
+    ]
+});
+
 const createEvent = async (req, res) => {
-  // step 1 : Check incomming data
-  console.log(req.body);
-  console.log(req.files);
+  logger.info('Create Event request received', { requestBody: req.body, files: req.files });
 
   const { eventTitle, eventContent, organizedBy, eventDate } = req.body;
   const { eventImageOneUrl, eventImageTwoUrl, eventFileUrl } = req.files;
@@ -17,9 +28,7 @@ const createEvent = async (req, res) => {
     });
   }
 
-  // step 4 : try catch block
   try {
-    // step 5 : upload image to cloudinary
     const uploadedImageOne = await cloudinary.v2.uploader.upload(
       eventImageOneUrl.path,
       {
@@ -43,7 +52,6 @@ const createEvent = async (req, res) => {
       }
     );
 
-    // save the events
     const newEvent = new Events({
       eventTitle: eventTitle,
       eventContent: eventContent,
@@ -61,6 +69,7 @@ const createEvent = async (req, res) => {
       data: newEvent,
     });
   } catch (err) {
+    logger.error('Error in createEvent', { error: err.message });
     res.status(400).json({ message: err.message });
   }
 };
@@ -74,6 +83,7 @@ const getAllEvents = async (req, res) => {
       events: listOfEvents,
     });
   } catch (error) {
+    logger.error('Error in getAllEvents', { error: error.message });
     res.status(500).json("Server Error");
   }
 };
@@ -94,16 +104,13 @@ const getSingleEvent = async (req, res) => {
       event: singleEvent,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error in getSingleEvent', { error: error.message });
     res.status(500).json("Server Error");
   }
 };
 
 const updateEvent = async (req, res) => {
-  // step 1 : Check incomming data
-  console.log(req.body);
-  console.log(req.files);
-  // step 2 : destructuring
+  logger.info('Update Event request received', { requestBody: req.body, files: req.files });
 
   const { eventTitle, eventContent, organizedBy, eventDate } = req.body;
   const { eventImageOneUrl, eventImageTwoUrl, eventFileUrl } = req.files;
@@ -117,6 +124,8 @@ const updateEvent = async (req, res) => {
     });
   }
   try {
+    let updatedEvent = {};
+
     if (eventImageOneUrl) {
       const uploadedImageOne = await cloudinary.v2.uploader.upload(
         eventImageOneUrl.path,
@@ -125,6 +134,7 @@ const updateEvent = async (req, res) => {
           crop: "scale",
         }
       );
+      updatedEvent.eventImageOneUrl = uploadedImageOne.secure_url;
     }
     if (eventImageTwoUrl) {
       const uploadedImageTwo = await cloudinary.v2.uploader.upload(
@@ -134,6 +144,7 @@ const updateEvent = async (req, res) => {
           crop: "scale",
         }
       );
+      updatedEvent.eventImageTwoUrl = uploadedImageTwo.secure_url;
     }
     if (eventFileUrl) {
       const uploadEventFileUrl = await cloudinary.v2.uploader.upload(
@@ -143,40 +154,26 @@ const updateEvent = async (req, res) => {
           crop: "scale",
         }
       );
-
-      // save the events
-      const updatedEvent = new Events({
-        eventTitle: eventTitle,
-        eventContent: eventContent,
-        organizedBy: organizedBy,
-        eventImageOneUrl: uploadedImageOne.secure_url,
-        eventImageTwoUrl: uploadedImageTwo.secure_url,
-        eventFileUrl: uploadEventFileUrl.secure_url,
-        eventDate: eventDate,
-      });
-
-      await Events.findByIdAndUpdate(id, updatedEvent);
-      res.json({
-        success: true,
-        message: "Updated Successfully",
-        event: updatedEvent,
-      });
-    } else {
-      const updatedEvent = {
-        eventTitle: eventTitle,
-        eventContent: eventContent,
-        organizedBy: organizedBy,
-        eventDate: eventDate,
-      };
-      await Events.findByIdAndUpdate(id, updatedEvent);
-      res.json({
-        success: true,
-        message: "Updated Successfully Without Image",
-        event: updatedEvent,
-      });
+      updatedEvent.eventFileUrl = uploadEventFileUrl.secure_url;
     }
+
+    updatedEvent = {
+      ...updatedEvent,
+      eventTitle,
+      eventContent,
+      organizedBy,
+      eventDate,
+    };
+
+    await Events.findByIdAndUpdate(id, updatedEvent);
+
+    res.json({
+      success: true,
+      message: "Updated Successfully",
+      event: updatedEvent,
+    });
   } catch (error) {
-    console.log(error);
+    logger.error('Error in updateEvent', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -196,7 +193,7 @@ const searchEvents = async (req, res) => {
     });
     res.send(data);
   } catch (error) {
-    console.error(error);
+    logger.error('Error in searchEvents', { error: error.message });
     res.status(500).send({ error: "Internal Server Error" });
   }
 };
@@ -215,29 +212,25 @@ const deleteEvent = async (req, res) => {
       message: "Event post deleted",
     });
   } catch (err) {
+    logger.error('Error in deleteEvent', { error: err.message });
     res.status(500).json({
       success: false,
       message: "server error",
     });
   }
 };
-//pagination
-const getEventPagination = async (req, res) => {
-  // res.send('Pagination')
-  //step 1: get pageNo form frontend
-  const requestedPage = req.query.page;
 
-  //step 2:  result per page
+const getEventPagination = async (req, res) => {
+  const requestedPage = req.query.page;
   const resultPerPage = 7;
+
   try {
-    //all product fetch
     const events = await Events.find({})
-      .skip((requestedPage - 1) * resultPerPage) //no of skips
-      .limit(resultPerPage); //limiting
+      .skip((requestedPage - 1) * resultPerPage)
+      .limit(resultPerPage);
 
     const totalEventsCount = await Events.countDocuments();
 
-    //if there is no product
     if (events.length === 0) {
       return res.json({
         success: false,
@@ -251,29 +244,25 @@ const getEventPagination = async (req, res) => {
       totalPages: Math.ceil(totalEventsCount / resultPerPage),
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error in getEventPagination', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
     });
   }
 };
-const getUserEventPagination = async (req, res) => {
-  // res.send('Pagination')
-  //step 1: get pageNo form frontend
-  const requestedPage = req.query.page;
 
-  //step 2:  result per page
+const getUserEventPagination = async (req, res) => {
+  const requestedPage = req.query.page;
   const resultPerPage = 4;
+
   try {
-    //all event fetch
     const events = await Events.find({})
-      .skip((requestedPage - 1) * resultPerPage) //no of skips
-      .limit(resultPerPage); //limiting
+      .skip((requestedPage - 1) * resultPerPage)
+      .limit(resultPerPage);
 
     const totalEventsCount = await Events.countDocuments();
 
-    //if there is no product
     if (events.length === 0) {
       return res.json({
         success: false,
@@ -287,7 +276,7 @@ const getUserEventPagination = async (req, res) => {
       totalPages: Math.ceil(totalEventsCount / resultPerPage),
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error in getUserEventPagination', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -303,7 +292,7 @@ const getEventCount = async (req, res) => {
       totalEventsCount: totalEventsCount,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error in getEventCount', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",

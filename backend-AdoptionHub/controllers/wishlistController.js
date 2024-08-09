@@ -1,55 +1,65 @@
 const Wishlist = require("../model/wishlistModel");
+const winston = require('winston');
 
-// Create a new wishlist item
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'application.log' })
+    ]
+});
+
 const addToWishlist = async (req, res) => {
   const { userId, plantId } = req.body;
   if (!userId || !plantId) {
     return res.json({
       success: false,
-      message: "All field are required ",
+      message: "All fields are required",
     });
   }
   try {
     const wishlist = await Wishlist.findOne({
-      userId: userId,
-      plantId: plantId,
+      userId,
+      plantId,
     });
     if (wishlist) {
       return res.json({
         success: false,
-        message: "You've already added",
+        message: "You've already added this item to your wishlist",
       });
     }
     const wishlists = new Wishlist({
-      userId: userId,
-      plantId: plantId,
+      userId,
+      plantId,
     });
     await wishlists.save();
+
+    logger.info('Added to wishlist successfully', { userId, plantId });
+
     res.status(200).json({
       success: true,
-      message: "Added Favorite Successfully",
+      message: "Added to wishlist successfully",
       data: wishlists,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error adding to wishlist', { error: error.message });
     res.status(500).json({
       success: false,
-      message: error,
+      message: "Internal Server Error",
     });
   }
 };
 
 
-
-// Remove item from wishlist
-// Remove item from wishlist
 const removeFromWishlist = async (req, res) => {
   try {
-    const wishlistItemId = req.params.id; // Corrected parameter name
+    const wishlistItemId = req.params.id;
 
-    const deletedWishlistItem = await Wishlist.findByIdAndRemove(
-      wishlistItemId
-    );
+    const deletedWishlistItem = await Wishlist.findByIdAndRemove(wishlistItemId);
 
     if (!deletedWishlistItem) {
       return res.status(404).json({
@@ -58,13 +68,15 @@ const removeFromWishlist = async (req, res) => {
       });
     }
 
+    logger.info('Removed from wishlist successfully', { wishlistItemId });
+
     res.status(200).json({
       success: true,
       message: "Item removed from wishlist successfully",
       data: deletedWishlistItem,
     });
   } catch (error) {
-    console.error(error);
+    logger.error('Error removing from wishlist', { error: error.message });
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -79,26 +91,27 @@ const getWishlist = async (req, res) => {
   const skip = (requestedPage - 1) * limit;
   try {
     const wishlists = await Wishlist.find({
-      userId: userId,
+      userId,
     })
       .populate("plantId")
       .skip(skip)
       .limit(limit);
+
+    logger.info('Wishlist fetched successfully', { userId, page: requestedPage });
+
     res.json({
       success: true,
-      message: "Whislist fetched successfully",
-      wishlists: wishlists,
+      message: "Wishlist fetched successfully",
+      wishlists,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error fetching wishlist', { error: error.message });
     res.status(500).json("Server error");
   }
 };
 
-
 module.exports = {
   addToWishlist,
- 
   removeFromWishlist,
   getWishlist,
 };

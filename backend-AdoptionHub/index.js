@@ -12,6 +12,8 @@ const rateLimit = require('express-rate-limit');
 const xssClean = require('xss-clean'); 
 const mongoSanitize = require('express-mongo-sanitize'); 
 const app = express();
+const winston = require('winston');
+
 
 dotenv.config();
 
@@ -88,9 +90,20 @@ app.use('/api/fund', require('./routes/fundingRoute'));
 
 const PORT = process.env.PORT || 5000;
 
-//https 
-https.createServer(sslOptions, app).listen(PORT, () => {
-    console.log(`HTTPS Server is running on port ${PORT}`);
+const logger = winston.createLogger({
+    level: 'info', 
+    format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+    ),
+    transports: [
+        new winston.transports.Console(), 
+        new winston.transports.File({ filename: 'server.log' }) 
+    ]
 });
+
+https.createServer(sslOptions, app).listen(PORT, () => {
+    logger.info(`HTTPS Server is running on port ${PORT}`);
+})
 
 module.exports = app;

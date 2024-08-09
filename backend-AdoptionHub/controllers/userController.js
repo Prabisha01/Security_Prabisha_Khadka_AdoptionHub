@@ -5,16 +5,24 @@ const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
-const res = require("express/lib/response");
-const path = require("path");
-const fs = require("fs");
 const { sendEmailController } = require("./sendEmailController");
-const { Console } = require("console");
+const winston = require('winston');
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'application.log' })
+    ]
+});
 
 const sendResetPasswordMail = async (fullName, email, token) => {
   try {
     const transporter = nodemailer.createTransport({
-      // Configure SMTP settings
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT,
       secure: false,
@@ -29,7 +37,7 @@ const sendResetPasswordMail = async (fullName, email, token) => {
 
     const mailOptions = {
       from: process.env.SMTP_MAIL,
-      to: email, // User's email
+      to: email,
       subject: "Reset the Password",
       html:
         "Hi " +
@@ -41,31 +49,29 @@ const sendResetPasswordMail = async (fullName, email, token) => {
 
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
-        console.log(error); // Log the specific error
+        logger.error("Error sending reset password email", { error: error.message });
       } else {
-        console.log("Mail has been sent :- ", info.response);
+        logger.info("Reset password email sent", { response: info.response });
       }
     });
   } catch (error) {
-    res.status(400).send({ success: false, msg: error.message });
+    logger.error("Error in sendResetPasswordMail", { error: error.message });
   }
 };
 
 const createUser = async (req, res) => {
   try {
-    // Step 1: Check if data is coming or not
-    console.log(req.body);
-    // Step 2: Destructure the data
+    logger.info('Create User request received', { requestBody: req.body });
+
     const { fullName, email, password } = req.body;
 
-    // Step 3: Validate the incoming data
     if (!fullName || !email || !password) {
       return res.json({
         success: false,
         message: "Please provide all required fields",
       });
     }
-    // Step 5: Check existing user
+
     const existingUser = await Users.findOne({ email: email });
     if (existingUser) {
       return res.json({
@@ -74,30 +80,29 @@ const createUser = async (req, res) => {
       });
     }
 
-    
     const randomSalt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, randomSalt);
 
-    // Step 7: Create new user
     const newUser = new Users({
-      fullName: fullName,
-      email: email,
+      fullName,
+      email,
       password: encryptedPassword,
     });
 
-    // Step 8: Save user and respond
     await newUser.save();
+    logger.info('User created successfully', { userId: newUser._id });
+
     res.status(200).json({
       success: true,
       message: "User created successfully.",
       data: newUser,
     });
   } catch (error) {
-    console.error("Error in createUser:", error);
+    logger.error("Error in createUser", { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
-      error: error.message, // Include the error message for debugging
+      error: error.message,
     });
   }
 };
@@ -126,15 +131,16 @@ const sendUnlockNotification = async (fullName, email) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(error);
+        logger.error("Error sending unlock notification", { error: error.message });
       } else {
-        console.log("Unlock notification sent: ", info.response);
+        logger.info("Unlock notification sent", { response: info.response });
       }
     });
   } catch (error) {
-    console.error("Error sending unlock notification:", error);
+    logger.error("Error in sendUnlockNotification", { error: error.message });
   }
 };
+
 const loginUser = async (req, res) => {
   const { email, password, captcha } = req.body;
 
@@ -202,7 +208,7 @@ const loginUser = async (req, res) => {
 
       if (user.failedLoginAttempts >= 5) {
         user.isLocked = true;
-        user.lockUntil = new Date(Date.now() + 1 * 60000); // lock for 5 minutes
+        user.lockUntil = new Date(Date.now() + 1 * 60000);
         await user.save();
 
         setTimeout(async () => {
@@ -211,7 +217,7 @@ const loginUser = async (req, res) => {
           user.lockUntil = null;
           await user.save();
           await sendUnlockNotification(user.fullName, user.email);
-        }, 5 * 60000); // 5 minutes in milliseconds
+        }, 5 * 60000);
 
         return res.json({
           success: false,
@@ -231,14 +237,13 @@ const loginUser = async (req, res) => {
     user.lockUntil = null;
     await user.save();
 
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_TOKEN_SECRET,
+      { expiresIn: "1m" }
+    );
 
-
-        // Step 7: Create token
-        const token = jwt.sign(
-          { id: user._id, isAdmin: user.isAdmin },
-          process.env.JWT_TOKEN_SECRET,
-          { expiresIn: "1m" } // token expiration
-        );
+    logger.info('User logged in successfully', { userId: user._id });
 
     res.status(200).json({
       success: true,
@@ -247,28 +252,22 @@ const loginUser = async (req, res) => {
       message: "Welcome to Adoption Hub",
     });
   } catch (error) {
-    console.log(error);
+    logger.error("Error in loginUser", { error: error.message });
     res.json(error);
   }
 };
 
-
-
 const getUserPagination = async (req, res) => {
-  // res.send('Pagination')
-  //step 1: get pageNo form frontend
   const requestedPage = req.query.page;
-
-  //step 2:  result per page
   const resultPerPage = 8;
+
   try {
-    //all user fetch
     const users = await Users.find({})
-      .skip((requestedPage - 1) * resultPerPage) //no of skips
-      .limit(resultPerPage); //limiting
+      .skip((requestedPage - 1) * resultPerPage)
+      .limit(resultPerPage);
 
     const totalUsersCount = await Users.countDocuments();
-    //if there is no product
+
     if (users.length === 0) {
       return res.json({
         success: false,
@@ -276,13 +275,15 @@ const getUserPagination = async (req, res) => {
       });
     }
 
+    logger.info('User pagination fetched', { page: requestedPage, totalUsers: totalUsersCount });
+
     res.json({
       success: true,
-      users: users,
+      users,
       totalPages: Math.ceil(totalUsersCount / resultPerPage),
     });
   } catch (error) {
-    console.log(error);
+    logger.error("Error in getUserPagination", { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -290,21 +291,21 @@ const getUserPagination = async (req, res) => {
   }
 };
 
-//function for getting all the product
 const getAllUsers = async (req, res) => {
   try {
     const listOfUsers = await Users.find();
+    logger.info('Fetched all users', { totalUsers: listOfUsers.length });
     res.json({
       success: true,
       message: "User Fetched Successfully",
       users: listOfUsers,
     });
   } catch (error) {
+    logger.error("Error in getAllUsers", { error: error.message });
     res.status(500).json("Server Error");
   }
 };
 
-// get product by id
 const getSingleUsers = async (req, res) => {
   const id = req.params.id;
   if (!id) {
@@ -315,29 +316,25 @@ const getSingleUsers = async (req, res) => {
   }
   try {
     const singleUser = await Users.findById(id);
+    logger.info('Fetched single user', { userId: id });
     res.json({
       success: true,
       message: "User Fetched",
       user: singleUser,
     });
   } catch (error) {
-    console.log(error);
+    logger.error("Error in getSingleUsers", { error: error.message });
     res.status(500).json("Server Error");
   }
 };
 
 const updateUser = async (req, res) => {
-  console.log(req.body);
-  console.log(req.files);
+  logger.info('Update User request received', { requestBody: req.body, requestFiles: req.files });
 
-  // step 2: Destructuring
-  const { fullName, email,address } = req.body;
+  const { fullName, email, address } = req.body;
   const { userImage } = req.files;
-
-  // destructure id from URL
   const id = req.params.id;
 
-  // step 3: Validating
   if (!fullName || !email) {
     return res.json({
       success: false,
@@ -352,11 +349,12 @@ const updateUser = async (req, res) => {
       });
 
       const updatedUser = {
-        fullName: fullName,
-        email: email,
+        fullName,
+        email,
         userImageUrl: uploadedImage.secure_url,
       };
       await Users.findByIdAndUpdate(id, updatedUser);
+      logger.info('User updated successfully with image', { userId: id });
       res.json({
         success: true,
         message: "Updated Successfully",
@@ -364,19 +362,20 @@ const updateUser = async (req, res) => {
       });
     } else {
       const updatedUser = {
-        fullName: fullName,
-        email: email,
-        address: address,
+        fullName,
+        email,
+        address,
       };
       await Users.findByIdAndUpdate(id, updatedUser);
+      logger.info('User updated successfully without image', { userId: id });
       res.json({
-        success: true,  
+        success: true,
         message: "Updated Successfully Without Image",
         user: updatedUser,
       });
     }
   } catch (error) {
-    console.log(error);
+    logger.error("Error in updateUser", { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -389,10 +388,8 @@ const changePassword = async (req, res) => {
   const { currentPassword, newPassword, confirmPassword } = req.body;
 
   try {
-    // Fetch the user by ID
     const user = await Users.findById(userId);
 
-    // Check if the user exists
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -400,7 +397,6 @@ const changePassword = async (req, res) => {
       });
     }
 
-    // Check if the current password is correct
     const isPasswordValid = await bcrypt.compare(
       currentPassword,
       user.password
@@ -413,7 +409,6 @@ const changePassword = async (req, res) => {
       });
     }
 
-    // Check if newPassword and confirmPassword match
     if (newPassword !== confirmPassword) {
       return res.status(400).json({
         success: false,
@@ -421,19 +416,19 @@ const changePassword = async (req, res) => {
       });
     }
 
-    // Hash the new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update the user's password
     user.password = hashedPassword;
     await user.save();
+
+    logger.info('Password changed successfully', { userId });
 
     res.status(200).json({
       success: true,
       message: "Password changed successfully",
     });
   } catch (error) {
-    console.error("Error in changePassword:", error);
+    logger.error("Error in changePassword", { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -451,15 +446,18 @@ const deleteUser = async (req, res) => {
         message: "User not found",
       });
     }
+
+    logger.info('User deleted successfully', { userId: req.params.id });
+
     res.json({
       success: true,
-      message: "User deleted Sucesfully",
+      message: "User deleted Successfully",
     });
   } catch (error) {
-    console.log(error);
+    logger.error("Error in deleteUser", { error: error.message });
     res.status(500).json({
       success: false,
-      message: "server error",
+      message: "Server Error",
     });
   }
 };
@@ -469,23 +467,26 @@ const forgetPassword = async (req, res) => {
     const userData = await Users.findOne({ email: req.body.email });
     if (userData) {
       const randomString = randomstring.generate();
-      const data = await Users.updateOne(
+      await Users.updateOne(
         { email: req.body.email },
         { $set: { token: randomString } }
       );
       sendResetPasswordMail(userData.fullName, userData.email, randomString);
+      logger.info('Reset password email sent', { email: userData.email });
       res
         .status(200)
         .send({ success: true, message: "Please check your inbox of mail" });
     } else {
       res
         .status(200)
-        .send({ success: true, message: "This email does not exits" });
+        .send({ success: true, message: "This email does not exist" });
     }
   } catch (error) {
+    logger.error("Error in forgetPassword", { error: error.message });
     res.status(400).send({ success: false, message: error.message });
   }
 };
+
 const searchUsers = async (req, res) => {
   try {
     const data = await Users.find({
@@ -494,9 +495,12 @@ const searchUsers = async (req, res) => {
         { email: { $regex: new RegExp(req.params.key, "i") } },
       ],
     });
+
+    logger.info('Users search performed', { searchKey: req.params.key, resultCount: data.length });
+
     res.send(data);
   } catch (error) {
-    console.error(error);
+    logger.error("Error in searchUsers", { error: error.message });
     res.status(500).send({ error: "Internal Server Error" });
   }
 };
@@ -504,33 +508,31 @@ const searchUsers = async (req, res) => {
 const resetPassword = async (req, res) => {
   try {
     const token = req.params.token;
-    const tokenData = await Users.findOne({ token: token });
+    const tokenData = await Users.findOne({ token });
 
     if (!tokenData) {
-      res.status(200).send({ success: false, message: "The token is expired" });
-    } else {
-      
-      const { password } = req.body;
-      if (!password || password.trim() === "") {
-        return res
-          .status(400)
-          .send({ success: false, message: "Invalid password" });
-      }
-
-      // Hash the new password before updating
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Update the user's password and clear the token
-      const data = await Users.updateOne(
-        { token: token },
-        { $set: { password: hashedPassword, token: "" } }
-      );
-
-      res
-        .status(200)
-        .send({ success: true, message: "Password reset successfully" });
+      return res.status(200).send({ success: false, message: "The token is expired" });
     }
+
+    const { password } = req.body;
+    if (!password || password.trim() === "") {
+      return res
+        .status(400)
+        .send({ success: false, message: "Invalid password" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await Users.updateOne(
+      { token },
+      { $set: { password: hashedPassword, token: "" } }
+    );
+
+    logger.info('Password reset successfully', { email: tokenData.email });
+
+    res.status(200).send({ success: true, message: "Password reset successfully" });
   } catch (error) {
+    logger.error("Error in resetPassword", { error: error.message });
     res.status(400).send({ success: false, message: error.message });
   }
 };
@@ -538,12 +540,13 @@ const resetPassword = async (req, res) => {
 const getUserCount = async (req, res) => {
   try {
     const totalUsersCount = await Users.countDocuments();
+    logger.info('User count retrieved', { totalUsersCount });
     res.json({
       success: true,
-      totalUsersCount: totalUsersCount,
+      totalUsersCount,
     });
   } catch (error) {
-    console.log(error);
+    logger.error("Error in getUserCount", { error: error.message });
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -553,45 +556,41 @@ const getUserCount = async (req, res) => {
 
 const sendOtp = async (req, res) => {
   const { email } = req.body;
-  // const user = await Users.findOne({ email: email });
   const randomOtp = Math.floor(100000 + Math.random() * 900000);
-  console.log(randomOtp);
-  // if (user) {
-    await sendEmailController(
-      email,
-      "Adoption Hub",
-      `Your Otp is: ${randomOtp}`
-    ).then(async (success) => {
-      if (success) {
-        res.status(200).json({
-          success: true,
-          message: "Otp sent successfully",
-          otp: randomOtp,
-        });
-      }
-    });
-  // } else {
-  //   res.json({
-  //     success: false,
-  //     message: "User not found",
-  //   });
-  // }
+  logger.info('OTP generated', { email, otp: randomOtp });
+
+  await sendEmailController(
+    email,
+    "Adoption Hub",
+    `Your Otp is: ${randomOtp}`
+  ).then(async (success) => {
+    if (success) {
+      logger.info('OTP sent successfully', { email });
+      res.status(200).json({
+        success: true,
+        message: "Otp sent successfully",
+        otp: randomOtp,
+      });
+    }
+  });
 };
 
 const verifyUser = async (req, res) => {
-  console.log(req.body);
+  logger.info('Verify User request received', { requestBody: req.body });
   const { email } = req.body;
-  const user = await Users.findOne({ email: email });
+  const user = await Users.findOne({ email });
   if (user) {
-    const verifyUser = await Users.updateOne(
-      { email: email },
+    await Users.updateOne(
+      { email },
       { $set: { isVerified: true } }
     );
+    logger.info('User verified successfully', { email });
     res.json({
       success: true,
       message: "User verified successfully",
     });
   } else {
+    logger.error("User not found during verification", { email });
     res.json({
       success: false,
       message: "User not found",
@@ -614,5 +613,4 @@ module.exports = {
   searchUsers,
   sendOtp,
   verifyUser,
-  
 };

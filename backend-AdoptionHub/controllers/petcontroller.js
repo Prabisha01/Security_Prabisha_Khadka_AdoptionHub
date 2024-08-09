@@ -1,10 +1,22 @@
 const Pet = require("../model/petModel");
 const cloudinary = require("cloudinary");
+const winston = require('winston');
+
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'application.log' })
+    ]
+});
 
 const addPet = async (req, res) => {
-  console.log(req.body);
-  console.log(req.files);
-  console.log(req.body.status);
+  logger.info('Add Pet request received', { requestBody: req.body, requestFiles: req.files, status: req.body.status });
 
   try {
     const {
@@ -99,6 +111,7 @@ const addPet = async (req, res) => {
       });
 
       await newPet.save();
+      logger.info('Pet created successfully', { petId: newPet._id });
     } else if (req.body.status === "own") {
       const { petAge, petGender, vaccines } = req.body;
       const {
@@ -149,11 +162,8 @@ const addPet = async (req, res) => {
         cloudinary.v2.uploader.upload(petFileUrl.path, { folder: "Pet" }),
       ]);
 
-      if (vaccines) {
-        isVaccinated = true;
-      } else {
-        isVaccinated = false;
-      }
+      const isVaccinated = vaccines ? true : false;
+
       const newPet = new Pet({
         fullName,
         email,
@@ -177,6 +187,7 @@ const addPet = async (req, res) => {
       });
 
       await newPet.save();
+      logger.info('Pet created successfully', { petId: newPet._id });
     }
 
     res.status(200).json({
@@ -184,7 +195,7 @@ const addPet = async (req, res) => {
       message: "Pet created successfully",
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error creating pet', { error: error.message });
     res.status(500).json("Something went wrong. Please try again later.");
   }
 };
@@ -192,15 +203,18 @@ const addPet = async (req, res) => {
 const getAllPets = async (req, res) => {
   try {
     const allPets = await Pet.find();
-    const Pets = await allPets.filter((pet) => pet.isVaccinated === false);
+    const Pets = allPets.filter((pet) => pet.isVaccinated === false);
     const vaccinatedPets = allPets.filter((pet) => pet.isVaccinated === true);
+
+    logger.info('Fetched all pets', { totalPets: allPets.length, unvaccinatedPets: Pets.length, vaccinatedPets: vaccinatedPets.length });
+
     res.status(200).json({
       success: true,
       allPets: Pets,
       vaccinatedPets: vaccinatedPets,
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Error fetching pets', { error: error.message });
     res.status(500).json(error.message);
   }
 };
