@@ -84,3 +84,12 @@
 {"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T06:32:42.022Z","totalStories":3}
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-09T17:09:20.837Z"}
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-09T17:41:41.423Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-09T17:41:56.988Z"}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T17:42:38.306Z","totalProducts":8}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T17:42:38.313Z","totalStories":3}
+{"level":"info","message":"Fetched all stories","timestamp":"2024-08-09T17:42:39.025Z","totalStories":3}
+{"level":"info","message":"Fetched all products","timestamp":"2024-08-09T17:42:39.036Z","totalProducts":8}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":747010,"timestamp":"2024-08-09T17:44:21.890Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723225478 d2e1a72fcca58-710e5ab565fsm18340b3a.191 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-09T17:44:39.393Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-09T17:44:39.396Z"}
+{"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"123456","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"123456"},"timestamp":"2024-08-09T17:45:03.365Z"}
