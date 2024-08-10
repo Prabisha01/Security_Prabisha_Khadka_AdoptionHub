@@ -77,15 +77,10 @@ app.get('/test', (req, res) => {
 });
 
 app.use('/api/user', require('./routes/userRoutes'));
-app.use('/api/product', require('./routes/productRoute'));
-app.use('/api/order', require('./routes/orderRoute'));
 app.use('/api/pet', require('./routes/petRoute'));
 app.use('/api/adopt', require('./routes/adoptionRoute'));
 app.use('/api/event', require('./routes/eventRoute'));
-app.use('/api/addtocart', require('./routes/cartRoute'));
-app.use('/api/story', require('./routes/storyRoute'));
 app.use('/api/contact', require('./routes/contactRoute'));
-app.use('/api/fund', require('./routes/fundingRoute'));
 
 
 const PORT = process.env.PORT || 5000;
