@@ -12,6 +12,9 @@ const rateLimit = require('express-rate-limit');
 const xssClean = require('xss-clean'); 
 const mongoSanitize = require('express-mongo-sanitize'); 
 const app = express();
+const session = require('express-session');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const winston = require('winston');
 
 
@@ -22,6 +25,49 @@ const sslOptions = {
     key: fs.readFileSync(path.resolve(__dirname, process.env.SSL_KEY_FILE)),
     cert: fs.readFileSync(path.resolve(__dirname, process.env.SSL_CRT_FILE))
 };
+
+// Middleware to parse cookies
+app.use(cookieParser());
+
+// Middleware to parse request bodies (for forms, JSON, etc.)
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Set up express-session
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false, 
+    saveUninitialized: false, 
+    cookie: {
+        maxAge: 1 * 60 * 1000 ,
+        secure: true,
+        httpOnly: false 
+        
+    }
+}));
+
+app.use((req, res, next) => {
+    if (req.session) {
+        console.log(`Session ID: ${req.sessionID}`);
+        console.log(`Session Data: ${JSON.stringify(req.session)}`);
+    } else {
+        console.log('No session initialized.');
+    }
+    next();
+});
+
+app.get('/set-session', (req, res) => {
+    req.session.username = 'testuser';
+    res.send('Session has been set!');
+});
+
+app.get('/get-session', (req, res) => {
+    if (req.session.username) {
+        res.send(`Session value: ${req.session.username}`);
+    } else {
+        res.send('No session found.');
+    }
+});
 
 
 const corsPolicy = {

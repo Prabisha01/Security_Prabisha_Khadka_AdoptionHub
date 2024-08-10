@@ -119,3 +119,72 @@
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:52.952Z"}
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:57.815Z"}
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:29:02.404Z"}
+{"level":"info","message":"Send Message request received","requestBody":{"contactEmail":"prabishakha","contactMessage":"nn","contactName":"Prabisha Khadka"},"timestamp":"2024-08-10T05:39:52.275Z"}
+{"level":"info","message":"Send Message request received","requestBody":{"contactEmail":"prabishakhadka2000@gmail.com","contactMessage":"hi","contactName":"Prabisha Khadka"},"timestamp":"2024-08-10T05:40:28.975Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723268431 d9443c01a7336-200bb9b15aasm5710535ad.124 - gsmtp","subject":"Contact Us","timestamp":"2024-08-10T05:40:31.900Z","to":"prabishakhadka2000@gmail.com"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T05:41:28.495Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T05:41:28.810Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T05:43:31.764Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T05:48:22.598Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T05:48:22.905Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T05:48:39.995Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T05:48:40.267Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T05:48:45.887Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T05:48:46.463Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T06:07:03.165Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T06:07:03.459Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T06:07:19.760Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T06:07:20.028Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:32:45.907Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:32:52.195Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:33:32.296Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:33:48.170Z"}
+{"level":"info","message":"User logged in successfully","timestamp":"2024-08-10T06:34:47.962Z","userId":"66b6de37abd06d30bfba7147"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:42:45.248Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:45:08.729Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:45:22.579Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:46:09.983Z"}
+{"level":"info","message":"User logged in successfully","timestamp":"2024-08-10T06:46:34.293Z","userId":"66b6de37abd06d30bfba7147"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:50:39.087Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:56:44.343Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T06:59:30.506Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:05:02.265Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:08:23.309Z"}
+{"level":"info","message":"User logged in successfully","sessionId":"jQd07ac_QlFZ77GXjKiQm4o-qEkfC4t5","timestamp":"2024-08-10T07:08:49.374Z","userId":"66b6de37abd06d30bfba7147"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:12:29.643Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:12:41.134Z"}
+{"level":"info","message":"User logged in successfully","sessionId":"8p4ER96VjSF7EPuSLVILaZYgePmIwU0F","timestamp":"2024-08-10T07:13:16.739Z","userId":"66b6de37abd06d30bfba7147"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:14:06.405Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:27:28.833Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:27:34.938Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:27:41.134Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:27:53.430Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:28:59.640Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:29:15.533Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:30:51.509Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:30:58.143Z"}
+{"level":"info","message":"User logged in successfully","method":"POST","sessionId":"13QIHKApfsIBPQ7Aznr5NUVwCDWdjzNE","timestamp":"2024-08-10T07:31:17.458Z","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147","userName":"Prabisha Khadka"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:37:52.612Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:38:27.478Z"}
+{"level":"info","message":"User logged in successfully","method":"POST","sessionId":"HQ5KlekHjPx1xnMsB6NlB57RDLfy7o2T","timestamp":"2024-08-10T07:38:49.229Z","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147","userName":"Prabisha Khadka"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:40:28.137Z"}
+{"level":"info","message":{"method":"POST","sessionId":"nfl724innty6TIzQQa6XMM5LCnSPM4UZ","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147","userName":"Prabisha Khadka"},"timestamp":"2024-08-10T07:40:42.331Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T07:41:48.263Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T08:29:03.901Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T08:30:26.322Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T08:30:32.865Z"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T08:38:15.632Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T08:38:15.941Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T08:42:12.339Z"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T08:46:25.857Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T08:46:26.116Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T08:49:12.540Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"s70E_mv06Ps-cDolkDrk7GKPrUFozMBw","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-10T08:49:36.428Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T08:54:48.821Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"X65BK5gUu21quSXqfeETlp7x0qrr0pRX","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-10T08:55:07.174Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T08:58:39.874Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T09:03:10.369Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T09:09:08.574Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T09:09:25.775Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"UXfVPAla2X9sPaxE8AKGAuDac6jXiCnF","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-10T09:29:13.335Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T09:39:44.317Z"}

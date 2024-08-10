@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { contactApi } from "../apis/Api";
 import useAuthCheck from "../components/IsAuthenticated";
-import DOMPurify from 'dompurify';  // Import DOMPurify for sanitization
+import DOMPurify from "dompurify"; // Import DOMPurify for sanitization
 
 const LandingPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -23,7 +23,6 @@ const LandingPage = () => {
   const handleContactSubmit = (e) => {
     e.preventDefault();
 
-  
     const sanitizedFullName = sanitizeInput(fullName.trim());
     const sanitizedEmail = sanitizeInput(email.trim());
     const sanitizedMessage = sanitizeInput(message.trim());
@@ -52,14 +51,6 @@ const LandingPage = () => {
         setIsLoading(false);
         toast.error("Server Error: " + err.message);
       });
-  };
-
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-
-  const openShareModal = () => {
-    verifyAuthBeforeAction(() => {
-      setIsShareModalOpen(true);
-    });
   };
 
   return (
@@ -118,8 +109,7 @@ const LandingPage = () => {
                   to={"/adopt"}
                   className="bg-[#FF8534] text-center text-white font-bold text-xl md:text-2xl px-12 py-2 rounded"
                   style={{
-                    transition:
-                      "background-color 500ms ease, border 500ms ease",
+                    transition: "background-color 500ms ease, border 500ms ease",
                   }}
                   onMouseOver={(e) => {
                     e.target.style.backgroundColor = "#FF7148";
@@ -146,8 +136,11 @@ const LandingPage = () => {
             height: "338px",
           }}
         >
-          <div className="bg-white flex flex-col md:flex-row md:p-8 border border-black items-center gap-6 justify-center w-full md:w-auto">
-            <form className="space-y-4 w-full" style={{ maxWidth: "600px" }}>
+          <div
+            className="bg-white flex flex-col md:flex-row md:p-8 border border-black items-center gap-6 justify-center w-full md:w-auto"
+            style={{ width: "calc(100% + 300px)" }} // Increase the width by 300px
+          >
+            <form className="space-y-4 w-full" style={{ maxWidth: "700px" }}>
               <h1 className="font-bold text-3xl md:text-5xl">
                 Get In <span className="text-[#FF8534]">Touch</span>
               </h1>
@@ -203,8 +196,7 @@ const LandingPage = () => {
                 style={{
                   fontSize: "22px",
                   fontWeight: "800",
-                  transition:
-                    "background-color 500ms ease, border 500ms ease",
+                  transition: "background-color 500ms ease, border 500ms ease",
                 }}
                 onMouseOver={(e) => {
                   e.target.style.backgroundColor = "#FF7148";
@@ -222,7 +214,10 @@ const LandingPage = () => {
                 )}
               </button>
             </form>
-            <div className="w-full md:w-1/2 mt-6 md:mt-0">
+            <div
+              className="w-full md:w-1/3 mt-6 md:mt-0"
+              style={{ position: "relative", top: "-20px" }} 
+            >
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1401.8199301169543!2d85.32952567350087!3d27.7060244248381!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb190a74aa1f23%3A0x74ebef82ad0e5c15!2z4KS44KSr4KWN4KSf4KS14KS-4KSw4KS_4KSV4KS-IOCkleCksuClh-CknA!5e0!3m2!1sne!2snp!4v1719846302324!5m2!1sne!2snp"
                 className="rounded-lg shadow-lg border-black border-2 w-full h-[200px] md:h-[500px]"
@@ -233,10 +228,6 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-
-        <footer className="text-center p-4 mt-10">
-          <p className="text-gray-600">© 2024 Your Company. All rights reserved.</p>
-        </footer>
       </div>
     </>
   );
