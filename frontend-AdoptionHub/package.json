@@ -21,6 +21,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
     "classnames": "^2.5.1",
+    "dompurify": "^3.1.6",
     "flowbite-react": "^0.9.0",
     "formik": "^2.4.6",
     "pdfjs-dist": "^4.4.168",
@@ -54,8 +55,6 @@
     "eject": "react-scripts eject",
     "secureBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "secureDeploy": "cross-env NODE_ENV=production serve -s build --listen 3000 --ssl-cert ./cert.crt --ssl-key ./cert.key"
-
-
   },
   "eslintConfig": {
     "extends": [

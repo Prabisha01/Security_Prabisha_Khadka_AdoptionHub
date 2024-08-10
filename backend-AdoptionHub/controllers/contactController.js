@@ -1,6 +1,8 @@
 const Contacts = require("../model/contactModel");
 const winston = require('winston');
 const { sendEmailController } = require("./sendEmailController");
+const { body, validationResult } = require('express-validator');
+const xss = require('xss');
 
 
 const logger = winston.createLogger({
@@ -15,36 +17,48 @@ const logger = winston.createLogger({
     ]
 });
 
+
 const sendMessage = async (req, res) => {
   logger.info('Send Message request received', { requestBody: req.body });
 
   const { contactName, contactEmail, contactMessage } = req.body;
 
-  if (!contactName || !contactEmail || !contactMessage) {
-    return res.json({
+  
+  await body('contactName').trim().escape().notEmpty().run(req);
+  await body('contactEmail').isEmail().normalizeEmail().run(req);
+  await body('contactMessage').trim().escape().notEmpty().run(req);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
       success: false,
-      message: "Please enter all the fields",
+      message: "Validation failed",
+      errors: errors.array(),
     });
   }
 
   try {
+    
+    const sanitizedContactName = xss(contactName);
+    const sanitizedContactEmail = xss(contactEmail);
+    const sanitizedContactMessage = xss(contactMessage);
+
     const sendEmail = await sendEmailController(
-      contactEmail,
+      sanitizedContactEmail,
       "Contact Us",
       "Thank You for Reaching To us!!"
     );
 
     if (sendEmail) {
       const newContact = await Contacts.create({
-        contactName,
-        contactEmail,
-        contactMessage,
+        contactName: sanitizedContactName,
+        contactEmail: sanitizedContactEmail,
+        contactMessage: sanitizedContactMessage,
       }).catch((error) => {
         logger.error('Error in saving contact', { error: error.message });
         return res.status(500).json({
           success: false,
           message: "An error occurred while saving the contact",
-          error: error.message,
         });
       });
 
@@ -58,7 +72,6 @@ const sendMessage = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An error occurred while sending the email",
-      error: error.message,
     });
   }
 };
@@ -67,9 +80,9 @@ const searchContacts = async (req, res) => {
   try {
     const data = await Contacts.find({
       $or: [
-        { contactEmail: { $regex: new RegExp(req.params.key, "i") } },
-        { contactMessage: { $regex: new RegExp(req.params.key, "i") } },
-        { contactName: { $regex: new RegExp(req.params.key, "i") } },
+        { contactEmail: { $regex: new RegExp(xss(req.params.key), "i") } },
+        { contactMessage: { $regex: new RegExp(xss(req.params.key), "i") } },
+        { contactName: { $regex: new RegExp(xss(req.params.key), "i") } },
       ],
     });
     res.send(data);
@@ -79,8 +92,9 @@ const searchContacts = async (req, res) => {
   }
 };
 
+
 const getContactPagination = async (req, res) => {
-  const requestedPage = req.query.page;
+  const requestedPage = parseInt(req.query.page, 10) || 1;
   const resultPerPage = 8;
 
   try {
@@ -111,12 +125,13 @@ const getContactPagination = async (req, res) => {
   }
 };
 
+
 const getAllContacts = async (req, res) => {
   try {
     const listOfContacts = await Contacts.find();
     res.json({
       success: true,
-      message: "Contact Fetched Successfully",
+      message: "Contacts Fetched Successfully",
       contacts: listOfContacts,
     });
   } catch (error) {
@@ -125,16 +140,23 @@ const getAllContacts = async (req, res) => {
   }
 };
 
+
 const getSingleContact = async (req, res) => {
-  const id = req.params.id;
+  const id = xss(req.params.id);
   if (!id) {
-    return res.json({
-      message: "No record with given id:",
+    return res.status(400).json({
+      message: "No record with given ID",
       success: false,
     });
   }
   try {
     const singleContact = await Contacts.findById(id);
+    if (!singleContact) {
+      return res.status(404).json({
+        success: false,
+        message: "Contact not found",
+      });
+    }
     res.json({
       success: true,
       message: "Contact Fetched",
@@ -146,27 +168,29 @@ const getSingleContact = async (req, res) => {
   }
 };
 
+
 const deleteContact = async (req, res) => {
   try {
-    const deleteContact = await Contacts.findByIdAndDelete(req.params.id);
+    const deleteContact = await Contacts.findByIdAndDelete(xss(req.params.id));
     if (!deleteContact) {
-      return res.json({
+      return res.status(404).json({
         success: false,
         message: "Contact not found",
       });
     }
     res.json({
       success: true,
-      message: "Contact deleted Sucesfully",
+      message: "Contact deleted Successfully",
     });
   } catch (error) {
     logger.error('Error in deleteContact', { error: error.message });
     res.status(500).json({
       success: false,
-      message: "server error",
+      message: "Server Error",
     });
   }
 };
+
 
 const getContactCount = async (req, res) => {
   try {

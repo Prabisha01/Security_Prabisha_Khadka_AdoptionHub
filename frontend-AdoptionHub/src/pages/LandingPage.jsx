@@ -1,10 +1,11 @@
 import { CircularProgress } from "@mui/material";
 import "pure-react-carousel/dist/react-carousel.es.css";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { contactApi } from "../apis/Api";
 import useAuthCheck from "../components/IsAuthenticated";
+import DOMPurify from 'dompurify';  // Import DOMPurify for sanitization
 
 const LandingPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -15,12 +16,22 @@ const LandingPage = () => {
 
   const verifyAuthBeforeAction = useAuthCheck();
 
+  const sanitizeInput = (input) => {
+    return DOMPurify.sanitize(input);
+  };
+
   const handleContactSubmit = (e) => {
     e.preventDefault();
+
+    // Sanitize inputs before sending them to the server
+    const sanitizedFullName = sanitizeInput(fullName.trim());
+    const sanitizedEmail = sanitizeInput(email.trim());
+    const sanitizedMessage = sanitizeInput(message.trim());
+
     const data = new FormData();
-    data.append("contactName", fullName.trim());
-    data.append("contactEmail", email.trim());
-    data.append("contactMessage", message.trim());
+    data.append("contactName", sanitizedFullName);
+    data.append("contactEmail", sanitizedEmail);
+    data.append("contactMessage", sanitizedMessage);
 
     setIsLoading(true);
 

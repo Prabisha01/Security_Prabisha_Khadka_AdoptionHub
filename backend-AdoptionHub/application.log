@@ -102,3 +102,19 @@
 {"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T02:57:44.360Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
 {"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T03:01:23.733Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
 {"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T03:01:24.010Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":681660,"timestamp":"2024-08-10T03:27:37.264Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723260460 d2e1a72fcca58-710e5a438b3sm456664b3a.121 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T03:27:40.378Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T03:27:40.394Z"}
+{"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"@Khad1234","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"@Khad1234"},"timestamp":"2024-08-10T03:27:51.095Z"}
+{"level":"info","message":"User created successfully","timestamp":"2024-08-10T03:27:51.796Z","userId":"66b6de37abd06d30bfba7147"}
+{"level":"info","message":"User logged in successfully","timestamp":"2024-08-10T03:27:59.297Z","userId":"66b6de37abd06d30bfba7147"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:27:29.214Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:10.218Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:15.815Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:19.927Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:27.458Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:33.794Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:41.002Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:48.098Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:52.952Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T05:28:57.815Z"}
