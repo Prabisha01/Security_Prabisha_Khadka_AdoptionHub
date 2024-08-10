@@ -61,11 +61,15 @@ export default function Navbar() {
   };
 
   return (
-    <Disclosure as="nav" className="bg-white border-b border-gray-300 fixed w-full z-50" style={{ fontFamily: "Poppins" }}>
+    <Disclosure
+      as="nav"
+      className="bg-white border-b border-gray-300 fixed w-full z-50"
+      style={{ fontFamily: "Poppins" }}
+    >
       {({ open }) => (
         <>
           <div className="relative mx-auto w-full max-w-screen-xl h-24 flex items-center justify-between px-4 sm:px-6 lg:px-8">
-            <div className="absolute left-[-70px] top-[12px] flex-shrink-0">
+            <div className="absolute left-0 top-[12px] flex-shrink-0">
               <Link to="/home">
                 <img
                   className="h-16 w-auto"
@@ -74,7 +78,7 @@ export default function Navbar() {
                 />
               </Link>
             </div>
-            <div className="hidden md:flex md:space-x-12 absolute left-[140px] top-[28px]">
+            <div className="hidden md:flex md:space-x-12 absolute left-28 top-[28px]">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -86,17 +90,19 @@ export default function Navbar() {
                     "px-3 py-2 text-lg font-medium"
                   )}
                   style={{
-                    fontSize: '25px',
-                    fontFamily: 'Poppins',
-                    fontWeight: '600',
+                    fontSize: "20px",
+                    fontFamily: "Poppins",
+                    fontWeight: "600",
                   }}
-                  aria-current={location.pathname === item.href ? "page" : undefined}
+                  aria-current={
+                    location.pathname === item.href ? "page" : undefined
+                  }
                 >
                   {item.name}
                 </Link>
               ))}
             </div>
-            <div className="hidden md:flex md:items-center md:space-x-4 absolute right-[-60px] top-[28px]">
+            <div className="hidden md:flex md:items-center md:space-x-4 absolute right-0 top-[28px]">
               {user ? (
                 <div className="flex items-center space-x-4">
                   <Menu as="div" className="relative">
@@ -105,7 +111,7 @@ export default function Navbar() {
                         className="rounded-circle"
                         src={user?.userImageUrl || "/assets/images/profile.png"}
                         alt=""
-                        style={{ width: '40px', height: '40px' }}
+                        style={{ width: "40px", height: "40px" }}
                       />
                     </MenuButton>
                     <Transition
@@ -199,8 +205,12 @@ export default function Navbar() {
                     </Transition>
                   </Menu>
                   <div className="ml-2">
-                    <span className="block text-sm font-medium text-gray-900">Welcome!!</span>
-                    <span className="block text-sm font-medium text-gray-500">{user?.fullName}</span>
+                    <span className="block text-sm font-medium text-gray-900">
+                      Welcome!!
+                    </span>
+                    <span className="block text-sm font-medium text-gray-500">
+                      {user?.fullName}
+                    </span>
                   </div>
                 </div>
               ) : (
@@ -218,7 +228,8 @@ export default function Navbar() {
                       padding: "8px 20px",
                       textAlign: "center",
                       textDecoration: "none",
-                      transition: "background-color 500ms ease, border 500ms ease, color 500ms ease",
+                      transition:
+                        "background-color 500ms ease, border 500ms ease, color 500ms ease",
                       width: "115px",
                       height: "41px",
                       display: "flex",
@@ -250,12 +261,11 @@ export default function Navbar() {
                     onClose={closeSignupModal}
                     onOpenLogin={openLoginModal}
                   />
-                  
                 </div>
               )}
             </div>
             <div className="flex items-center md:hidden absolute top-7 right-4">
-              <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+              <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                 <span className="sr-only">Open main menu</span>
                 {open ? (
                   <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -267,7 +277,7 @@ export default function Navbar() {
           </div>
 
           <Disclosure.Panel className="md:hidden">
-            <div className="px-0 pt-2 pb-3 space-y-1">
+            <div className="px-4 pt-2 pb-3 space-y-1">
               {navigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
@@ -275,36 +285,38 @@ export default function Navbar() {
                   to={item.href}
                   className={classNames(
                     location.pathname === item.href
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-800 hover:bg-gray-700 hover:text-white",
+                      ? "bg-gray-200 text-black"
+                      : "text-gray-800 hover:bg-gray-100 hover:text-black",
                     "block px-3 py-2 rounded-md text-base font-medium"
                   )}
-                  aria-current={location.pathname === item.href ? "page" : undefined}
+                  aria-current={
+                    location.pathname === item.href ? "page" : undefined
+                  }
                 >
                   {item.name}
                 </Disclosure.Button>
               ))}
             </div>
-            <div className="px-2 pt-2 pb-3 space-y-1">
+            <div className="px-4 pt-2 pb-3 space-y-1">
               {user ? (
                 <div className="space-y-1">
                   <Disclosure.Button
                     as={Link}
                     to={`/profile/${user._id}`}
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-100 hover:text-black"
                   >
                     Profile
                   </Disclosure.Button>
                   <Disclosure.Button
                     as={Link}
                     to={`/changePassword/${user._id}`}
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-100 hover:text-black"
                   >
                     Reset Password
                   </Disclosure.Button>
                   <Disclosure.Button
                     onClick={logout}
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-100 hover:text-black"
                   >
                     Logout
                   </Disclosure.Button>
@@ -313,14 +325,14 @@ export default function Navbar() {
                 <div className="space-y-1">
                   <Disclosure.Button
                     onClick={openLoginModal}
-                    className="block w-full text-center px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                    className="block w-full text-center px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-100 hover:text-black"
                   >
                     Login
                   </Disclosure.Button>
                   <Disclosure.Button
                     as={Link}
                     to="/donate"
-                    className="block w-full text-center px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
+                    className="block w-full text-center px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-100 hover:text-black"
                   >
                     Donor
                   </Disclosure.Button>

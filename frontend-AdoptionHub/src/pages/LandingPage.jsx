@@ -132,41 +132,9 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-
-        <div className="bg-white py-4 mb-14">
-          <div className="text-center mb-8 md:text-left">
-            <h1 className="font-bold text-2xl md:text-4xl">
-              Pamper Your Pet with
-              <span className="text-[#FF8534]">Tasty</span> Treats
-            </h1>
-            <p className="mt-1">Because Your Pet Deserves the Best</p>
-          </div>
-
-          <div className="flex flex-col mx-4 lg:flex-row items-center md:flex-row md:px-48 md:p-3 justify-between">
-            <h2 className="text-3xl font-semibold text-center mb-4">
-              Recently Added
-            </h2>
-            <Link
-              to={"/products"}
-              className="bg-[#FF8534] text-center text-white font-bold text-xl w-full md:w-auto md:text-2xl px-12 py-2 md:py-2 lg:py-2 rounded"
-              style={{
-                transition: "background-color 500ms ease, border 500ms ease",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.backgroundColor = "#FF7148";
-                e.target.style.border = "2px solid black";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.backgroundColor = "#FF8534";
-                e.target.style.border = "none";
-              }}
-            >
-              Explore
-            </Link>
-          </div>
-            
-          </div>
         </div>
+
+    
 
 
         <div
