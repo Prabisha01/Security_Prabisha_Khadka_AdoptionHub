@@ -94,3 +94,11 @@
 {"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-09T17:44:39.396Z"}
 {"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"123456","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"123456"},"timestamp":"2024-08-09T17:45:03.365Z"}
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-10T02:32:33.606Z"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T02:57:20.565Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T02:57:20.841Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T02:57:37.583Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T02:57:37.832Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T02:57:44.102Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T02:57:44.360Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T03:01:23.733Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T03:01:24.010Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}

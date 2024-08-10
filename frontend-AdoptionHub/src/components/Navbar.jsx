@@ -78,7 +78,7 @@ export default function Navbar() {
                 />
               </Link>
             </div>
-            <div className="hidden md:flex md:space-x-12 absolute left-28 top-[28px]">
+            <div className="hidden md:flex md:space-x-12 absolute left-36 top-[28px]">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -159,32 +159,6 @@ export default function Navbar() {
                               )}
                             >
                               Reset Password
-                            </Link>
-                          )}
-                        </MenuItem>
-                        <MenuItem>
-                          {({ active }) => (
-                            <Link
-                              to={`/my-cart`}
-                              className={classNames(
-                                active ? "bg-[#FFA500]" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              Cart
-                            </Link>
-                          )}
-                        </MenuItem>
-                        <MenuItem>
-                          {({ active }) => (
-                            <Link
-                              to={`/my-orders/${user._id}`}
-                              className={classNames(
-                                active ? "bg-[#FFA500]" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              My Orders
                             </Link>
                           )}
                         </MenuItem>
