@@ -23,7 +23,7 @@ const LandingPage = () => {
   const handleContactSubmit = (e) => {
     e.preventDefault();
 
-    // Sanitize inputs before sending them to the server
+  
     const sanitizedFullName = sanitizeInput(fullName.trim());
     const sanitizedEmail = sanitizeInput(email.trim());
     const sanitizedMessage = sanitizeInput(message.trim());
@@ -138,7 +138,7 @@ const LandingPage = () => {
         </div>
 
         <div
-          className="mx-4 md:mx-[13rem] lg:mx-80 md:p-20 p-4 mt-16 rounded-lg mb-8 flex flex-col md:flex-row items-center justify-center"
+          className="mx-4 md:mx-[12rem] lg:mx-[12rem] md:p-20 p-4 mt-16 rounded-lg mb-8 flex flex-col md:flex-row items-center justify-center"
           style={{
             backgroundImage: "url('assets/images/landingpage.png')",
             backgroundSize: "cover",
@@ -147,7 +147,7 @@ const LandingPage = () => {
           }}
         >
           <div className="bg-white flex flex-col md:flex-row md:p-8 border border-black items-center gap-6 justify-center w-full md:w-auto">
-            <form className="space-y-4 w-full">
+            <form className="space-y-4 w-full" style={{ maxWidth: "600px" }}>
               <h1 className="font-bold text-3xl md:text-5xl">
                 Get In <span className="text-[#FF8534]">Touch</span>
               </h1>

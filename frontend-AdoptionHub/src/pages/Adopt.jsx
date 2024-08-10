@@ -149,34 +149,7 @@ const Adopt = () => {
                 to families.
               </p>
               <div className="flex justify-end gap-4">
-              <Link
-                  to="/vaccinated"
-                  className="bg-[#FF8534] text-white font-bold py-2 px-4 rounded w-[300px] h-[58px] text-[22px]"
-                  style={{
-                    backgroundColor: "#FF8534",
-                    color: "#FFFFFF",
-                    fontSize: "22px",
-                    fontWeight: "bold",
-                    borderRadius: "10px",
-                    fontFamily: "Poppins",
-                    border: "none",
-                    transition:
-                      "background-color 500ms ease, border 500ms ease",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.backgroundColor = "#FF7148";
-                    e.target.style.border = "2px solid black";
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.backgroundColor = "#FF8534";
-                    e.target.style.border = "none";
-                  }}
-                >
-                  Vaccinated Pets
-                </Link>
+              
                 <button
                   onClick={openListModal}
                   className="bg-[#FF8534] text-white font-bold py-2 px-4 rounded w-[222px] h-[58px] text-[22px]"
