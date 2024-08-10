@@ -188,3 +188,8 @@
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-10T09:09:25.775Z"}
 {"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"UXfVPAla2X9sPaxE8AKGAuDac6jXiCnF","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-10T09:29:13.335Z"}
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-10T09:39:44.317Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T09:52:07.746Z"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T10:03:30.785Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T10:03:31.053Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T10:04:11.482Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T10:04:11.743Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
