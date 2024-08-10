@@ -22,7 +22,6 @@ import RegisterModal from "../pages/Register";
 
 const navigation = [
   { name: "Adopt", href: "/adopt", current: false },
-  { name: "Shop", href: "/products", current: false },
   { name: "Event", href: "/event", current: false },
 ];
 
@@ -203,37 +202,6 @@ export default function Navbar() {
                     <span className="block text-sm font-medium text-gray-900">Welcome!!</span>
                     <span className="block text-sm font-medium text-gray-500">{user?.fullName}</span>
                   </div>
-                  <Link
-                    to="/donate"
-                    className="bg-[#F24E1E] text-white px-4 py-2 rounded-lg"
-                    style={{
-                      backgroundColor: "#FF8534",
-                      color: "#FFFFFF",
-                      width: "115px",
-                      height: "41px",
-                      fontSize: "15px",
-                      fontWeight: "bold",
-                      borderRadius: "10px",
-                      fontFamily: "Poppins",
-                      border: "none",
-                      transition: "background-color 500ms ease, border 500ms ease",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      position: "relative",
-                      left: "10px",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.backgroundColor = "#FF7148";
-                      e.target.style.border = "2px solid black";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.backgroundColor = "#FF8534";
-                      e.target.style.border = "none";
-                    }}
-                  >
-                    Donor
-                  </Link>
                 </div>
               ) : (
                 <div className="flex space-x-4">
@@ -282,37 +250,7 @@ export default function Navbar() {
                     onClose={closeSignupModal}
                     onOpenLogin={openLoginModal}
                   />
-                  <Link
-                    to="/donate"
-                    className="bg-[#F24E1E] text-white px-4 py-2 rounded-lg"
-                    style={{
-                      backgroundColor: "#FF8534",
-                      color: "#FFFFFF",
-                      width: "115px",
-                      height: "41px",
-                      fontSize: "15px",
-                      fontWeight: "bold",
-                      borderRadius: "10px",
-                      fontFamily: "Poppins",
-                      border: "none",
-                      transition: "background-color 500ms ease, border 500ms ease",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      position: "relative",
-                      left: "10px",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.backgroundColor = "#FF7148";
-                      e.target.style.border = "2px solid black";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.backgroundColor = "#FF8534";
-                      e.target.style.border = "none";
-                    }}
-                  >
-                    Donor
-                  </Link>
+                  
                 </div>
               )}
             </div>

@@ -4,15 +4,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
-  addToCartApi,
+  
   contactApi,
-  getAllEventsApi,
-  getAllProductApi,
-  getAllStoryApi,
+
+  
 } from "../apis/Api";
 import useAuthCheck from "../components/IsAuthenticated";
-import StorySlider from "../components/StorySlider";
-import ShareStory from "./user/ShareStory";
+
 
 const LandingPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -20,8 +18,6 @@ const LandingPage = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [events, setEvents] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const verifyAuthBeforeAction = useAuthCheck();
@@ -39,7 +35,7 @@ const LandingPage = () => {
       .then((res) => {
         if (res.data.success) {
           toast.success(res.data.message);
-          // Clear form fields
+          
           setFullName("");
           setEmail("");
           setMessage("");
@@ -62,93 +58,8 @@ const LandingPage = () => {
     });
   };
 
-  const closeShareModal = () => {
-    setIsShareModalOpen(false);
-  };
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const delay = 3000;
 
-  const fetchStory = () => {
-    getAllStoryApi()
-      .then((res) => {
-        setStories(res?.data?.story || []);
-      })
-      .catch((err) => {
-        toast.error("Error Fetching Stories: " + err.message);
-      });
-  };
-
-  const fetchEvents = () => {
-    getAllEventsApi()
-      .then((res) => {
-        setEvents(res?.data?.events || []);
-      })
-      .catch((err) => {
-        toast.error("Error Fetching Events: " + err.message);
-      });
-  };
-
-  const fetchProducts = () => {
-    getAllProductApi()
-      .then((res) => {
-        setProducts(res?.data?.fewProducts || []);
-      })
-      .catch((err) => {
-        toast.error("Error Fetching Products: " + err.message);
-      });
-  };
-
-  const addToCart = (id) => {
-    verifyAuthBeforeAction(() => {
-      const data = new FormData();
-      data.append("products", id);
-      data.append("user", user?._id);
-      data.append("quantity", 1);
-
-      addToCartApi(data)
-        .then((res) => {
-          if (res.data.success) {
-            toast.success(res.data.message);
-          } else {
-            toast.error(res.data.message);
-          }
-        })
-        .catch((err) => {
-          toast.error("Error Adding to Cart: " + err.message);
-        });
-    });
-  };
-
-  useEffect(() => {
-    fetchEvents();
-    fetchProducts();
-    fetchStory();
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      goToNext();
-    }, delay);
-
-    return () => clearInterval(timer);
-  }, [currentIndex, events]);
-
-  const numberOfSlidesToShow = events.length > 3 ? 3 : events.length;
-  const slideWidth = 100 / numberOfSlidesToShow;
-  const goToNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex < events.length - numberOfSlidesToShow ? prevIndex + 1 : 0
-    );
-  };
-
-  const goToPrev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : events.length - numberOfSlidesToShow
-    );
-  };
-
-  const translateX = -(currentIndex * slideWidth);
 
   return (
     <>
@@ -253,129 +164,10 @@ const LandingPage = () => {
               Explore
             </Link>
           </div>
-          <div className="flex md:flex-row flex-col items-center justify-between gap-5 md:px-52 mb-12">
-            {products.map((product) => (
-              <div
-                key={product._id}
-                className="min-w-[200px] w-[400px] bg-gray-100 rounded-lg shadow-md p-2 relative"
-              >
-                <img
-                  src={product.productImageUrl}
-                  alt={product.productName}
-                  className="h-40 w-full object-cover rounded-t-lg"
-                />
-                <button
-                  onClick={() => addToCart(product._id)}
-                  className="absolute bottom-0 right-0 mb-[-20px] mr-[-10px] bg-[#FF8534] hover:bg-[#FF7148] border-1 border-black text-white font-bold py-2 px-4 rounded"
-                  style={{
-                    transition: "background-color 500ms ease, border 500ms ease",
-                  }}
-                >
-                  Add to Cart
-                </button>
-              </div>
-            ))}
+            
           </div>
         </div>
 
-        <div className="text-center mb-8 md:text-left">
-          <h1 className="font-bold text-2xl md:text-4xl mb-3">
-            Be Part of the Cause. Participate in <br />
-            Pet <span className="text-[#FF8534]">Adoption</span> Event
-          </h1>
-          <p className="my-4">
-            Are you ready to join with multiple organizations for a paw-some
-            cause? We're thrilled to invite you to
-            <br /> our <span className="font-bold">Collaborative</span> pet
-            adoption event.
-          </p>
-        </div>
-        <div className="mx-52">
-          <div className="flex flex-col md:flex-row justify-center items-center overflow-hidden">
-            <div
-              className="flex items-center gap-x-2 transition-transform duration-1000 ease-in-out"
-              style={{ transform: `translateX(${translateX}%)` }}
-            >
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="min-w-[33%] md:min-w-[50%] lg:min-w-[33%]"
-                  style={{ width: `${slideWidth}%` }}
-                >
-                  <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
-                    <img
-                      src={event.eventImageOneUrl}
-                      alt="event"
-                      className="lg:h-48 md:h-36 w-full object-cover object-center"
-                    />
-                    <div className="p-6">
-                      <h2 className="tracking-widest text-xs title-font font-medium text-gray-500 mb-1">
-                        {event.eventTitle}
-                      </h2>
-
-                      <h2 className="tracking-widest text-xs title-font font-medium text-gray-500 mb-1">
-                        Date :{" "}
-                        {(() => {
-                          const date = new Date(event.eventDate);
-                          return `${
-                            date.getMonth() + 1
-                          }/${date.getDate()}/${date.getFullYear()}`;
-                        })()}
-                      </h2>
-
-                      <p className="leading-relaxed mb-3">
-                        Organized By : {event.organizedBy}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row p-6 md:p-20 items-center gap-6 md:gap-12 justify-center">
-          <div className="">
-            <img
-              src="assets/images/empower.png"
-              alt="Welcome Cat"
-              className="mx-auto rounded-3xl object-cover border-2 border-gray-300"
-              style={{ width: "100%", maxWidth: "500px" }}
-            />
-          </div>
-          <div className="text-center md:text-left">
-            <h1 className="font-bold text-left text-2xl md:text-4xl">
-              Empowering{"  "}
-              <span className="text-[#FF8534]">Happy Lives,</span> One Donation
-              <br className="hidden md:inline" />
-              at a Time.
-            </h1>
-            <p className="mt-4 text-left">
-              Discover the Joy of Adopting a Pet and Transforming Your Life with
-              <br />
-              <span className="font-bold">Unconditional</span> Love
-            </p>
-            <div className="flex justify-center md:justify-end mt-8">
-              <Link
-                to={"/why-donate"}
-                className="bg-[#FF8534] text-white font-bold text-xl md:text-2xl px-16 py-2 w-full md:w-auto rounded"
-                style={{
-                  transition: "background-color 500ms ease, border 500ms ease",
-                }}
-                onMouseOver={(e) => {
-                  e.target.style.backgroundColor = "#FF7148";
-                  e.target.style.border = "2px solid black";
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.backgroundColor = "#FF8534";
-                  e.target.style.border = "none";
-                }}
-              >
-                Donate
-              </Link>
-            </div>
-          </div>
-        </div>
 
         <div
           className="md:!mx-[13rem] lg:mx-80 m-5 md:p-20 rounded-lg mb-8"
@@ -475,48 +267,6 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-
-        <div
-          className="text-center md:text-left mx-4 mt-8"
-          style={{ marginTop: "400px" }}
-        >
-          <h1 className="font-bold text-2xl md:text-4xl mb-3">
-            Where Dreams Find Their{" "}
-            <span className="text-[#FF8534]">Happily </span>Ever After Event
-          </h1>
-          <p className="mt-1">
-            "Adopt now and become part of our our{" "}
-            <span className="font-bold">Success</span> Story! Share your journey
-            with us."
-          </p>
-          <div className="flex justify-center md:mx-52 md:justify-end mt-8">
-            <button
-              onClick={openShareModal}
-              className="bg-[#FF8534] text-white font-bold text-xl md:text-2xl px-16 py-2 w-full md:w-auto rounded"
-              style={{
-                transition: "background-color 500ms ease, border 500ms ease",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.backgroundColor = "#FF7148";
-                e.target.style.border = "2px solid black";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.backgroundColor = "#FF8534";
-                e.target.style.border = "none";
-              }}
-            >
-              Share Story
-            </button>
-          </div>
-          <ShareStory isOpen={isShareModalOpen} onClose={closeShareModal} />
-        </div>
-
-        <div className="mx-36">
-          <div className="flex flex-row items-center justify-center w-full h-full py-24 sm:py-8 px-4">
-            <StorySlider stories={stories} />
-          </div>
-        </div>
-      </div>
     </>
   );
 };

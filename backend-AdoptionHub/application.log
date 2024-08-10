@@ -93,3 +93,4 @@
 {"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723225478 d2e1a72fcca58-710e5ab565fsm18340b3a.191 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-09T17:44:39.393Z","to":"prabishakhadka2000@gmail.com"}
 {"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-09T17:44:39.396Z"}
 {"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"123456","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"123456"},"timestamp":"2024-08-09T17:45:03.365Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T02:32:33.606Z"}
