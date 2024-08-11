@@ -25,7 +25,7 @@ const useTokenExpiryCheck = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("tokenExpiry");
       toast.info("Session expired. Please log in again.");
-      navigate("/login");
+      navigate("/adopt");
     };
  
     checkTokenExpiry();

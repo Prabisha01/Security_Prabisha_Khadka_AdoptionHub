@@ -195,3 +195,149 @@
 {"level":"info","message":"Fetched all pets","timestamp":"2024-08-10T10:04:11.743Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-10T10:17:51.079Z"}
 {"error":"Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/","level":"error","message":"Database connection error","timestamp":"2024-07-29T10:31:38.240Z"}
+{"error":"Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/","level":"error","message":"Database connection error","timestamp":"2024-07-30T10:41:18.074Z"}
+{"error":"Operation `users.findOne()` buffering timed out after 10000ms","level":"error","message":"Error in loginUser","method":"POST","timestamp":"2024-08-10T11:05:31.994Z","url":"/api/user/login"}
+{"error":"Operation `users.findOne()` buffering timed out after 10000ms","level":"error","message":"Error in loginUser","method":"POST","timestamp":"2024-08-10T11:05:38.037Z","url":"/api/user/login"}
+{"error":"Operation `users.findOne()` buffering timed out after 10000ms","level":"error","message":"Error in loginUser","method":"POST","timestamp":"2024-08-10T11:07:31.690Z","url":"/api/user/login"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T11:08:49.058Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"fx3ynICgUGM1N7cCJ2kKlXMWdcDyndI1","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-10T11:09:22.013Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T11:10:08.709Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"7IGG_7HjGcChPkfiWWA3J0tTXUqiLH4d","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-10T11:10:25.090Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T11:10:42.725Z"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":147010,"timestamp":"2024-08-10T11:17:56.029Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723288679 98e67ed59e1d1-2d1fd022d93sm1354737a91.55 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:17:58.995Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:17:58.997Z"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":929168,"timestamp":"2024-08-10T11:19:44.630Z"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":866105,"timestamp":"2024-08-10T11:19:45.658Z"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":770142,"timestamp":"2024-08-10T11:19:46.613Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723288787 d2e1a72fcca58-710e8f53032sm866597b3a.70 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:19:47.464Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:19:47.468Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723288789 41be03b00d2f7-7c3dbe9f9c5sm1124698a12.77 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:19:49.190Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:19:49.196Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723288789 d9443c01a7336-200bbb3fc1bsm10139625ad.264 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:19:49.306Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:19:49.310Z"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":544395,"timestamp":"2024-08-10T11:21:05.956Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723288868 d9443c01a7336-200bb7e8c64sm10192325ad.39 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:21:08.638Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:21:08.640Z"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":843666,"timestamp":"2024-08-10T11:25:21.791Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723289125 d2e1a72fcca58-710e5a8815esm1088548b3a.151 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:25:25.333Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:25:25.335Z"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":321584,"timestamp":"2024-08-10T11:25:45.273Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723289148 d2e1a72fcca58-710e5a89f52sm1092963b3a.162 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:25:47.933Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:25:47.935Z"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":410396,"timestamp":"2024-08-10T11:45:15.645Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723290318 98e67ed59e1d1-2d1fcec6b47sm1430778a91.13 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:45:18.620Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:45:18.622Z"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP generated","otp":491644,"timestamp":"2024-08-10T11:49:25.328Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723290568 98e67ed59e1d1-2d1fcf06589sm1399524a91.25 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:49:28.186Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:49:28.188Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T11:53:21.032Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T11:54:14.784Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T11:54:28.365Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T11:55:11.163Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T12:10:19.685Z","level":"info","message":"OTP generated","otp":568394,"timestamp":"2024-08-10T11:55:19.686Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723290923 41be03b00d2f7-7c3dbe040b9sm1168619a12.18 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:55:23.522Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:55:23.524Z"}
+{"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"@Khad1234","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"@Khad1234"},"timestamp":"2024-08-10T11:55:59.041Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T12:13:49.592Z","level":"info","message":"OTP generated","otp":195315,"timestamp":"2024-08-10T11:58:49.592Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723291132 98e67ed59e1d1-2d1fcfe3dd8sm1404104a91.43 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T11:58:52.761Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T11:58:52.763Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T12:00:47.678Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T12:01:01.550Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T12:01:10.398Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T12:17:35.978Z","level":"info","message":"OTP generated","otp":800054,"timestamp":"2024-08-10T12:02:35.978Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723291359 d9443c01a7336-200bb9b141asm10676685ad.179 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T12:02:39.327Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T12:02:39.329Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T12:04:28.634Z","level":"info","message":"OTP generated","otp":432400,"timestamp":"2024-08-10T12:03:28.634Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T12:03:29.755Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723291414 d9443c01a7336-200bb7e8cc7sm10799265ad.23 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T12:03:34.744Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T12:03:34.746Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T12:07:01.752Z","level":"info","message":"OTP generated","otp":454779,"timestamp":"2024-08-10T12:06:01.752Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723291564 d9443c01a7336-200bb7e93fesm10841365ad.43 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T12:06:04.983Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T12:06:04.985Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T12:10:49.089Z","level":"info","message":"OTP generated","otp":931240,"timestamp":"2024-08-10T12:09:49.089Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723291792 98e67ed59e1d1-2d1c9ca796fsm5071089a91.30 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T12:09:52.408Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T12:09:52.410Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T12:14:09.635Z","level":"info","message":"OTP generated","otp":310740,"timestamp":"2024-08-10T12:13:09.635Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723291992 d9443c01a7336-200bb9fe5fasm10767555ad.190 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T12:13:12.935Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T12:13:12.938Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T12:18:22.765Z","level":"info","message":"OTP generated","otp":707357,"timestamp":"2024-08-10T12:17:22.766Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723292245 98e67ed59e1d1-2d1c9db3bdesm4711094a91.44 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T12:17:25.942Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T12:17:25.944Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T12:27:59.260Z","level":"info","message":"OTP generated","otp":358384,"timestamp":"2024-08-10T12:26:59.260Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723292822 d9443c01a7336-200bba01cb4sm10964885ad.199 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T12:27:02.663Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T12:27:02.666Z"}
+{"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"@Khad1234","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"@Khad1234"},"timestamp":"2024-08-10T12:33:10.218Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"awx3PkKGZIxcL0ri5EaSH-7etby41b9P","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-10T12:34:47.834Z"}
+{"email":"dotelanjana93@gmail.com","expiresAt":"2024-08-10T12:42:57.774Z","level":"info","message":"OTP generated","otp":392805,"timestamp":"2024-08-10T12:41:57.774Z"}
+{"email":"dotelanjana93@gmail.com","expiresAt":"2024-08-10T12:43:09.804Z","level":"info","message":"OTP generated","otp":995463,"timestamp":"2024-08-10T12:42:09.804Z"}
+{"email":"dotelanjana93@gmail.com","expiresAt":"2024-08-10T12:43:27.582Z","level":"info","message":"OTP generated","otp":143749,"timestamp":"2024-08-10T12:42:27.582Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T12:42:54.558Z"}
+{"email":"dotelanjana93@gmail.com","expiresAt":"2024-08-10T12:44:05.442Z","level":"info","message":"OTP generated","otp":228819,"timestamp":"2024-08-10T12:43:05.442Z"}
+{"email":"dotelanjana93@gmail.com","expiresAt":"2024-08-10T12:45:01.625Z","level":"info","message":"OTP generated","otp":448453,"timestamp":"2024-08-10T12:44:01.625Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-10T15:49:02.438Z"}
+{"email":"dotelanjana93@gmail.com","expiresAt":"2024-08-10T15:51:39.958Z","level":"info","message":"OTP generated","otp":968219,"timestamp":"2024-08-10T15:50:39.959Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-10T15:52:24.047Z","level":"info","message":"OTP generated","otp":162785,"timestamp":"2024-08-10T15:51:24.047Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723305088 d2e1a72fcca58-710e5a43cc2sm1386862b3a.104 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-10T15:51:29.068Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-10T15:51:29.110Z"}
+{"email":"prabis@gmail.com","expiresAt":"2024-08-10T15:52:55.792Z","level":"info","message":"OTP generated","otp":716550,"timestamp":"2024-08-10T15:51:55.792Z"}
+{"error":"connect ECONNREFUSED ::1:27017","level":"error","message":"Database connection error","timestamp":"2024-08-11T15:24:03.642Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-11T15:25:35.083Z","level":"info","message":"OTP generated","otp":206266,"timestamp":"2024-08-11T15:24:35.084Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-11T15:25:42.236Z","level":"info","message":"OTP generated","otp":350153,"timestamp":"2024-08-11T15:24:42.236Z"}
+{"error":"Operation `users.findOne()` buffering timed out after 10000ms","level":"error","message":"Error sending OTP","timestamp":"2024-08-11T15:24:45.127Z"}
+{"error":"Operation `users.findOne()` buffering timed out after 10000ms","level":"error","message":"Error sending OTP","timestamp":"2024-08-11T15:24:52.257Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:27:14.360Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-11T15:28:37.512Z","level":"info","message":"OTP generated","otp":643507,"timestamp":"2024-08-11T15:27:37.512Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723390061 d2e1a72fcca58-710e587382csm2525610b3a.33 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-11T15:27:41.434Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-11T15:27:41.437Z"}
+{"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"@Khad1234","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"@Khad1234"},"timestamp":"2024-08-11T15:27:57.841Z"}
+{"email":"avicekbhatta.13@gmail.com","expiresAt":"2024-08-11T15:29:54.209Z","level":"info","message":"OTP generated","otp":345664,"timestamp":"2024-08-11T15:28:54.209Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-11T15:30:39.152Z","level":"info","message":"OTP generated","otp":161985,"timestamp":"2024-08-11T15:29:39.152Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723390184 d9443c01a7336-200bba00771sm23936155ad.225 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-11T15:29:43.875Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-11T15:29:43.878Z"}
+{"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"@Khad1234","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"@Khad1234"},"timestamp":"2024-08-11T15:29:56.095Z"}
+{"error":"connect ECONNREFUSED ::1:27017","level":"error","message":"Database connection error","timestamp":"2024-08-11T15:33:46.894Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:35:23.001Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-11T15:37:05.253Z","level":"info","message":"OTP generated","otp":968115,"timestamp":"2024-08-11T15:36:05.254Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723390569 d9443c01a7336-200bb9b17ccsm23829085ad.135 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-11T15:36:09.536Z","to":"prabishakhadka2000@gmail.com"}
+{"email":"prabishakhadka2000@gmail.com","level":"info","message":"OTP sent successfully","timestamp":"2024-08-11T15:36:09.539Z"}
+{"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"@Khad1234","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"@Khad1234"},"timestamp":"2024-08-11T15:36:21.071Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:37:01.638Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-11T15:38:35.587Z","level":"info","message":"OTP generated","otp":977202,"timestamp":"2024-08-11T15:37:35.588Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-11T15:38:59.001Z","level":"info","message":"OTP generated","otp":964451,"timestamp":"2024-08-11T15:37:59.002Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:40:34.004Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:40:39.509Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:41:38.648Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:41:55.894Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:41:58.547Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:42:12.545Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:42:31.829Z"}
+{"email":"prabishakhadka2000@gmail.com","expiresAt":"2024-08-11T15:43:51.326Z","level":"info","message":"OTP generated","otp":554735,"timestamp":"2024-08-11T15:42:51.327Z"}
+{"error":"Assignment to constant variable.","level":"error","message":"Error sending OTP","timestamp":"2024-08-11T15:42:51.339Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T15:45:06.601Z"}
+{"level":"info","message":"Email sent successfully","response":"250 2.0.0 OK  1723391184 d2e1a72fcca58-710e58a9c42sm2546892b3a.69 - gsmtp","subject":"Adoption Hub","timestamp":"2024-08-11T15:46:24.256Z","to":"prabishakhadka2000@gmail.com"}
+{"level":"info","message":"Create User request received","requestBody":{"confirmPassword":"@Khad1234","email":"prabishakhadka2000@gmail.com","fullName":"Prabisha Khadka","password":"@Khad1234"},"timestamp":"2024-08-11T15:46:39.421Z"}
+{"level":"info","message":"User created successfully","timestamp":"2024-08-11T15:46:39.828Z","userId":"66b8dcdf16b399ef735fc4da"}
+{"level":"info","message":{"Fullname":"admin admin","method":"POST","sessionId":"6Qh_6bjcdGdL31QyvKSWd2QL3cyjJLhc","text":"User logged in successfully","url":"/api/user/login","userId":"66b8dd3bed7b9a150bd64216"},"timestamp":"2024-08-11T15:49:15.781Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"zRXHhBcp_yM6tcZIi59ev9gz22WuB2sZ","text":"User logged in successfully","url":"/api/user/login","userId":"66b8dcdf16b399ef735fc4da"},"timestamp":"2024-08-11T15:51:34.471Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"87tV-UhuQWTE6PGuJd9ptR_wBWp4fRk0","text":"User logged in successfully","url":"/api/user/login","userId":"66b8dcdf16b399ef735fc4da"},"timestamp":"2024-08-11T16:03:30.079Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T16:05:35.847Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"9emlRFqo53Sj-OzJcFIJdtS9-htryLPo","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-11T16:08:00.352Z"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:09:00.738Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:09:00.993Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"nPyvqZNytV6nCWGW9CUlldeAHvB4kj7z","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-11T16:18:15.614Z"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:19:16.751Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:19:16.994Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"error":"users validation failed: fullName: Path `fullName` is required.","level":"error","message":"Error in loginUser","method":"POST","timestamp":"2024-08-11T16:20:45.061Z","url":"/api/user/login"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"bW2xqWLS_ax0cSq3l2HpMb7qBCwPLM6L","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-11T16:21:45.740Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T16:26:59.089Z"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:27:17.263Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:27:17.590Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"bhYjSGZ85-YY87ka8GsDS-RF0CaMI3ir","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-11T16:27:27.960Z"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:28:28.852Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:28:29.179Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T16:29:09.493Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T16:31:03.486Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T16:31:20.337Z"}
+{"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"_N4qciVxYmSt96qkJtuOlttANV-Ocy3p","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-11T16:37:40.973Z"}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-11T16:43:42.571Z"}

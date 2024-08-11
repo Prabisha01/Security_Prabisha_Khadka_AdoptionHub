@@ -20,7 +20,7 @@ const logger = winston.createLogger({
         new winston.transports.Console(),
         new winston.transports.File({ filename: 'application.log' }),
         new winston.transports.MongoDB({
-            db: 'mongodb+srv://test:test@cluster0.wmvavdc.mongodb.net/section',
+            db: 'mongodb://127.0.0.1:27017/adoption',
             collection: 'logs',
             level: 'info',
             options: { useUnifiedTopology: true }
@@ -279,7 +279,7 @@ const loginUser = async (req, res) => {
       const token = jwt.sign(
           { id: user._id, isAdmin: user.isAdmin },
           process.env.JWT_TOKEN_SECRET,
-          { expiresIn: "1m" }
+          { expiresIn: "15m" }
       );
 
       
@@ -621,48 +621,81 @@ const getUserCount = async (req, res) => {
 // Function to send OTP
 const sendOtp = async (req, res) => {
     const { email } = req.body;
+    // const user = await Users.findOne({ email: email });
     const randomOtp = Math.floor(100000 + Math.random() * 900000);
-    logger.info('OTP generated', { email, otp: randomOtp });
-
+    console.log(randomOtp);
+    // if (user) {
     await sendEmailController(
-        email,
-        "Adoption Hub",
-        `Your Otp is: ${randomOtp}`
+      email,
+      "Adoption Hub",
+      `Your Otp is: ${randomOtp}`
     ).then(async (success) => {
-        if (success) {
-            logger.info('OTP sent successfully', { email });
-            res.status(200).json({
-                success: true,
-                message: "Otp sent successfully",
-                otp: randomOtp,
-            });
-        }
+      if (success) {
+        res.status(200).json({
+          success: true,
+          message: "Otp sent successfully",
+          otp: randomOtp,
+        });
+      }
     });
-};
+    // } else {
+    //   res.json({
+    //     success: false,
+    //     message: "User not found",
+    //   });
+    // }
+  };
+
 
 // Function to verify a user
 const verifyUser = async (req, res) => {
-    logger.info('Verify User request received', { requestBody: req.body });
-    const { email } = req.body;
+  logger.info('Verify User request received', { requestBody: req.body });
+  const { email, otp } = req.body;
+
+  try {
     const user = await Users.findOne({ email });
-    if (user) {
-        await Users.updateOne(
-            { email },
-            { $set: { isVerified: true } }
-        );
-        logger.info('User verified successfully', { email });
-        res.json({
-            success: true,
-            message: "User verified successfully",
-        });
-    } else {
-        logger.error("User not found during verification", { email });
-        res.json({
-            success: false,
-            message: "User not found",
-        });
+
+    if (!user) {
+      logger.error("User not found during verification", { email });
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
     }
+
+    if (user.otp !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP.",
+      });
+    }
+
+    if (new Date() > user.otpExpiresAt) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP has expired. Please request a new one.",
+      });
+    }
+
+    user.isVerified = true;
+    user.otp = null;
+    user.otpExpiresAt = null;
+    await user.save();
+
+    logger.info('User verified successfully', { email });
+    res.json({
+      success: true,
+      message: "User verified successfully.",
+    });
+  } catch (error) {
+    logger.error("Error during user verification", { error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Server Error.",
+    });
+  }
 };
+
 
 module.exports = {
     createUser,

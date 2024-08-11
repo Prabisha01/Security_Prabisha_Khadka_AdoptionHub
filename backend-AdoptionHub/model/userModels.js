@@ -43,6 +43,14 @@ const userSchema = new mongoose.Schema(
     lockUntil: {
       type: Date,
     },
+    otp: {
+      type: String,
+      default: null,
+    },
+    otpExpiresAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

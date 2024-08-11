@@ -56,18 +56,18 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/set-session', (req, res) => {
-    req.session.username = 'testuser';
-    res.send('Session has been set!');
-});
+// app.get('/set-session', (req, res) => {
+//     req.session.username = 'testuser';
+//     res.send('Session has been set!');
+// });
 
-app.get('/get-session', (req, res) => {
-    if (req.session.username) {
-        res.send(`Session value: ${req.session.username}`);
-    } else {
-        res.send('No session found.');
-    }
-});
+// app.get('/get-session', (req, res) => {
+//     if (req.session.username) {
+//         res.send(`Session value: ${req.session.username}`);
+//     } else {
+//         res.send('No session found.');
+//     }
+// });
 
 
 const corsPolicy = {

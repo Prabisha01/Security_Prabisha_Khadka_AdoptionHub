@@ -1,14 +1,12 @@
 import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createUserApi, sendOtpApi } from "../apis/Api";
-import { Label, Modal, TextInput } from "flowbite-react";
+import { Modal, Label, TextInput } from "flowbite-react";
 
 const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,35 +15,26 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
 
   const [fnameerror, setFullnameError] = useState("");
   const [emailerror, setEmailError] = useState("");
-  const [passworderror, setPasswordError] = useState("");
+  const [passwordError, setPasswordError] = useState([]);
+  const [passwordStrength, setPasswordStrength] = useState("");
   const [cpassworderror, setCpasswordError] = useState("");
   const [termsError, setTermsError] = useState("");
 
-  const [userVerificationCode, setUserVerificationCode] = useState("");
   const [openModal, setOpenModal] = useState(false);
+  const [userVerificationCode, setUserVerificationCode] = useState("");
   const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(900); // 15 minutes timer
 
-  
-  const sendOtp = async () => {
-    setIsLoading(true);
-    const data = { email: email };
-    sendOtpApi(data)
-      .then((res) => {
-        if (res?.data?.success === false) {
-          toast.error(res?.data?.message);
-          setIsLoading(false);
-        } else {
-          setOpenModal(true);
-          toast.success(res?.data?.message);
-          setOtp(res?.data?.otp);
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        toast.error("Server Error");
-        setIsLoading(false);
-      });
-  };
+  useEffect(() => {
+    let interval;
+    if (openModal) {
+      interval = setInterval(() => {
+        setTimer((prev) => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [openModal]);
 
   const handleTermsChange = (e) => {
     setTerms(e.target.checked);
@@ -54,62 +43,105 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
     }
   };
 
+  const validatePassword = (password) => {
+    const errors = [];
+    if (password.length < 8) errors.push("At least 8 characters long");
+    if (!/[A-Z]/.test(password)) errors.push("An uppercase letter");
+    if (!/[a-z]/.test(password)) errors.push("A lowercase letter");
+    if (!/\d/.test(password)) errors.push("A number");
+    if (!/[@$!%*?&]/.test(password)) errors.push("A special character");
+
+    setPasswordError(errors);
+
+    if (errors.length === 0) {
+      setPasswordStrength("Strong");
+    } else if (errors.length <= 2) {
+      setPasswordStrength("Medium");
+    } else {
+      setPasswordStrength("Weak");
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    const passwordValue = e.target.value;
+    setPassword(passwordValue);
+    validatePassword(passwordValue);
+  };
+
   const Validate = () => {
     let isValid = true;
     setFullnameError("");
     setEmailError("");
-    setPasswordError("");
+    setPasswordError([]);
     setCpasswordError("");
+    setTermsError("");
+
     if (fullName.trim() === "") {
       setFullnameError("Name is Required");
       isValid = false;
     }
-    if (email.trim() === "") {
-      setEmailError("Email is Required");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email.trim() === "" || !emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address.");
       isValid = false;
     }
-    if (email.trim() !== "" && !email.includes("@")) {
-      setEmailError("Invalid Email");
+    if (passwordError.length > 0 || passwordStrength !== "Strong") {
+      toast.error("Please ensure your password meets all criteria and is strong.");
       isValid = false;
     }
-    if (password.trim() === "") {
-      setPasswordError("Password is Required");
-      isValid = false;
-    }
-    if (confirmPassword.trim() === "") {
-      setCpasswordError("Password does not match");
-      isValid = false;
-    }
-
     if (password.trim() !== confirmPassword.trim()) {
-      setCpasswordError("Password does not match");
+      setCpasswordError("Passwords do not match.");
       isValid = false;
     }
     if (!terms) {
-      setTermsError("Please agree to terms and conditions");
+      setTermsError("Please agree to the terms and conditions.");
       isValid = false;
     }
+
     return isValid;
   };
 
-  const validatein = (e) => {
+  const validateAndSendOtp = async (e) => {
     e.preventDefault();
     const isValid = Validate();
-    if (!isValid) {
-      return;
-    } else {
-      sendOtp(email);
+    if (isValid) {
+      const data = { email: email };
+      sendOtpApi(data)
+        .then((res) => {
+          if (res?.data?.success === false) {
+            toast.error(res?.data?.message);
+          } else {
+            setOpenModal(true);
+            setTimer(900); // Reset timer to 15 minutes
+            toast.success(res?.data?.message);
+            setOtp(res?.data?.otp);
+          }
+        })
+        .catch(() => {
+          toast.error("Server Error");
+        });
     }
   };
 
-  function onCloseModal() {
-    setOpenModal(false);
-  }
-
+  const resendOtp = async () => {
+    const data = { email: email };
+    sendOtpApi(data)
+      .then((res) => {
+        if (res?.data?.success === false) {
+          toast.error(res?.data?.message);
+        } else {
+          setTimer(900); // Reset timer to 15 minutes
+          toast.success("OTP has been resent to your email.");
+          setOtp(res?.data?.otp);
+        }
+      })
+      .catch(() => {
+        toast.error("Server Error");
+      });
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     const data = new FormData();
     data.append("fullName", fullName);
     data.append("email", email);
@@ -119,7 +151,6 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
     createUserApi(data)
       .then((res) => {
         if (res.data.success === false) {
-          setIsLoading(false);
           toast.error(res.data.message);
         } else {
           onClose();
@@ -127,176 +158,206 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
           toast.success(res.data.message);
         }
       })
-      .catch((err) => {
-        setIsLoading(false);
+      .catch(() => {
         toast.error("Server Error");
-      
       });
+  };
+
+  const onCloseModal = () => {
+    setOpenModal(false);
   };
 
   if (!isOpen) return null;
 
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer % 60;
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-10 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-lg flex border border-black" style={{ width: '1102px', height: '711px', borderRadius: '25px' }}>
-        <div className="w-1/2 p-4">
+    <div className="fixed inset-0 flex items-center justify-center z-10 backdrop-blur-sm p-4 md:p-8">
+      <div className="bg-white rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-4xl border border-black overflow-visible">
+        <div className="w-full md:w-1/2 hidden md:block">
           <img
             src="assets/images/login.png"
             alt="Adopt Me"
             className="h-full w-full object-cover rounded-l-lg"
-            style={{ borderRadius: '40px' }}
           />
         </div>
-        <div className="w-1/2 p-6 relative flex flex-col justify-center">
+        <div className="w-full md:w-1/2 p-8 relative flex flex-col justify-center">
           <button
             onClick={onClose}
-            className="absolute"
-            style={{ top: '29px', right: '27px', fontSize: '3.2rem', color: 'black' }}
+            className="absolute top-4 right-4 text-2xl text-black hover:text-red-600"
           >
             &times;
           </button>
-          <div className="absolute" style={{ top: '40px', left: '10px' }}>
-            <img src="assets/logo/logo.png" alt="AdoptionHub" className="w-48 h-20" style={{ width: '193px', height: '80px' }} />
+          <div className="text-center mb-8">
+            <img
+              src="assets/logo/logo.png"
+              alt="AdoptionHub"
+              className="w-32 h-auto mx-auto"
+            />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 mt-24" style={{ fontFamily: 'Poppins', fontSize: '30px', fontWeight: 'bold' }}>
+          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">
             Create an Account
           </h2>
-          <form className="flex flex-col items-center">
-            <div className="mb-2 w-full">
+          <form className="flex flex-col items-center relative">
+            <div className="mb-4 w-full">
               <div className="relative">
-                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: '55%' }}>
-                  <FontAwesomeIcon icon={faUser} className="text-gray-950" />
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-4">
+                  <FontAwesomeIcon icon={faUser} className="text-gray-500" />
                 </span>
                 <input
                   placeholder="Full Name"
                   type="text"
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
-                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                  className="w-full pl-12 py-3 bg-gray-100 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              {fnameerror && <p className="text-danger">{fnameerror}</p>}
+              {fnameerror && (
+                <p className="text-red-500 text-sm mt-2">{fnameerror}</p>
+              )}
             </div>
-            <div className="mb-2 w-full">
+            <div className="mb-4 w-full">
               <div className="relative">
-                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: '55%' }}>
-                  <FontAwesomeIcon icon={faEnvelope} className="text-gray-950" />
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-4">
+                  <FontAwesomeIcon icon={faEnvelope} className="text-gray-500" />
                 </span>
                 <input
                   placeholder="Email"
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
-                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                  className="w-full pl-12 py-3 bg-gray-100 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              {emailerror && <p className="text-danger">{emailerror}</p>}
+              {emailerror && (
+                <p className="text-red-500 text-sm mt-2">{emailerror}</p>
+              )}
             </div>
-            <div className="mb-2 w-full">
+            <div className="mb-4 w-full relative">
               <div className="relative">
-                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: '55%' }}>
-                  <FontAwesomeIcon icon={faLock} className="text-gray-950" />
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-4">
+                  <FontAwesomeIcon icon={faLock} className="text-gray-500" />
                 </span>
                 <input
                   placeholder="Password"
                   type="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
-                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                  onChange={handlePasswordChange}
+                  className="w-full pl-12 py-3 bg-gray-100 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              {passworderror && <p className="text-danger">{passworderror}</p>}
+              {passwordError.length > 0 && (
+                <div className="absolute top-0 right-[-240px] bg-white border border-gray-300 rounded p-4 w-[220px] shadow-lg text-sm text-red-500 z-50">
+                  <ul>
+                    {passwordError.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {passwordStrength && (
+                <div className={`mt-2 text-sm ${passwordStrength === "Strong" ? "text-green-500" : passwordStrength === "Medium" ? "text-yellow-500" : "text-red-500"}`}>
+                  Password Strength: {passwordStrength}
+                </div>
+              )}
             </div>
             <div className="mb-4 w-full">
               <div className="relative">
-                <span className="absolute top-1/2 transform -translate-y-1/2 left-8" style={{ top: '55%' }}>
-                  <FontAwesomeIcon icon={faLock} className="text-gray-950" />
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-4">
+                  <FontAwesomeIcon icon={faLock} className="text-gray-500" />
                 </span>
                 <input
                   placeholder="Confirm Password"
                   type="password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-16 py-2 mt-2 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-gray-950"
-                  style={{ color: 'black', width: '431px', height: '62px', borderRadius: '10px', fontSize: '16px' }}
+                  className="w-full pl-12 py-3 bg-gray-100 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              {cpassworderror && <p className="text-danger">{cpassworderror}</p>}
+              {cpassworderror && (
+                <p className="text-red-500 text-sm mt-2">{cpassworderror}</p>
+              )}
             </div>
-            <div className="flex flex-col  w-full" style={{ paddingLeft: '0px', marginBottom: '16px' }}>
-              <button
-                className="bg-[#FF8534] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="button"
-                onClick={(e) => validatein(e)}
-                style={{ width: '431px', height: '62px', borderRadius: '10px', fontSize: '22px', fontWeight: '800', marginBottom: '16px', border: 'none', transition: 'background-color 500ms ease, border 500ms ease' }}
-                onMouseOver={(e) => {
-                  e.target.style.backgroundColor = "#FF7148";
-                  e.target.style.border = "2px solid black";
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.backgroundColor = "#FF8534";
-                  e.target.style.border = "none";
-                }}
-              >
-                Sign Up
-              </button>
-              <div className="flex items-start w-full mb-2">
+            <div className="flex flex-col w-full items-start mb-4">
+              <div className="flex items-center">
                 <input
                   onChange={handleTermsChange}
                   className="cursor-pointer"
                   type="checkbox"
                   id="terms"
                 />
-                <label htmlFor="terms" className="ml-2 cursor-pointer">
-                  I agree to the <a href="/terms-and-condition" className="text-blue-800 hover:underline">terms and conditions</a>.
+                <label htmlFor="terms" className="ml-2 cursor-pointer text-sm">
+                  I agree to the{" "}
+                  <a
+                    href="/terms-and-condition"
+                    className="text-blue-600 hover:underline"
+                  >
+                    terms and conditions
+                  </a>
                 </label>
-                {termsError && <p className="text-danger">{termsError}</p>}
               </div>
-              <p
-                className="inline-block align-baseline font-bold text-sm text-black"
-                style={{ fontFamily: 'Poppins', fontSize: '16px', fontWeight: '400' }}
-              >
-                Already a member?
-                <Link onClick={onOpenLogin} className="text-blue-800 hover:underline">
-                  {" "}
-                  Login{" "}
-                </Link>
-              </p>
+              {termsError && (
+                <p className="text-red-500 text-sm mt-2">{termsError}</p>
+              )}
             </div>
-            <Modal show={openModal} size="md" onClose={onCloseModal} popup>
-                <Modal.Header>
-                  <h3 className="text-2xl text-center font-semibold text-gray-900 dark:text-white">
-                    Verification Code
-                  </h3>
-                </Modal.Header>
-                <Modal.Body>
-                  <div className="space-y-6">
-                    <p className="text-lg text-gray-600 dark:text-gray-400">
-                      Enter your verification code below to create your account.
-                    </p>
-                    <div>
-                      <Label htmlFor="code" value="Your Verification Code" />
-                      <TextInput
-                        id="code"
-                        type="text"
-                        onChange={(e) =>
-                          setUserVerificationCode(e.target.value)
-                        }
-                        required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:!ring-gray-500"
-                      />
-                    </div>
-                    <div className="w-full flex justify-center">
-                      <button
-                        className="px-6 py-2 mt-4 bg-[#8BC53E] text-white font-semibold rounded-md shadow-md hover:bg-[#6aa023] transition duration-300"
-                        onClick={handleRegister}
-                      >
-                        Create your account
-                      </button>
-                    </div>
-                  </div>
-                </Modal.Body>
-              </Modal>
+            <button
+              className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-50 w-full mb-4"
+              type="button"
+              onClick={validateAndSendOtp}
+            >
+              Sign Up
+            </button>
+            <p className="text-sm text-gray-600">
+              Already a member?{" "}
+              <Link
+                onClick={onOpenLogin}
+                className="text-blue-600 hover:underline"
+              >
+                Login
+              </Link>
+            </p>
           </form>
+          <Modal show={openModal} size="md" onClose={onCloseModal} popup>
+            <Modal.Header>
+              <h3 className="text-2xl font-semibold text-center text-gray-900">
+                Verification Code
+              </h3>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="space-y-6">
+                <p className="text-lg text-gray-600">
+                  Enter your verification code below to create your account.
+                </p>
+                <div>
+                  <Label htmlFor="code" value="Your Verification Code" />
+                  <TextInput
+                    id="code"
+                    type="text"
+                    onChange={(e) => setUserVerificationCode(e.target.value)}
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:!ring-gray-500"
+                  />
+                </div>
+                <div className="w-full flex justify-center">
+                  <button
+                    className="px-6 py-2 mt-4 bg-[#8BC53E] text-white font-semibold rounded-md shadow-md hover:bg-[#6aa023] transition duration-300"
+                    onClick={handleRegister}
+                  >
+                    Create your account
+                  </button>
+                </div>
+                {timer > 0 ? (
+                  <p className="text-sm text-gray-500">
+                    Resend OTP in {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+                  </p>
+                ) : (
+                  <button
+                    className="text-sm text-blue-600 hover:underline"
+                    onClick={resendOtp}
+                  >
+                    Resend OTP
+                  </button>
+                )}
+              </div>
+            </Modal.Body>
+          </Modal>
         </div>
       </div>
     </div>

@@ -60,8 +60,12 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
         } else {
           toast.success(res.data.message);
           const jsonDecode = JSON.stringify(res.data.userData);
+
           localStorage.setItem("user", jsonDecode);
           localStorage.setItem("token", res.data.token);
+          const expiryTime = new Date().getTime() + 15 * 60 * 1000;
+          localStorage.setItem("tokenExpiry", expiryTime);
+ 
           onClose();
           navigate("/");
           if (res.data.userData.isAdmin === false) {
@@ -80,90 +84,103 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-10 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md md:max-w-lg p-8 border border-gray-300">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-700 text-xl md:text-2xl"
-        >
-          &times;
-        </button>
-        <div className="text-center mb-6">
+    <div className="fixed inset-0 flex items-center justify-center z-10 backdrop-blur-sm p-4 md:p-8">
+      <div className="bg-white rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-4xl border border-black overflow-hidden">
+        <div className="w-full md:w-1/2 hidden md:block">
           <img
-            src="assets/logo/logo.png"
-            alt="AdoptionHub"
-            className="w-28 md:w-36 mx-auto"
+            src="assets/images/login.png"
+            alt="Adopt Me"
+            className="h-full w-full object-cover rounded-l-lg"
           />
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
-          Welcome to <span className="text-orange-500">Adoption</span>
-          <span style={{ color: "#004AAD" }}>Hub</span>
-        </h2>
-        <form>
-          <div className="mb-4">
-            <div className="relative">
-              <span className="absolute top-1/2 transform -translate-y-1/2 left-4">
-                <FontAwesomeIcon icon={faEnvelope} className="text-gray-500" />
-              </span>
-              <input
-                placeholder="Email"
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 py-2 bg-gray-50 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-            {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+        <div className="w-full md:w-1/2 p-8 relative flex flex-col justify-center">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-2xl text-black hover:text-red-600"
+          >
+            &times;
+          </button>
+          <div className="text-center mb-8">
+            <img
+              src="assets/logo/logo.png"
+              alt="AdoptionHub"
+              className="w-32 h-auto mx-auto"
+            />
           </div>
-          <div className="mb-4">
-            <div className="relative">
-              <span className="absolute top-1/2 transform -translate-y-1/2 left-4">
-                <FontAwesomeIcon icon={faLock} className="text-gray-500" />
-              </span>
-              <input
-                placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                className="w-full pl-12 py-2 bg-gray-50 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-            {passwordError && <p className="text-red-500 text-sm mt-2">{passwordError}</p>}
-          </div>
-          {showCaptcha && (
+          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">
+            Welcome to <span className="text-orange-500">Adoption</span>
+            <span className="text-blue-700">Hub</span>
+          </h2>
+          <form>
             <div className="mb-4">
-              <ReCAPTCHA
-                sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
-                onChange={(value) => setCaptcha(value)}
-                onExpired={() => setCaptcha(null)}
-              />
+              <div className="relative">
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-4">
+                  <FontAwesomeIcon icon={faEnvelope} className="text-gray-500" />
+                </span>
+                <input
+                  placeholder="Email"
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-12 py-3 bg-gray-100 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              {emailError && (
+                <p className="text-red-500 text-sm mt-2">{emailError}</p>
+              )}
             </div>
-          )}
-          <div className="flex items-center justify-between mb-4">
-            <a
-              href="/passwordForget"
-              className="text-sm text-blue-600 hover:underline"
-            >
-              Forgot Password?
-            </a>
-          </div>
-          <div className="flex flex-col items-center">
-            <button
-              className="bg-gradient-to-r from-orange-400 to-orange-500 w-full text-white font-bold py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-50"
-              type="button"
-              onClick={loginNow}
-            >
-              Login
-            </button>
-            <p className="text-sm text-gray-600 mt-4">
-              Not a member?{" "}
-              <Link
-                onClick={onOpenSignup}
-                className="text-blue-600 hover:underline"
+            <div className="mb-4">
+              <div className="relative">
+                <span className="absolute top-1/2 transform -translate-y-1/2 left-4">
+                  <FontAwesomeIcon icon={faLock} className="text-gray-500" />
+                </span>
+                <input
+                  placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  className="w-full pl-12 py-3 bg-gray-100 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-2">{passwordError}</p>
+              )}
+            </div>
+            {showCaptcha && (
+              <div className="mb-4">
+                <ReCAPTCHA
+                  sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                  onChange={(value) => setCaptcha(value)}
+                  onExpired={() => setCaptcha(null)}
+                />
+              </div>
+            )}
+            <div className="flex items-center justify-between mb-4">
+              <a
+                href="/passwordForget"
+                className="text-sm text-blue-600 hover:underline"
               >
-                Sign Up
-              </Link>
-            </p>
-          </div>
-        </form>
+                Forgot Password?
+              </a>
+            </div>
+            <div className="flex flex-col items-center">
+              <button
+                className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-50 w-full mb-4"
+                type="button"
+                onClick={loginNow}
+              >
+                Login
+              </button>
+              <p className="text-sm text-gray-600">
+                Not a member?{" "}
+                <Link
+                  onClick={onOpenSignup}
+                  className="text-blue-600 hover:underline"
+                >
+                  Sign Up
+                </Link>
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

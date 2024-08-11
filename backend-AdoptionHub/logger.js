@@ -11,7 +11,7 @@ const logger = winston.createLogger({
         new winston.transports.Console(),
         new winston.transports.File({ filename: 'application.log' }),
         new winston.transports.MongoDB({
-            db: 'mongodb+srv://test:test@cluster0.wmvavdc.mongodb.net/section',
+            db: 'mongodb://127.0.0.1:27017/adoption',
             collection: 'logs',
             level: 'info',
             options: { useUnifiedTopology: true, useNewUrlParser: true },
