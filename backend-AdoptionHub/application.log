@@ -341,3 +341,5 @@
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-11T16:31:20.337Z"}
 {"level":"info","message":{"Fullname":"Prabisha Khadka","method":"POST","sessionId":"_N4qciVxYmSt96qkJtuOlttANV-Ocy3p","text":"User logged in successfully","url":"/api/user/login","userId":"66b6de37abd06d30bfba7147"},"timestamp":"2024-08-11T16:37:40.973Z"}
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-11T16:43:42.571Z"}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:52:42.999Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:52:43.479Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
