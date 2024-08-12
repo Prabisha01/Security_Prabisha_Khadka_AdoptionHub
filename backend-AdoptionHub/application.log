@@ -343,3 +343,4 @@
 {"level":"info","message":"Connected to Database","timestamp":"2024-08-11T16:43:42.571Z"}
 {"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:52:42.999Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
 {"level":"info","message":"Fetched all pets","timestamp":"2024-08-11T16:52:43.479Z","totalPets":9,"unvaccinatedPets":9,"vaccinatedPets":0}
+{"level":"info","message":"Connected to Database","timestamp":"2024-08-12T08:09:59.896Z"}

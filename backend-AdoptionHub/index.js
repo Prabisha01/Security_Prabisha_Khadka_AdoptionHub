@@ -86,7 +86,62 @@ const corsPolicy = {
 app.use(cors(corsPolicy));
 
 
-app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            "'unsafe-eval'", 
+            "https://js.stripe.com", 
+            "https://www.google.com", 
+            "https://www.gstatic.com", 
+            "https://cdn.jsdelivr.net", 
+            "https://cdnjs.cloudflare.com" 
+        ],
+        styleSrc: [
+            "'self'",
+            "'unsafe-inline'", 
+            "https://fonts.googleapis.com", 
+            "https://cdn.jsdelivr.net", 
+            "https://cdnjs.cloudflare.com" 
+        ],
+        imgSrc: [
+            "'self'",
+            "data:", 
+            "https://*.stripe.com", 
+            "https://www.google.com", 
+            "https://www.gstatic.com",
+            "https://cdn.jsdelivr.net", 
+            "https://cdnjs.cloudflare.com" 
+        ],
+        fontSrc: [
+            "'self'",
+            "https://fonts.gstatic.com", 
+            "https://cdnjs.cloudflare.com" 
+        ],
+        connectSrc: [
+            "'self'",
+            "https://api.stripe.com", 
+            "https://www.google.com", 
+            "https://www.gstatic.com", 
+            "https://*.sentry.io" 
+        ],
+        frameSrc: [
+            "'self'",
+            "https://js.stripe.com", 
+            "https://www.google.com", 
+            "https://www.gstatic.com" 
+        ],
+        objectSrc: ["'none'"], 
+        upgradeInsecureRequests: [], 
+        blockAllMixedContent: [], 
+        baseUri: ["'self'"],
+        formAction: ["'self'"], 
+        frameAncestors: ["'self'"], 
+    }
+}));
+
 
 
 const limiter = rateLimit({
