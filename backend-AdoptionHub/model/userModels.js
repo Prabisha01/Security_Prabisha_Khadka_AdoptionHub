@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    token : {
+      type : String,
+      default: '',
+  },
     failedLoginAttempts: {
       type: Number,
       default: 0,
@@ -50,6 +54,25 @@ const userSchema = new mongoose.Schema(
     otpExpiresAt: {
       type: Date,
       default: null,
+    },
+    previousPasswords: [
+      {
+        passwordHash: String,
+        date: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+ 
+    passwordChagedAt: {
+      type: Date,
+      default: Date.now,
+    },
+ 
+    passwordExpiresAt: {
+      type: Date,
+      // default: Date.now().setDate(Date.now().getDate() + 90),
     },
   },
   { timestamps: true }

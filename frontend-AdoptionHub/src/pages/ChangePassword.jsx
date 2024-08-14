@@ -30,7 +30,7 @@ const UpdatedPasswords = () => {
 
       if (response.data.success === true) {
         toast.success(response.data.message);
-        navigate('/products');
+        navigate('/');
       } else {
         toast.error(response.data.message);
       }

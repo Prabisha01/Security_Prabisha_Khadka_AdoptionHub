@@ -12,9 +12,9 @@ import AllEvents from "./pages/AllEvents";
 import Faq from "./pages/Faq";
 import LandingPage from "./pages/LandingPage";
 import LoginModal from "./pages/Login";
-import NewPassword from "./pages/NewPassword";
+import NewPassword from "./pages/ResetPassword";
 import PasswordForgot from "./pages/PasswordForgot";
-import UpdatedPasswords from "./pages/PasswordNew";
+import UpdatedPasswords from "./pages/ChangePassword";
 import TermsAndConditions from "./pages/Terms";
 import MyPetRequests from "./pages/user/MyPetRequest";
 import Profile from "./pages/user/Profile";
@@ -42,7 +42,8 @@ function App() {
         <Route path="/reset_password/:token" element={<NewPassword />} />
         <Route path="/adopt" element={<Adopt />} />
         <Route path="/changePassword/:id" element={<UpdatedPasswords />} />
-        <Route path="/passwordForget" element={<PasswordForgot />} />
+        <Route path="/passwordForget" element={< PasswordForgot/>} />
+        <Route path="/after-expired" element={< PasswordForgot/>} />
       
 
       </Routes>

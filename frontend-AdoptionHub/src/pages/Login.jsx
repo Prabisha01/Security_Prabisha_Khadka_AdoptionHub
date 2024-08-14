@@ -52,6 +52,9 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
       .then((res) => {
         if (res.data.success === false) {
           toast.error(res.data.message);
+          if (res?.data?.passwordExpired) {
+            window.location.reload("/passwordForget");
+          }
           if (res.data.message.includes("captcha")) {
             setShowCaptcha(true);
           } else {
@@ -65,7 +68,7 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
           localStorage.setItem("token", res.data.token);
           const expiryTime = new Date().getTime() + 15 * 60 * 1000;
           localStorage.setItem("tokenExpiry", expiryTime);
- 
+
           onClose();
           navigate("/");
           if (res.data.userData.isAdmin === false) {
@@ -115,7 +118,10 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
             <div className="mb-4">
               <div className="relative">
                 <span className="absolute top-1/2 transform -translate-y-1/2 left-4">
-                  <FontAwesomeIcon icon={faEnvelope} className="text-gray-500" />
+                  <FontAwesomeIcon
+                    icon={faEnvelope}
+                    className="text-gray-500"
+                  />
                 </span>
                 <input
                   placeholder="Email"
